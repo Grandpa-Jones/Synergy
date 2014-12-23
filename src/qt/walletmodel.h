@@ -27,6 +27,8 @@ class SendCoinsRecipient
 public:
     QString address;
     QString label;
+    QString narration;
+    int typeInd;
     qint64 amount;
 };
 
@@ -49,6 +51,7 @@ public:
         DuplicateAddress,
         TransactionCreationFailed, // Error returned when wallet is still locked
         TransactionCommitFailed,
+        NarrationTooLong,
         Aborted
     };
 
@@ -85,8 +88,8 @@ public:
         QString hex; // is filled with the transaction hash if status is "OK"
     };
 
-    // Send coins to a list of recipients
-    SendCoinsReturn sendCoins(const QList<SendCoinsRecipient> &recipients, const CCoinControl *coinControl=NULL);
+    // Send SWIFT to a list of recipients
+    SendCoinsReturn sendCoins(const QString &txcomment, const QList<SendCoinsRecipient> &recipients, unsigned int nProdTypeID, const CCoinControl *coinControl=NULL);
 
     // Wallet encryption
     bool setWalletEncrypted(bool encrypted, const SecureString &passphrase);

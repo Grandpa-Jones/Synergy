@@ -352,8 +352,8 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-13"/>
-        <source>&amp;Receive coins</source>
-        <translation>&amp;Receive coins</translation>
+        <source>&amp;Receive SWIFT</source>
+        <translation>&amp;Receive SWIFT</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -362,8 +362,8 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-7"/>
-        <source>&amp;Send coins</source>
-        <translation>&amp;Send coins</translation>
+        <source>&amp;Send SWIFT</source>
+        <translation>&amp;Send SWIFT</translation>
     </message>
     <message>
         <location line="+35"/>
@@ -430,8 +430,8 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-64"/>
-        <source>Send coins to a bitswift address</source>
-        <translation>Send coins to a bitswift address</translation>
+        <source>Send SWIFT to a bitswift address</source>
+        <translation>Send SWIFT to a bitswift address</translation>
     </message>
     <message>
         <location line="+47"/>
@@ -647,7 +647,7 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="+59"/>
-        <source>This transaction is over the size limit.  You can still send it for a fee of %1, which goes to the nodes that process your transaction and helps to support the network.  Do you want to pay the fee?</source>
+        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SWIFT, which rewards all users of the BitSwift network as a result of your usage. Do you want to pay this fee?</source>
         <translation></translation>
     </message>
     <message>

@@ -11,6 +11,7 @@
 #include "init.h"
 #include "ui_interface.h"
 #include "kernel.h"
+#include "stealth.h"
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -34,9 +35,10 @@ unsigned int nTransactionsUpdated = 0;
 map<uint256, CBlockIndex*> mapBlockIndex;
 set<pair<COutPoint, unsigned int> > setStakeSeen;
 
-CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // "standard" scrypt target limit for proof of work, results with 0,000244140625 proof-of-work difficulty
+// "standard" scrypt target limit for proof of work, results with 0,000244140625 proof-of-work difficulty
+CBigNum bnProofOfWorkLimit(~uint256(0) >> 20);
 CBigNum bnProofOfStakeLimit(~uint256(0) >> 20);
-CBigNum bnProofOfWorkLimitTestNet(~uint256(0) >> 16);
+CBigNum bnProofOfWorkLimitTestNet(~uint256(0) >> 20);
 
 unsigned int nTargetSpacing = 1 * 30; // 30 seconds
 unsigned int nStakeMinAge = 60 * 60 * 4; // 4 hours
@@ -69,7 +71,7 @@ CScript COINBASE_FLAGS;
 const string strMessageMagic = "bitswift Signed Message:\n";
 
 // Settings
-int64_t nTransactionFee = 0;
+int64_t nTransactionFee = 0;  // going to make this reasonable elsewhere
 int64_t nReserveBalance = 0;
 int64_t nMinimumInputValue = 0;
 
@@ -294,6 +296,10 @@ bool CTransaction::IsStandard() const
     if (nVersion > CTransaction::CURRENT_VERSION)
         return false;
 
+	// Disallow large transaction comments
+    if ((unsigned int) strTxComment.length() > MAX_TX_COMMENT_LEN)
+		return false;
+
     BOOST_FOREACH(const CTxIn& txin, vin)
     {
         // Biggest 'standard' txin is a 3-signature 3-of-3 CHECKMULTISIG
@@ -307,15 +313,28 @@ bool CTransaction::IsStandard() const
             return false;
         }
     }
+    unsigned int nDataOut = 0;
+    unsigned int nTxnOut = 0;
+    txnouttype whichType;
     BOOST_FOREACH(const CTxOut& txout, vout) {
-        if (!::IsStandard(txout.scriptPubKey))
+        if (!::IsStandard(txout.scriptPubKey, whichType))
             return false;
-        if (txout.nValue == 0)
-            return false;
-        if (fEnforceCanonical && !txout.scriptPubKey.HasCanonicalPushes()) {
-            return false;
+
+        if (whichType == TX_NULL_DATA)  {
+            nDataOut++;
+        } else {
+            if (txout.nValue == 0)
+                  return false;
+            nTxnOut++;
         }
+            if (fEnforceCanonical && !txout.scriptPubKey.HasCanonicalPushes())
+                  return false;
     }
+
+    if (nDataOut > nTxnOut) {
+        return false;
+    }
+
     return true;
 }
 
@@ -473,10 +492,11 @@ bool CTransaction::CheckTransaction() const
     for (unsigned int i = 0; i < vout.size(); i++)
     {
         const CTxOut& txout = vout[i];
+
         if (txout.IsEmpty() && !IsCoinBase() && !IsCoinStake())
             return DoS(100, error("CTransaction::CheckTransaction() : txout empty for user transaction"));
         if (txout.nValue < 0)
-            return DoS(100, error("CTransaction::CheckTransaction() : txout.nValue negative"));
+              return DoS(100, error("CTransaction::CheckTransaction() : txout.nValue negative"));
         if (txout.nValue > MAX_MONEY)
             return DoS(100, error("CTransaction::CheckTransaction() : txout.nValue too high"));
         nValueOut += txout.nValue;
@@ -503,6 +523,15 @@ bool CTransaction::CheckTransaction() const
         BOOST_FOREACH(const CTxIn& txin, vin)
             if (txin.prevout.IsNull())
                 return DoS(10, error("CTransaction::CheckTransaction() : prevout is null"));
+    }
+
+    if (nVersion >= 2) {
+         if ((unsigned int) strTxComment.length() > MAX_TX_COMMENT_LEN) {
+           return DoS(10, error("CTransaction::CheckTransaction() : comment too big"));
+         }
+    } else if (strTxComment.length() > 0) {
+        printf("CTransaction -> nVersion = %d\n", nVersion);
+        return DoS(100, error("CTransaction::CheckTransaction() : comment not supported"));
     }
 
     return true;
@@ -532,15 +561,60 @@ int64_t CTransaction::GetMinFee(unsigned int nBlockSize, enum GetMinFee_mode mod
         nMinFee *= MAX_BLOCK_SIZE_GEN / (MAX_BLOCK_SIZE_GEN - nNewBlockSize);
     }
 
+    if (nVersion >= 2) {
+       // ensure they pay their service fees, which are tacked on flat
+       nMinFee += GetSwiftFee();
+       // ensure they pay their OP_RETURN fees, which are also tacked on flat
+       nMinFee += GetOpRetFee();
+    }
+
     if (!MoneyRange(nMinFee))
         nMinFee = MAX_MONEY;
     return nMinFee;
+}
+
+// Swift Fee
+int64_t CTransaction::GetSwiftFee() const {
+    int64_t nSwiftFee = 0;
+    if (fTestNet || nTime >= CTXV2_LIVE) {
+            nSwiftFee = COMMENT_FEE_PER_CHAR * strTxComment.size();
+    }
+    return nSwiftFee;
+}
+
+// OP_RETURN Fees: encourage use of swift services
+int64_t CTransaction::GetOpRetFee() const {
+    int64_t nOpRetFee = 0;
+    std::vector<uint8_t> vchR;
+    opcodetype opCode;
+
+    BOOST_FOREACH(const CTxOut& txout, vout) {
+        CScript scriptPK = txout.scriptPubKey;
+        CScript::const_iterator pc = scriptPK.begin();
+
+        // checked in GetOp2, but be safe
+        if (!vchR.empty()) {
+              vchR.clear();
+        }
+
+        if (scriptPK.GetOp(pc, opCode, vchR) && (opCode == OP_RETURN)) {
+              if (!vchR.empty()) {
+                     vchR.clear();
+              }
+              if (!txout.scriptPubKey.GetOp(pc, opCode, vchR) ||
+                                               (vchR.size() != ec_compressed_size)) {
+                   nOpRetFee += (OP_RET_FEE_PER_CHAR * scriptPK.size());
+              }
+        }
+    }
+    return nOpRetFee;
 }
 
 
 bool CTxMemPool::accept(CTxDB& txdb, CTransaction &tx, bool fCheckInputs,
                         bool* pfMissingInputs)
 {
+    AssertLockHeld(cs_main);
     if (pfMissingInputs)
         *pfMissingInputs = false;
 
@@ -554,10 +628,6 @@ bool CTxMemPool::accept(CTxDB& txdb, CTransaction &tx, bool fCheckInputs,
     // ppcoin: coinstake is also only valid in a block, not as a loose transaction
     if (tx.IsCoinStake())
         return tx.DoS(100, error("CTxMemPool::accept() : coinstake as individual tx"));
-
-    // To help v0.1.5 clients who would see it as a negative number
-    if ((int64_t)tx.nLockTime > std::numeric_limits<int>::max())
-        return error("CTxMemPool::accept() : not accepting nLockTime beyond 2038 yet");
 
     // Rather not work on nonstandard transactions (unless -testnet)
     if (!fTestNet && !tx.IsStandard())
@@ -772,6 +842,7 @@ int CMerkleTx::GetDepthInMainChainINTERNAL(CBlockIndex* &pindexRet) const
 {
     if (hashBlock == 0 || nIndex == -1)
         return 0;
+    AssertLockHeld(cs_main);
 
     // Find the block it claims to be in
     map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(hashBlock);
@@ -795,6 +866,7 @@ int CMerkleTx::GetDepthInMainChainINTERNAL(CBlockIndex* &pindexRet) const
 
 int CMerkleTx::GetDepthInMainChain(CBlockIndex* &pindexRet) const
 {
+    AssertLockHeld(cs_main);
     int nResult = GetDepthInMainChainINTERNAL(pindexRet);
     if (nResult == 0 && !mempool.exists(GetHash()))
         return -1; // Not in chain, not in mempool
@@ -881,9 +953,8 @@ bool GetTransaction(const uint256 &hash, CTransaction &tx, uint256 &hashBlock)
         LOCK(cs_main);
         {
             LOCK(mempool.cs);
-            if (mempool.exists(hash))
+            if (mempool.lookup(hash, tx))
             {
-                tx = mempool.lookup(hash);
                 return true;
             }
         }
@@ -990,7 +1061,16 @@ int64_t GetProofOfStakeReward(int64_t nCoinAge, int64_t nFees)
     if (fDebug && GetBoolArg("-printcreation"))
         printf("GetProofOfStakeReward(): create=%s nCoinAge=%"PRId64"\n", FormatMoney(nSubsidy).c_str(), nCoinAge);
 
-    return nSubsidy + nFees;
+    int64_t nPOSReward;
+
+    // fees will get eaten by the network starting block 286250
+    if ((pindexBest->nHeight >= FEEV2_LIVE) || fTestNet) {
+        nPOSReward = nSubsidy;
+    } else {
+        nPOSReward = nSubsidy + nFees;
+    }
+
+    return nPOSReward;
 }
 
 static const int64_t nTargetTimespan = 20 * 60;  // 20 mins
@@ -1101,6 +1181,7 @@ int GetNumBlocksOfPeers()
 
 bool IsInitialBlockDownload()
 {
+    LOCK(cs_main);
     if (pindexBest == NULL || nBestHeight < Checkpoints::GetTotalBlocksEstimate())
         return true;
     static int64_t nLastUpdate;
@@ -1230,9 +1311,12 @@ bool CTransaction::FetchInputs(CTxDB& txdb, const map<uint256, CTxIndex>& mapTes
             // Get prev tx from single transactions in memory
             {
                 LOCK(mempool.cs);
-                if (!mempool.exists(prevout.hash))
-                    return error("FetchInputs() : %s mempool Tx prev not found %s", GetHash().ToString().substr(0,10).c_str(),  prevout.hash.ToString().substr(0,10).c_str());
-                txPrev = mempool.lookup(prevout.hash);
+
+                if (!mempool.lookup(prevout.hash, txPrev))
+                    return error("FetchInputs() : %s mempool Tx prev not found %s",
+                                 GetHash().ToString().substr(0,10).c_str(),
+                                 prevout.hash.ToString().substr(0,10).c_str());
+
             }
             if (!fFound)
                 txindex.vSpent.resize(txPrev.vout.size());
@@ -1367,7 +1451,8 @@ bool CTransaction::ConnectInputs(CTxDB& txdb, MapPrevTx inputs, map<uint256, CTx
                 // Verify signature
                 if (!VerifySignature(txPrev, *this, i, 0))
                 {
-                    return DoS(100,error("ConnectInputs() : %s VerifySignature failed", GetHash().ToString().substr(0,10).c_str()));
+                    return DoS(100,error("ConnectInputs() : %s VerifySignature failed",
+                                         GetHash().ToString().substr(0,10).c_str()));
                 }
             }
 
@@ -1650,7 +1735,7 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
     printf("REORGANIZE: Connect %"PRIszu" blocks; %s..%s\n", vConnect.size(), pfork->GetBlockHash().ToString().substr(0,20).c_str(), pindexNew->GetBlockHash().ToString().substr(0,20).c_str());
 
     // Disconnect shorter branch
-    vector<CTransaction> vResurrect;
+    list<CTransaction> vResurrect;
     BOOST_FOREACH(CBlockIndex* pindex, vDisconnect)
     {
         CBlock block;
@@ -1660,9 +1745,13 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
             return error("Reorganize() : DisconnectBlock %s failed", pindex->GetBlockHash().ToString().substr(0,20).c_str());
 
         // Queue memory transactions to resurrect
-        BOOST_FOREACH(const CTransaction& tx, block.vtx)
-            if (!(tx.IsCoinBase() || tx.IsCoinStake()))
-                vResurrect.push_back(tx);
+        BOOST_REVERSE_FOREACH(const CTransaction& tx, block.vtx)
+             if (!(tx.IsCoinBase() || tx.IsCoinStake()) &&
+                 pindex->nHeight > Checkpoints::GetTotalBlocksEstimate())
+             {
+                 vResurrect.push_front(tx);
+             }
+ 
     }
 
     // Connect longer branch
@@ -1981,6 +2070,8 @@ bool CBlock::AddToBlockIndex(unsigned int nFile, unsigned int nBlockPos, const u
     if (!txdb.TxnCommit())
         return false;
 
+    LOCK(cs_main);
+
     // New best
     if (pindexNew->nChainTrust > nBestChainTrust)
         if (!SetBestChain(txdb, pindexNew))
@@ -2090,6 +2181,7 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
 
 bool CBlock::AcceptBlock()
 {
+    AssertLockHeld(cs_main);
     // Check for duplicate
     uint256 hash = GetHash();
     if (mapBlockIndex.count(hash))
@@ -2102,7 +2194,7 @@ bool CBlock::AcceptBlock()
     CBlockIndex* pindexPrev = (*mi).second;
     int nHeight = pindexPrev->nHeight+1;
 
-    if (IsProofOfWork() && (GetBlockTime() > LAST_POW_TIME))
+    if (IsProofOfWork() && ((GetBlockTime() > LAST_POW_TIME) && !fTestNet))
         return DoS(100, error("AcceptBlock() : reject proof-of-work at height %d", nHeight));
 
     if (IsProofOfStake() && nHeight < MODIFIER_INTERVAL_SWITCH)
@@ -2202,6 +2294,8 @@ bool CBlockIndex::IsSuperMajority(int minVersion, const CBlockIndex* pstart, uns
 
 bool ProcessBlock(CNode* pfrom, CBlock* pblock)
 {
+    AssertLockHeld(cs_main);
+
     // Check for duplicate
     uint256 hash = pblock->GetHash();
     if (mapBlockIndex.count(hash))
@@ -2452,18 +2546,20 @@ FILE* AppendBlockFile(unsigned int& nFileRet)
 
 bool LoadBlockIndex(bool fAllowNew)
 {
+    LOCK(cs_main);
+
     CBigNum bnTrustedModulus;
 
     if (fTestNet)
     {
-        pchMessageStart[0] = 0xa1;
-        pchMessageStart[1] = 0xa0;
-        pchMessageStart[2] = 0xa2;
-        pchMessageStart[3] = 0xa3;
+        pchMessageStart[0] = 0xaf;
+        pchMessageStart[1] = 0xb9;
+        pchMessageStart[2] = 0xd9;
+        pchMessageStart[3] = 0xff;
 
         bnProofOfWorkLimit = bnProofOfWorkLimitTestNet; // 0x0000ffff PoW base target is fixed in testnet
-        nStakeMinAge = 20 * 60; // test net min age is 20 min
-        nCoinbaseMaturity = 10; // test maturity is 10 blocks
+        nStakeMinAge = 5 * 60; // test net min age is 5 min
+        nCoinbaseMaturity = 5; // test maturity is 10 blocks
     }
 
     //
@@ -2483,6 +2579,7 @@ bool LoadBlockIndex(bool fAllowNew)
 
         const char* pszTimestamp = "How will Obama respond to ISIS?";
         CTransaction txNew;
+        txNew.nVersion = 1;
         txNew.nTime = 1409736828;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
@@ -2498,7 +2595,7 @@ bool LoadBlockIndex(bool fAllowNew)
         block.nNonce   = 959466;
 		if(fTestNet)
         {
-            block.nNonce   = 0;
+            block.nNonce   = 959466;
         }
         if (false  && (block.GetHash() != hashGenesisBlock)) {
 

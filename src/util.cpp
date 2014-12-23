@@ -66,6 +66,9 @@ map<string, string> mapArgs;
 map<string, vector<string> > mapMultiArgs;
 bool fDebug = false;
 bool fDebugNet = false;
+// maybe secure messaging some day
+bool fDebugSmsg = false;
+bool fNoSmsg = false;
 bool fPrintToConsole = false;
 bool fPrintToDebugger = false;
 bool fRequestShutdown = false;

@@ -347,7 +347,7 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-13"/>
-        <source>&amp;Receive coins</source>
+        <source>&amp;Receive SWIFT</source>
         <translation>&amp;Rebre monedes</translation>
     </message>
     <message>
@@ -357,7 +357,7 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-7"/>
-        <source>&amp;Send coins</source>
+        <source>&amp;Send SWIFT</source>
         <translation>&amp;Enviar monedes</translation>
     </message>
     <message>
@@ -422,7 +422,7 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-64"/>
-        <source>Send coins to a bitswift address</source>
+        <source>Send SWIFT to a bitswift address</source>
         <translation>Enviar monedes a una adreça bitswift</translation>
     </message>
     <message>
@@ -624,7 +624,7 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="+59"/>
-        <source>This transaction is over the size limit.  You can still send it for a fee of %1, which goes to the nodes that process your transaction and helps to support the network.  Do you want to pay the fee?</source>
+        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SWIFT, which rewards all users of the BitSwift network as a result of your usage. Do you want to pay this fee?</source>
         <translation>Aquesta transacció es troba sobre el límit de mida. Encara pot enviar-la amb una comisió de 1%, aquesta va als nodes que processen la seva transacció i ajuda a mantenir la xarxa. Vol pagar la quota?</translation>
     </message>
     <message>

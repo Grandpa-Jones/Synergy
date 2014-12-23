@@ -352,7 +352,7 @@ Produktet indeholder software, som er udviklet af OpenSSL Project til brug i Ope
     </message>
     <message>
         <location line="-13"/>
-        <source>&amp;Receive coins</source>
+        <source>&amp;Receive SWIFT</source>
         <translation>&amp;Modtag mønter</translation>
     </message>
     <message>
@@ -362,7 +362,7 @@ Produktet indeholder software, som er udviklet af OpenSSL Project til brug i Ope
     </message>
     <message>
         <location line="-7"/>
-        <source>&amp;Send coins</source>
+        <source>&amp;Send SWIFT</source>
         <translation>&amp;Send mønter</translation>
     </message>
     <message>
@@ -427,7 +427,7 @@ Produktet indeholder software, som er udviklet af OpenSSL Project til brug i Ope
     </message>
     <message>
         <location line="-64"/>
-        <source>Send coins to a bitswift address</source>
+        <source>Send SWIFT to a bitswift address</source>
         <translation>Send mønter til en bitswift adresse</translation>
     </message>
     <message>
@@ -629,7 +629,7 @@ Produktet indeholder software, som er udviklet af OpenSSL Project til brug i Ope
     </message>
     <message>
         <location line="+59"/>
-        <source>This transaction is over the size limit.  You can still send it for a fee of %1, which goes to the nodes that process your transaction and helps to support the network.  Do you want to pay the fee?</source>
+        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SWIFT, which rewards all users of the BitSwift network as a result of your usage. Do you want to pay this fee?</source>
         <translation>Denne transaktion er over grænsen størrelse. Du kan stadig sende det for et gebyr på %1, der går til de noder, der behandler din transaktion og hjælper med at støtte netværket. Ønsker du at betale gebyret?</translation>
     </message>
     <message>

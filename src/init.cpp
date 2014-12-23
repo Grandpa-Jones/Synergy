@@ -240,7 +240,7 @@ std::string HelpMessage()
         "  -socks=<n>             " + _("Select the version of socks proxy to use (4-5, default: 5)") + "\n" +
         "  -tor=<ip:port>         " + _("Use proxy to reach tor hidden services (default: same as -proxy)") + "\n"
         "  -dns                   " + _("Allow DNS lookups for -addnode, -seednode and -connect") + "\n" +
-        "  -port=<port>           " + _("Listen for connections on <port> (default: 21138 or testnet: 21168)") + "\n" +
+        "  -port=<port>           " + _("Listen for connections on <port> (default: 21138 or testnet: 21188)") + "\n" +
         "  -maxconnections=<n>    " + _("Maintain at most <n> connections to peers (default: 125)") + "\n" +
         "  -addnode=<ip>          " + _("Add a node to connect to and attempt to keep the connection open") + "\n" +
         "  -connect=<ip>          " + _("Connect only to the specified node(s)") + "\n" +
@@ -384,7 +384,6 @@ bool AppInit2()
     nDerivationMethodIndex = 0;
 
     fTestNet = GetBoolArg("-testnet");
-    //fTestNet = true;
     if (fTestNet) {
         SoftSetBoolArg("-irc", true);
     }
@@ -428,10 +427,17 @@ bool AppInit2()
 
     // -debug implies fDebug*
     if (fDebug)
-        fDebugNet = true;
-    else
-        fDebugNet = GetBoolArg("-debugnet");
-
+    {
+        fDebugNet  = true;
+        // maybe secure messaging some day
+        // fDebugSmsg = true;
+    } else
+    {
+        fDebugNet  = GetBoolArg("-debugnet");
+        fDebugSmsg = GetBoolArg("-debugsmsg");
+    }
+    fNoSmsg = GetBoolArg("-nosmsg");
+    
     bitdb.SetDetach(GetBoolArg("-detachdb", false));
 
 #if !defined(WIN32) && !defined(QT_GUI)

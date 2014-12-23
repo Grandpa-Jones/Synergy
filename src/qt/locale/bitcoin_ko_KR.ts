@@ -350,7 +350,7 @@ MIT/X11 프로그램 라이선스에 따라 배포합니다. COPYING 또는 http
     </message>
     <message>
         <location line="-13"/>
-        <source>&amp;Receive coins</source>
+        <source>&amp;Receive SWIFT</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -360,7 +360,7 @@ MIT/X11 프로그램 라이선스에 따라 배포합니다. COPYING 또는 http
     </message>
     <message>
         <location line="-7"/>
-        <source>&amp;Send coins</source>
+        <source>&amp;Send SWIFT</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -425,7 +425,7 @@ MIT/X11 프로그램 라이선스에 따라 배포합니다. COPYING 또는 http
     </message>
     <message>
         <location line="-64"/>
-        <source>Send coins to a bitswift address</source>
+        <source>Send SWIFT to a bitswift address</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -627,7 +627,7 @@ MIT/X11 프로그램 라이선스에 따라 배포합니다. COPYING 또는 http
     </message>
     <message>
         <location line="+59"/>
-        <source>This transaction is over the size limit.  You can still send it for a fee of %1, which goes to the nodes that process your transaction and helps to support the network.  Do you want to pay the fee?</source>
+        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SWIFT, which rewards all users of the BitSwift network as a result of your usage. Do you want to pay this fee?</source>
         <translation type="unfinished"/>
     </message>
     <message>

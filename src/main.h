@@ -11,6 +11,7 @@
 #include "script.h"
 #include "scrypt.h"
 #include "hashblock.h"
+#include "prodtypeids.h"
 
 #include <list>
 
@@ -30,6 +31,7 @@ class CNode;
 // Sat Oct 11 03:00:00 2014 EST
 static const int LAST_POW_TIME = 1413010800;
 
+
 static const unsigned int MAX_BLOCK_SIZE = 1000000;
 static const unsigned int MAX_BLOCK_SIZE_GEN = MAX_BLOCK_SIZE/2;
 static const unsigned int MAX_BLOCK_SIGOPS = MAX_BLOCK_SIZE/50;
@@ -46,6 +48,26 @@ inline bool MoneyRange(int64_t nValue) { return (nValue >= 0 && nValue <= MAX_MO
 // Threshold for nLockTime: below this value it is interpreted as block number, otherwise as UNIX timestamp.
 static const unsigned int LOCKTIME_THRESHOLD = 500000000; // Tue Nov  5 00:53:20 1985 UTC
 
+// version 2 of CTransaction goes live Tue Jan 1 00:00:00 2015 PDT
+// stealth addresses go live too
+static const int CTXV2_LIVE = 1420088400;
+// new: burn fees starting approx Sun Jan 11 00:00:00 2015 PDT
+static const int FEEV2_LIVE = 286250;  // block number 286250
+
+// change the string to avoid conversion to string all the time
+static const std::string sMAX_TX_COMMENT_LEN = "2048";
+static const unsigned int MAX_TX_COMMENT_LEN = std::atoi(sMAX_TX_COMMENT_LEN.c_str());
+
+// e.g. <$0.05 for swiftExist if 1 EXIST pegged to $0.50
+static const int64_t COMMENT_FEE_PER_CHAR = COIN * 0.001;
+// OP_RETURN is useful, but encourage swift services
+static const int64_t OP_RET_FEE_PER_CHAR = COMMENT_FEE_PER_CHAR * 1.5;
+
+
+static const int64_t MIN_TXOUT_AMOUNT = MIN_TX_FEE;
+
+
+
 #ifdef USE_UPNP
 static const int fHaveUPnP = true;
 #else
@@ -53,7 +75,11 @@ static const int fHaveUPnP = false;
 #endif
 
 static const uint256 hashGenesisBlock("0x0000001a31e9be6cfd533e02ab8b19580971a69963dffbd56552ca29b93bc8a9");
-static const uint256 hashGenesisBlockTestNet("0x0000044449d51b7f537583006cf141e2d5a55a28d0149d75bebaaad724a2b405");
+// static const uint256 hashGenesisBlockTestNet("0x0000044449d51b7f537583006cf141e2d5a55a28d0149d75bebaaad724a2b405");
+// static const uint256 hashGenesisBlockTestNet("0x5ac8c2d3f8cde2320faba8b3af117a6f9bb869536cce8a36aee94569cf23e401");
+static const uint256 hashGenesisBlockTestNet("0x0000001a31e9be6cfd533e02ab8b19580971a69963dffbd56552ca29b93bc8a9");
+
+
 inline int64_t PastDrift(int64_t nTime)   { return nTime - 10 * 60; } // up to 10 minutes from the past
 inline int64_t FutureDrift(int64_t nTime) { return nTime + 10 * 60; } // up to 10 minutes from the future
 
@@ -422,12 +448,19 @@ typedef std::map<uint256, std::pair<CTxIndex, CTransaction> > MapPrevTx;
 class CTransaction
 {
 public:
-    static const int CURRENT_VERSION=1;
+    // versions
+    //    1 : original
+    //    2 : support for tx comments (strTxComment)
+    //        support for productivity type identifiers (nProdTypeID)
+    static const int CURRENT_VERSION = 2;
+    static const int PREVIOUS_VERSION = 1;
     int nVersion;
     unsigned int nTime;
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
     unsigned int nLockTime;
+    std::string strTxComment;
+    unsigned int nProdTypeID;
 
     // Denial-of-service detection:
     mutable int nDoS;
@@ -441,21 +474,32 @@ public:
     IMPLEMENT_SERIALIZE
     (
         READWRITE(this->nVersion);
-        nVersion = this->nVersion;
+	nVersion = this->nVersion;
         READWRITE(nTime);
         READWRITE(vin);
         READWRITE(vout);
         READWRITE(nLockTime);
+        if (nVersion == CTransaction::CURRENT_VERSION) {
+              READWRITE(strTxComment);
+              READWRITE(nProdTypeID);
+        }
     )
 
     void SetNull()
     {
-        nVersion = CTransaction::CURRENT_VERSION;
         nTime = GetAdjustedTime();
+        // 10 minute buffer for clock drift
+        if ((nTime >= (CTXV2_LIVE + 600)) || fTestNet) {
+            nVersion = CTransaction::CURRENT_VERSION;
+        } else {
+            nVersion = CTransaction::PREVIOUS_VERSION;
+        }
         vin.clear();
         vout.clear();
         nLockTime = 0;
         nDoS = 0;  // Denial-of-service prevention
+        strTxComment.clear();
+        nProdTypeID = SWIFT_NONE;
     }
 
     bool IsNull() const
@@ -607,11 +651,20 @@ public:
 
     friend bool operator==(const CTransaction& a, const CTransaction& b)
     {
-        return (a.nVersion  == b.nVersion &&
-                a.nTime     == b.nTime &&
-                a.vin       == b.vin &&
-                a.vout      == b.vout &&
-                a.nLockTime == b.nLockTime);
+        if (a.nVersion >= 2) {
+             return (a.nVersion   == b.nVersion &&
+                     a.nTime      == b.nTime &&
+                     a.vin        == b.vin &&
+                     a.vout       == b.vout &&
+                     a.nLockTime  == b.nLockTime &&
+                     a.strTxComment == b.strTxComment);
+        } else {
+             return (a.nVersion  == b.nVersion &&
+                     a.nTime     == b.nTime &&
+                     a.vin       == b.vin &&
+                     a.vout      == b.vout &&
+                     a.nLockTime == b.nLockTime);
+        }
     }
 
     friend bool operator!=(const CTransaction& a, const CTransaction& b)
@@ -630,7 +683,8 @@ public:
     {
         std::string str;
         str += IsCoinBase()? "Coinbase" : (IsCoinStake()? "Coinstake" : "CTransaction");
-        str += strprintf("(hash=%s, nTime=%d, ver=%d, vin.size=%"PRIszu", vout.size=%"PRIszu", nLockTime=%d)\n",
+        str += strprintf("(hash=%s, nTime=%d, ver=%d, vin.size=%"PRIszu", vout.size=%"PRIszu
+                         ", nLockTime=%d)\n",
             GetHash().ToString().substr(0,10).c_str(),
             nTime,
             nVersion,
@@ -641,6 +695,10 @@ public:
             str += "    " + vin[i].ToString() + "\n";
         for (unsigned int i = 0; i < vout.size(); i++)
             str += "    " + vout[i].ToString() + "\n";
+        if (nVersion >= 2) {
+            str += strprintf("  sTxComment='%s'\n", strTxComment.c_str());
+            str += strprintf("  Productivity Type=%d\n", nProdTypeID);
+        }
         return str;
     }
 
@@ -686,6 +744,9 @@ public:
     bool CheckTransaction() const;
     bool AcceptToMemoryPool(CTxDB& txdb, bool fCheckInputs=true, bool* pfMissingInputs=NULL);
     bool GetCoinAge(CTxDB& txdb, uint64_t& nCoinAge) const;  // ppcoin: get transaction coin age
+
+    int64_t GetSwiftFee() const;
+    int64_t GetOpRetFee() const;
 
 protected:
     const CTxOut& GetOutputFor(const CTxIn& input, const MapPrevTx& inputs) const;
@@ -744,8 +805,16 @@ public:
     //  0  : in memory pool, waiting to be included in a block
     // >=1 : this many blocks deep in the main chain
     int GetDepthInMainChain(CBlockIndex* &pindexRet) const;
-    int GetDepthInMainChain() const { CBlockIndex *pindexRet; return GetDepthInMainChain(pindexRet); }
-    bool IsInMainChain() const { CBlockIndex *pindexRet; return GetDepthInMainChainINTERNAL(pindexRet) > 0; }
+
+    int GetDepthInMainChain() const {
+            CBlockIndex *pindexRet;
+            return GetDepthInMainChain(pindexRet);
+    }
+     bool IsInMainChain() const {
+           CBlockIndex *pindexRet;
+           return GetDepthInMainChainINTERNAL(pindexRet) > 0;
+    }
+
     int GetBlocksToMaturity() const;
     bool AcceptToMemoryPool(CTxDB& txdb, bool fCheckInputs=true);
     bool AcceptToMemoryPool();
@@ -1073,7 +1142,8 @@ public:
     bool ReadFromDisk(const CBlockIndex* pindex, bool fReadTransactions=true);
     bool SetBestChain(CTxDB& txdb, CBlockIndex* pindexNew);
     bool AddToBlockIndex(unsigned int nFile, unsigned int nBlockPos, const uint256& hashProofOfStake);
-    bool CheckBlock(bool fCheckPOW=true, bool fCheckMerkleRoot=true, bool fCheckSig=true) const;
+    bool CheckBlock(bool fCheckPOW=true,
+                    bool fCheckMerkleRoot=true, bool fCheckSig=true) const;
     bool AcceptBlock();
     bool GetCoinAge(uint64_t& nCoinAge) const; // ppcoin: calculate total coin age spent in block
     bool SignBlock(CWallet& keystore, int64_t nFees);
@@ -1571,7 +1641,7 @@ public:
     std::map<COutPoint, CInPoint> mapNextTx;
 
     bool accept(CTxDB& txdb, CTransaction &tx,
-                bool fCheckInputs, bool* pfMissingInputs);
+                bool fCheckInputs, bool* pfMissingInputs = NULL);
     bool addUnchecked(const uint256& hash, CTransaction &tx);
     bool remove(const CTransaction &tx, bool fRecursive = false);
     bool removeConflicts(const CTransaction &tx);
@@ -1592,6 +1662,14 @@ public:
     CTransaction& lookup(uint256 hash)
     {
         return mapTx[hash];
+    }
+
+    bool lookup(uint256 hash, CTransaction& result) const
+    {
+        std::map<uint256, CTransaction>::const_iterator i = mapTx.find(hash);
+        if (i==mapTx.end()) return false;
+        result = i->second;
+        return true;
     }
 };
 

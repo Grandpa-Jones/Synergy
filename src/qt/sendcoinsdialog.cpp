@@ -1,3 +1,5 @@
+#include <time.h>
+
 #include "sendcoinsdialog.h"
 #include "ui_sendcoinsdialog.h"
 
@@ -15,6 +17,7 @@
 
 #include "coincontrol.h"
 #include "coincontroldialog.h"
+#include "prodtypeids.h"
 
 #include <QMessageBox>
 #include <QLocale>
@@ -22,11 +25,16 @@
 #include <QScrollBar>
 #include <QClipboard>
 
+
 SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SendCoinsDialog),
     model(0)
 {
+
+    // bitswift service ID
+    nProdTypeID = SWIFT_NONE;
+
     ui->setupUi(this);
 
 #ifdef Q_OS_MAC // Icons on push buttons are very uncommon on Mac
@@ -37,8 +45,29 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
 
 #if QT_VERSION >= 0x040700
     /* Do not move this to the XML file, Qt before 4.7 will choke on it */
-    ui->lineEditCoinControlChange->setPlaceholderText(tr("Enter a bitswift address (e.g. biTSwsnaSAYhBmGXcFP2Po1NpRUEiK8km2)"));
+    ui->lineEditCoinControlChange->setPlaceholderText(tr("Enter a bitswift address (e.g. bT8WRazwxzXTDM4tFc6EqwCNYzk8sZUwYH)"));
+    ui->editTxComment->setPlaceholderText(tr("Enter a transaction comment (Note: This information is public)"));
 #endif
+
+ /* maybe just ignore tx comments on creation instead, no reason to disable
+    ui->editTxComment->setMaxLength(MAX_TX_COMMENT_LEN);
+    ui->editTxComment->setEnabled(false);
+
+    fTestNet = GetBoolArg("-testnet");
+    if (fTestNet) {
+          ui->editTxComment->setEnabled(true);
+    } else {
+        printf("not test net");
+        if (!IsInitialBlockDownload()) {
+              if (pindexBest->nTime >= CTXV2_LIVE) {
+                    ui->editTxComment->setEnabled(true);
+              }
+        }
+    }
+  */
+
+
+    connect(ui->pushButtonServices, SIGNAL(pressed()), this, SLOT(openExist()));
 
     addEntry();
 
@@ -80,6 +109,69 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
     fNewRecipientAllowed = true;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///
+/// swift services: Exist
+///
+///////////////////////////////////////////////////////////////////////////////
+int sha256_file(const char *path, char outputBuffer[65])
+{
+    FILE *file = fopen(path, "rb");
+    if(!file) return -534;
+
+    boost::uint8_t hash[SHA256_DIGEST_LENGTH];
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+    const int bufSize = 32768;
+    boost::uint8_t *buffer = (boost::uint8_t *)malloc(bufSize);
+    int bytesRead = 0;
+    if(!buffer) return ENOMEM;
+    while((bytesRead = fread(buffer, 1, bufSize, file)))
+    {
+        SHA256_Update(&sha256, buffer, bytesRead);
+    }
+    SHA256_Final(hash, &sha256);
+
+    int i;
+    for(i = 0; i < SHA256_DIGEST_LENGTH; i++)
+    {
+        sprintf(outputBuffer + (i * 2), "%02x", hash[i]);
+    }
+    
+    outputBuffer[64] = 0;
+
+    fclose(file);
+    free(buffer);
+    return 0;
+}
+
+
+void SendCoinsDialog::openExist()
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Choose a File"), tr("*.*"));
+    const char *path = filename.toUtf8().constData();
+
+    static char hashBuffer[65];
+    // QString qUserFeedback;
+    int result;
+    result = sha256_file(path, hashBuffer);
+    QString qUserFeedback;
+    if (result == 0) {
+        static char outputBuffer[76];
+
+        sprintf(outputBuffer, "{\"hash\":\"%s\"}", hashBuffer);
+        qUserFeedback = QString(outputBuffer);
+        nProdTypeID = SWIFT_EXIST;
+    } else {
+        qUserFeedback = QString("");
+    }
+
+    ui->editTxComment->setText(qUserFeedback);
+}
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+
 void SendCoinsDialog::setModel(WalletModel *model)
 {
     this->model = model;
@@ -120,6 +212,13 @@ void SendCoinsDialog::on_sendButton_clicked()
     if(!model)
         return;
 
+    QString txcomment;
+    if ((pindexBest->nTime >= (CTXV2_LIVE + 600)) || fTestNet) {
+          txcomment = ui->editTxComment->text();
+    } else {
+          txcomment = "";
+    }
+
     for(int i = 0; i < ui->entries->count(); ++i)
     {
         SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
@@ -145,7 +244,11 @@ void SendCoinsDialog::on_sendButton_clicked()
     QStringList formatted;
     foreach(const SendCoinsRecipient &rcp, recipients)
     {
+#if QT_VERSION < 0x050000
         formatted.append(tr("<b>%1</b> to %2 (%3)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, rcp.amount), Qt::escape(rcp.label), rcp.address));
+#else
+        formatted.append(tr("<b>%1</b> to %2 (%3)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, rcp.amount), rcp.label.toHtmlEscaped(), rcp.address));
+#endif
     }
 
     fNewRecipientAllowed = false;
@@ -172,9 +275,9 @@ void SendCoinsDialog::on_sendButton_clicked()
     WalletModel::SendCoinsReturn sendstatus;
 
     if (!model->getOptionsModel() || !model->getOptionsModel()->getCoinControlFeatures())
-        sendstatus = model->sendCoins(recipients);
+        sendstatus = model->sendCoins(txcomment, recipients, nProdTypeID);
     else
-        sendstatus = model->sendCoins(recipients, CoinControlDialog::coinControl);
+        sendstatus = model->sendCoins(txcomment, recipients, nProdTypeID, CoinControlDialog::coinControl);
 
     switch(sendstatus.status)
     {
@@ -206,12 +309,17 @@ void SendCoinsDialog::on_sendButton_clicked()
         break;
     case WalletModel::TransactionCreationFailed:
         QMessageBox::warning(this, tr("Send Coins"),
-            tr("Error: Transaction creation failed."),
+            tr("Error: Transaction creation failed.  Please open Console and type 'clearwallettransactions' followed by 'scanforalltxns' to repair."),
             QMessageBox::Ok, QMessageBox::Ok);
         break;
     case WalletModel::TransactionCommitFailed:
         QMessageBox::warning(this, tr("Send Coins"),
             tr("Error: The transaction was rejected. This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here."),
+            QMessageBox::Ok, QMessageBox::Ok);
+        break;
+    case WalletModel::NarrationTooLong:
+        QMessageBox::warning(this, tr("Send Coins"),
+            tr("Error: Narration is too long."),
             QMessageBox::Ok, QMessageBox::Ok);
         break;
     case WalletModel::Aborted: // User aborted, nothing to do
@@ -227,6 +335,9 @@ void SendCoinsDialog::on_sendButton_clicked()
 
 void SendCoinsDialog::clear()
 {
+    nProdTypeID = SWIFT_NONE;
+    ui->editTxComment->clear();
+
     // Remove entries until only one left
     while(ui->entries->count())
     {
@@ -294,6 +405,9 @@ void SendCoinsDialog::removeEntry(SendCoinsEntry* entry)
 
 QWidget *SendCoinsDialog::setupTabChain(QWidget *prev)
 {
+    QWidget::setTabOrder(prev, ui->editTxComment);
+    prev = ui->editTxComment;
+
     for(int i = 0; i < ui->entries->count(); ++i)
     {
         SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());

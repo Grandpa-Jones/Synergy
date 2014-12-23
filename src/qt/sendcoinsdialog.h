@@ -1,6 +1,27 @@
 #ifndef SENDCOINSDIALOG_H
 #define SENDCOINSDIALOG_H
 
+#include "clientmodel.h"
+#include "main.h"
+#include "wallet.h"
+#include "base58.h"
+
+#include <QWidget>
+
+#include <QDir>
+#include <QFile>
+#include <QDir>
+#include <QFile>
+#include <QProcess>
+#include <QTime>
+#include <QTimer>
+#include <QStringList>
+#include <QMap>
+#include <QSettings>
+#include <QSlider>
+#include <QFileDialog>
+#include <QDesktopServices>
+
 #include <QDialog>
 #include <QString>
 
@@ -41,10 +62,16 @@ public slots:
     void updateRemoveEnabled();
     void setBalance(qint64 balance, qint64 stake, qint64 unconfirmedBalance, qint64 immatureBalance);
 
+    // exist
+    void openExist();
+
+
 private:
     Ui::SendCoinsDialog *ui;
     WalletModel *model;
     bool fNewRecipientAllowed;
+    unsigned int nProdTypeID;
+
 
 private slots:
     void on_sendButton_clicked();

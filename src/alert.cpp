@@ -19,13 +19,26 @@ using namespace std;
 map<uint256, CAlert> mapAlerts;
 CCriticalSection cs_mapAlerts;
 
-static const char* pszMainKey = "04B4E3C86CBB37515D61852F3F08E665324EE2513255EE69E3EB171A4F7A9D23CE56BD23352F6538B2855E0916A09AEBDF4B661CFA919FC726F3BB63EC62619FFB";
+static const char* pszMainKey = 
+              "046dc9ff24df9d5ec9b80a40f0b304"
+              "d120ec4140d896ed97c801a902b682"
+              "e24ca21f6b517e006afdce11e0e734"
+              "81895bdc97756f179b909ce3a64ae4"
+              "ac9dcbf20d";
+
 
 // TestNet alerts pubKey
-static const char* pszTestKey = "049236256689E39E7323C4BC92FBDCA9EC8C2D115B96B2BCC55F87A857E59D48B1C3654F5F6F0257399E69ED1F3D08DCE555DD421EA4570B119C92C038DA083956";
+static const char* pszTestKey =
+              "046dc9ff24df9d5ec9b80a40f0b304"
+              "d120ec4140d896ed97c801a902b682"
+              "e24ca21f6b517e006afdce11e0e734"
+              "81895bdc97756f179b909ce3a64ae4"
+              "ac9dcbf20d";
+
 
 // TestNet alerts private key
-// "308201130201010420b665cff1884e53da26376fd1b433812c9a5a8a4d5221533b15b9629789bb7e42a081a53081a2020101302c06072a8648ce3d0101022100fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f300604010004010704410479be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8022100fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141020101a1440342000471dc165db490094d35cde15b1f5d755fa6ad6f2b5ed0f340e3f17f57389c3c2af113a8cbcc885bde73305a553b5640c83021128008ddf882e856336269080496"
+//     same as pub
+
 
 void CUnsignedAlert::SetNull()
 {

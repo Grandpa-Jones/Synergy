@@ -22,18 +22,6 @@ Value getsubsidy(const Array& params, bool fHelp)
             "getsubsidy [nTarget]\n"
             "Returns proof-of-work subsidy value for the specified value of target.");
 
-    unsigned int nBits = 0;
-
-    if (params.size() != 0)
-    {
-        CBigNum bnTarget(uint256(params[0].get_str()));
-        nBits = bnTarget.GetCompact();
-    }
-    else
-    {
-        nBits = GetNextTargetRequired(pindexBest, false);
-    }
-
     return (uint64_t)GetProofOfWorkReward(0);
 }
 
@@ -122,7 +110,7 @@ Value getworkex(const Array& params, bool fHelp)
     if (IsInitialBlockDownload())
         throw JSONRPCError(-10, "bitswift is downloading blocks...");
 
-    if (pindexBest->GetBlockTime() >= LAST_POW_TIME)
+    if ((pindexBest->GetBlockTime() >= LAST_POW_TIME) && !fTestNet)
         throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
 
     typedef map<uint256, pair<CBlock*, CScript> > mapNewBlock_t;
@@ -256,7 +244,7 @@ Value getwork(const Array& params, bool fHelp)
     if (IsInitialBlockDownload())
         throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "bitswift is downloading blocks...");
 
-    if (pindexBest->GetBlockTime() >= LAST_POW_TIME)
+    if ((pindexBest->GetBlockTime() >= LAST_POW_TIME) && !fTestNet)
         throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
 
     typedef map<uint256, pair<CBlock*, CScript> > mapNewBlock_t;
@@ -400,7 +388,7 @@ Value getblocktemplate(const Array& params, bool fHelp)
     if (IsInitialBlockDownload())
         throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "bitswift is downloading blocks...");
 
-    if (pindexBest->GetBlockTime() >= LAST_POW_TIME)
+    if ((pindexBest->GetBlockTime() >= LAST_POW_TIME) && !fTestNet)
         throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
 
     static CReserveKey reservekey(pwalletMain);

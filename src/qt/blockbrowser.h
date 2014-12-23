@@ -1,45 +1,23 @@
 #ifndef BLOCKBROWSER_H
 #define BLOCKBROWSER_H
 
-#include "clientmodel.h"
-#include "main.h"
-#include "wallet.h"
-#include "base58.h"
 #include <QWidget>
-
-#include <QDir>
-#include <QFile>
-#include <QProcess>
-#include <QTime>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QByteArray>
 #include <QTimer>
-#include <QStringList>
-#include <QMap>
-#include <QSettings>
-#include <QSlider>
-
-double getBlockHardness(int);
-double getTxTotalValue(std::string);
-double convertCoins(int64_t);
-double getTxFees(std::string);
-int getBlockTime(int);
-int getBlocknBits(int);
-int getBlockNonce(int);
-int blocksInPastHours(int);
-int getBlockHashrate(int);
-std::string getInputs(std::string);
-std::string getOutputs(std::string);
-std::string getBlockHash(int);
-std::string getBlockMerkle(int);
-bool addnode(std::string);
-const CBlockIndex* getBlockIndex(int);
-int64_t getInputValue(CTransaction, CScript);
-
 
 namespace Ui {
-class BlockBrowser;
+    class BlockBrowser;
 }
 class ClientModel;
+class WalletModel;
 
+QT_BEGIN_NAMESPACE
+class QModelIndex;
+QT_END_NAMESPACE
+
+/** Trade page widget */
 class BlockBrowser : public QWidget
 {
     Q_OBJECT
@@ -47,21 +25,21 @@ class BlockBrowser : public QWidget
 public:
     explicit BlockBrowser(QWidget *parent = 0);
     ~BlockBrowser();
-    
-    void setModel(ClientModel *model);
-    
-public slots:
-    
-    void blockClicked();
-    void txClicked();
-    void updateExplorer(bool);
 
-private slots:
+    void setModel(ClientModel *clientModel);
+    void setModel(WalletModel *walletModel);
+
+public slots:
+
+// signals:
 
 private:
     Ui::BlockBrowser *ui;
-    ClientModel *model;
-    
+    ClientModel *clientModel;
+    WalletModel *walletModel;
+
+private slots:
+
 };
 
 #endif // BLOCKBROWSER_H

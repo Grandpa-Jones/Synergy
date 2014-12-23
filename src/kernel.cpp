@@ -14,13 +14,14 @@ extern unsigned int nTargetSpacing;
 
 typedef std::map<int, unsigned int> MapModifierCheckpoints;
 
-// Hard checkpoints of stake modifiers to ensure they are deterministic
+// Hard checkpoints of stake modifier checksums to ensure they are deterministic
 static std::map<int, unsigned int> mapStakeModifierCheckpoints =
     boost::assign::map_list_of
-        ( 0, 0x0e00670bu )
+        (         0, 0x0e00670bu )
+        (    177200, 0x95cfb58au )
     ;
 
-// Hard checkpoints of stake modifiers to ensure they are deterministic (testNet)
+// Hard checkpoints of stake modifier checksums to ensure they are deterministic (testNet)
 static std::map<int, unsigned int> mapStakeModifierCheckpointsTestNet =
     boost::assign::map_list_of
         ( 0, 0x0e00670bu )

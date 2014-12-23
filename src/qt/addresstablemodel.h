@@ -17,10 +17,16 @@ class AddressTableModel : public QAbstractTableModel
 public:
     explicit AddressTableModel(CWallet *wallet, WalletModel *parent = 0);
     ~AddressTableModel();
+    enum AddressType{
+        AT_Unknown = 0,
+        AT_Normal = 1,
+        AT_Stealth = 2
+    };
 
     enum ColumnIndex {
-        Label = 0,   /**< User specified label */
-        Address = 1  /**< Bitcoin address */
+        Label = 0,    /**< User specified label */
+        Address = 1,  /**< Bitcoin address */
+        Type = 2      /**< Address type */
     };
 
     enum RoleIndex {
@@ -55,7 +61,7 @@ public:
     /* Add an address to the model.
        Returns the added address on success, and an empty string otherwise.
      */
-    QString addRow(const QString &type, const QString &label, const QString &address);
+    QString addRow(const QString &type, const QString &label, const QString &address, int addressType);
 
     /* Look up label for address in address book, if not found return empty string.
      */

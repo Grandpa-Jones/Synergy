@@ -1139,7 +1139,8 @@ void MapPort()
 // The first name is used as information source for addrman.
 // The second name should resolve to a list of seed addresses.
 static const char *strDNSSeed[][2] = {
-    {"seednode", "178.62.145.25"},
+    {"seednode", "178.62.145.25"},      // ?
+    {"seednode", "104.236.9.136"},      // ok
 	
 };
 
@@ -1850,8 +1851,10 @@ void StartNode(void* parg)
             printf("Error: NewThread(ThreadDNSAddressSeed) failed\n");
 
     // Map ports with UPnP
+# ifdef USE_UPNP
     if (fUseUPnP)
         MapPort();
+#endif
 
     // Get addresses from IRC and advertise ours
     if (!NewThread(ThreadIRCSeed, NULL))

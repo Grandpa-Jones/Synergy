@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = bitswift-qt
-VERSION = 1.0.0
+VERSION = 2.0.0.1
 INCLUDEPATH += src src/json src/qt
 DEFINES += QT_GUI BOOST_THREAD_USE_LIB BOOST_SPIRIT_THREADSAFE
 QT += core gui network
@@ -220,6 +220,7 @@ HEADERS += src/qt/bitcoingui.h \
     src/txdb.h \
     src/walletdb.h \
     src/script.h \
+    src/stealth.h \
     src/init.h \
     src/irc.h \
     src/mruset.h \
@@ -359,6 +360,7 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/scrypt-x86_64.S \
     src/scrypt.cpp \
     src/pbkdf2.cpp \
+    src/stealth.cpp \
     src/qt/blockbrowser.cpp
 
 RESOURCES += \
