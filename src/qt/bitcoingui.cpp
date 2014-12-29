@@ -715,7 +715,7 @@ void BitcoinGUI::askFee(qint64 nFeeRequired, bool *payFee)
 {
     QString strMessage =
         tr("This transaction requires a fee based on the services it uses. You may send it "
-           "for a fee of %1 SWIFT, which rewards all users of the BitSwift network as a result "
+           "for a fee of %2 SWIFT, which rewards all users of the BitSwift network as a result "
            "of your usage. Do you want to pay this fee?").arg(
                 BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, nFeeRequired));
     QMessageBox::StandardButton retval = QMessageBox::question(

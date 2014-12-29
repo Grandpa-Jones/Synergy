@@ -5,6 +5,8 @@
 USE_UPNP:=-
 USE_IPV6:=1
 
+STATIC:=1
+
 LINK:=$(CXX)
 ARCH:=$(system lscpu | head -n 1 | awk '{print $2}')
 
