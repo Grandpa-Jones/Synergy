@@ -12,6 +12,7 @@
 #include "scrypt.h"
 #include "hashblock.h"
 #include "prodtypeids.h"
+#include "base58.h"
 
 #include <list>
 
@@ -27,41 +28,44 @@ class CInv;
 class CRequestTracker;
 class CNode;
 
-// to make the PoS stable, PoW with 0 in rewards 72 + 36 hours post ICO
-// Sat Oct 11 03:00:00 2014 EST
-static const int LAST_POW_TIME = 1413010800;
+static const int LAST_POW_BLOCK = 4320;
+// accept no PoW before Tue, 26 May 2015 06:00:00 GMT
+static const unsigned int LAUNCH_TIME = 1432620000;
+// ending X11 after PoW is easier on CPUs when validating full chain
+// 10 days
+static const int LAST_X11_TIME = LAUNCH_TIME + (10 * 24 * 60 * 60);
 
-
-static const unsigned int MAX_BLOCK_SIZE = 1000000;
+static const unsigned int MAX_BLOCK_SIZE = 250000;
 static const unsigned int MAX_BLOCK_SIZE_GEN = MAX_BLOCK_SIZE/2;
 static const unsigned int MAX_BLOCK_SIGOPS = MAX_BLOCK_SIZE/50;
 static const unsigned int MAX_ORPHAN_TRANSACTIONS = MAX_BLOCK_SIZE/100;
 static const unsigned int MAX_INV_SZ = 50000;
-static const int64_t MIN_TX_FEE = 1000;
+static const int64_t MIN_TX_FEE = 62500;
 static const int64_t MIN_RELAY_TX_FEE = MIN_TX_FEE;
-static const int64_t MAX_MONEY = 4000000 * COIN;  //  transaction size limit, is total ico
-static const int64_t COIN_YEAR_REWARD = 1 * CENT; 
-static const int64_t MAX_MINT_PROOF_OF_STAKE = 0.03 * COIN;	// 3% annual interest
+static const int64_t MAX_MONEY = 10000000 * COIN; // 10x Max POW Coins (1000000)
+static const int64_t MAX_MINT_PROOF_OF_STAKE = 10 * CENT; // 10% annual interest
+static const int MAX_TURBO_MULTIPLIER = 288; // 2880% (* MAX_MINT_PROOF_OF_STAKE)
+// inverse of the max turbo fraction 5 --> 20%, 4 --> 25%, etc
+// find 20% (1/5) of blocks over 2 weeks, get max
+static const int MAX_TURBO_FRACTION_INV = 5;
+// coinstake must have this depth before it's turbo
+// static const int MIN_TURBO_DEPTH = 4;   // overkill
+
 static const int MODIFIER_INTERVAL_SWITCH = 2;
 
 inline bool MoneyRange(int64_t nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 // Threshold for nLockTime: below this value it is interpreted as block number, otherwise as UNIX timestamp.
 static const unsigned int LOCKTIME_THRESHOLD = 500000000; // Tue Nov  5 00:53:20 1985 UTC
 
-// version 2 of CTransaction goes live Tue Jan 1 00:00:00 2015 PDT
-// stealth addresses go live too
-static const int CTXV2_LIVE = 1420088400;
-// new: burn fees starting approx Sun Jan 11 00:00:00 2015 PDT
-static const int FEEV2_LIVE = 286250;  // block number 286250
 
 // change the string to avoid conversion to string all the time
-static const std::string sMAX_TX_COMMENT_LEN = "2048";
+static const std::string sMAX_TX_COMMENT_LEN = "512";
 static const unsigned int MAX_TX_COMMENT_LEN = std::atoi(sMAX_TX_COMMENT_LEN.c_str());
 
-// e.g. <$0.05 for swiftExist if 1 EXIST pegged to $0.50
-static const int64_t COMMENT_FEE_PER_CHAR = COIN * 0.001;
+// Comments are used for block chain services -- they cost money
+static const int64_t COMMENT_FEE_PER_CHAR = 10000;
 // OP_RETURN is useful, but encourage swift services
-static const int64_t OP_RET_FEE_PER_CHAR = COMMENT_FEE_PER_CHAR * 1.5;
+static const int64_t OP_RET_FEE_PER_CHAR = 15000;
 
 
 static const int64_t MIN_TXOUT_AMOUNT = MIN_TX_FEE;
@@ -74,10 +78,10 @@ static const int fHaveUPnP = true;
 static const int fHaveUPnP = false;
 #endif
 
-static const uint256 hashGenesisBlock("0x0000001a31e9be6cfd533e02ab8b19580971a69963dffbd56552ca29b93bc8a9");
-// static const uint256 hashGenesisBlockTestNet("0x0000044449d51b7f537583006cf141e2d5a55a28d0149d75bebaaad724a2b405");
-// static const uint256 hashGenesisBlockTestNet("0x5ac8c2d3f8cde2320faba8b3af117a6f9bb869536cce8a36aee94569cf23e401");
-static const uint256 hashGenesisBlockTestNet("0x0000001a31e9be6cfd533e02ab8b19580971a69963dffbd56552ca29b93bc8a9");
+static const uint256 
+     hashGenesisBlock("0x0000d31a9c2fe162db1175626d062ef06c235baf4986464bdd40e51da037375b");
+static const uint256 
+     hashGenesisBlockTestNet("0x0001171dc6387bcdd83d845590ced3bcb6e31d7d08f0a193755d0f5694e5dca2");
 
 
 inline int64_t PastDrift(int64_t nTime)   { return nTime - 10 * 60; } // up to 10 minutes from the past
@@ -139,8 +143,11 @@ bool LoadExternalBlockFile(FILE* fileIn);
 
 bool CheckProofOfWork(uint256 hash, unsigned int nBits);
 unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfStake);
-int64_t GetProofOfWorkReward(int64_t nFees);
-int64_t GetProofOfStakeReward(int64_t nCoinAge, int64_t nFees);
+int64_t GetPoWSubsidy(int64_t nHeight);
+int64_t GetPoWSubsidy2(int64_t nHeight);
+int64_t GetProofOfWorkReward(int nHeight, int64_t nFees);
+int GetTurboStakeMultiplier(CBitcoinAddress address, int64_t txTime, CBlockIndex* pindex);
+int64_t GetProofOfStakeReward(int64_t nCoinAge, CBitcoinAddress address, int64_t nTime, CBlockIndex* pindex);
 unsigned int ComputeMinWork(unsigned int nBase, int64_t nTime);
 unsigned int ComputeMinStake(unsigned int nBase, int64_t nTime, unsigned int nBlockTime);
 int GetNumBlocksOfPeers();
@@ -395,6 +402,20 @@ public:
         return (nValue == 0 && scriptPubKey.empty());
     }
 
+    bool IsOpReturn() const {
+       std::vector<uint8_t> vchR;
+       opcodetype opCode;
+       CScript scriptPK = this->scriptPubKey;
+       CScript::const_iterator pc = scriptPK.begin();
+       if (!vchR.empty()) {
+             vchR.clear();
+       }
+       if (scriptPK.GetOp(pc, opCode, vchR) && (opCode == OP_RETURN)) {
+              return true;
+       }
+       return false;
+    }
+
     uint256 GetHash() const
     {
         return SerializeHash(*this);
@@ -449,8 +470,9 @@ class CTransaction
 {
 public:
     // versions
-    //    1 : original
-    //    2 : support for tx comments (strTxComment)
+    //    1 : launch
+    //    2 : after pow
+    //        support for tx comments (strTxComment)
     //        support for productivity type identifiers (nProdTypeID)
     static const int CURRENT_VERSION = 2;
     static const int PREVIOUS_VERSION = 1;
@@ -474,12 +496,12 @@ public:
     IMPLEMENT_SERIALIZE
     (
         READWRITE(this->nVersion);
-	nVersion = this->nVersion;
+        nVersion = this->nVersion;
         READWRITE(nTime);
         READWRITE(vin);
         READWRITE(vout);
         READWRITE(nLockTime);
-        if (nVersion == CTransaction::CURRENT_VERSION) {
+        if (nVersion >= 2) {
               READWRITE(strTxComment);
               READWRITE(nProdTypeID);
         }
@@ -488,8 +510,7 @@ public:
     void SetNull()
     {
         nTime = GetAdjustedTime();
-        // 10 minute buffer for clock drift
-        if ((nTime >= (CTXV2_LIVE + 600)) || fTestNet) {
+        if (nBestHeight >= LAST_POW_BLOCK) {
             nVersion = CTransaction::CURRENT_VERSION;
         } else {
             nVersion = CTransaction::PREVIOUS_VERSION;
@@ -499,8 +520,9 @@ public:
         nLockTime = 0;
         nDoS = 0;  // Denial-of-service prevention
         strTxComment.clear();
-        nProdTypeID = SWIFT_NONE;
+        nProdTypeID = SNRG_NONE;
     }
+
 
     bool IsNull() const
     {
@@ -514,6 +536,7 @@ public:
 
     bool IsFinal(int nBlockHeight=0, int64_t nBlockTime=0) const
     {
+        AssertLockHeld(cs_main);
         // Time based nLockTime implemented in 0.1.6
         if (nLockTime == 0)
             return true;
@@ -753,9 +776,6 @@ protected:
 };
 
 
-
-
-
 /** A transaction with a merkle branch linking it to the block chain. */
 class CMerkleTx : public CTransaction
 {
@@ -878,9 +898,6 @@ public:
 };
 
 
-
-
-
 /** Nodes collect new transactions into a block, hash them into a hash tree,
  * and scan through nonce values to make the block's hash satisfy proof-of-work
  * requirements.  When they solve the proof-of-work, they broadcast the block
@@ -965,7 +982,16 @@ public:
 
     uint256 GetHash() const
     {
-        return Hash9(BEGIN(nVersion), END(nNonce));
+        if (this->nTime > LAST_X11_TIME)
+        {
+             // synergy PoS period: SHA256d
+             return SerializeHash(*this);
+        }
+        else
+        {
+             // synergy PoW period: X11
+             return Hash9(BEGIN(nVersion), END(nNonce));
+        }
     }
 
     int64_t GetBlockTime() const
@@ -1193,7 +1219,8 @@ public:
     // proof-of-stake specific fields
     COutPoint prevoutStake;
     unsigned int nStakeTime;
-    uint256 hashProofOfStake;
+
+    uint256 hashProof;
 
     // block header
     int nVersion;
@@ -1216,7 +1243,7 @@ public:
         nFlags = 0;
         nStakeModifier = 0;
         nStakeModifierChecksum = 0;
-        hashProofOfStake = 0;
+        hashProof = 0;
         prevoutStake.SetNull();
         nStakeTime = 0;
 
@@ -1241,7 +1268,7 @@ public:
         nFlags = 0;
         nStakeModifier = 0;
         nStakeModifierChecksum = 0;
-        hashProofOfStake = 0;
+        hashProof = 0;
         if (block.IsProofOfStake())
         {
             SetProofOfStake();
@@ -1379,12 +1406,12 @@ public:
 
     std::string ToString() const
     {
-        return strprintf("CBlockIndex(nprev=%p, pnext=%p, nFile=%u, nBlockPos=%-6d nHeight=%d, nMint=%s, nMoneySupply=%s, nFlags=(%s)(%d)(%s), nStakeModifier=%016"PRIx64", nStakeModifierChecksum=%08x, hashProofOfStake=%s, prevoutStake=(%s), nStakeTime=%d merkle=%s, hashBlock=%s)",
+        return strprintf("CBlockIndex(nprev=%p, pnext=%p, nFile=%u, nBlockPos=%-6d nHeight=%d, nMint=%s, nMoneySupply=%s, nFlags=(%s)(%d)(%s), nStakeModifier=%016"PRIx64", nStakeModifierChecksum=%08x, hashProof=%s, prevoutStake=(%s), nStakeTime=%d merkle=%s, hashBlock=%s)",
             pprev, pnext, nFile, nBlockPos, nHeight,
             FormatMoney(nMint).c_str(), FormatMoney(nMoneySupply).c_str(),
             GeneratedStakeModifier() ? "MOD" : "-", GetStakeEntropyBit(), IsProofOfStake()? "PoS" : "PoW",
             nStakeModifier, nStakeModifierChecksum, 
-            hashProofOfStake.ToString().c_str(),
+            hashProof.ToString().c_str(),
             prevoutStake.ToString().c_str(), nStakeTime,
             hashMerkleRoot.ToString().c_str(),
             GetBlockHash().ToString().c_str());
@@ -1438,14 +1465,13 @@ public:
         {
             READWRITE(prevoutStake);
             READWRITE(nStakeTime);
-            READWRITE(hashProofOfStake);
         }
         else if (fRead)
         {
             const_cast<CDiskBlockIndex*>(this)->prevoutStake.SetNull();
             const_cast<CDiskBlockIndex*>(this)->nStakeTime = 0;
-            const_cast<CDiskBlockIndex*>(this)->hashProofOfStake = 0;
         }
+        READWRITE(hashProof);
 
         // block header
         READWRITE(this->nVersion);
@@ -1648,14 +1674,15 @@ public:
     void clear();
     void queryHashes(std::vector<uint256>& vtxid);
 
-    unsigned long size()
+    unsigned long size() const
     {
         LOCK(cs);
         return mapTx.size();
     }
 
-    bool exists(uint256 hash)
+    bool exists(uint256 hash) const
     {
+        LOCK(cs);
         return (mapTx.count(hash) != 0);
     }
 
@@ -1666,8 +1693,9 @@ public:
 
     bool lookup(uint256 hash, CTransaction& result) const
     {
+        LOCK(cs);
         std::map<uint256, CTransaction>::const_iterator i = mapTx.find(hash);
-        if (i==mapTx.end()) return false;
+        if (i == mapTx.end()) return false;
         result = i->second;
         return true;
     }

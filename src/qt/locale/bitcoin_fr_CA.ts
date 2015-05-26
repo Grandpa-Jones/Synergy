@@ -3,22 +3,22 @@
     <name>AboutDialog</name>
     <message>
         <location filename="../forms/aboutdialog.ui" line="+14"/>
-        <source>About bitswift</source>
-        <translation>Au sujet de bitswift</translation>
+        <source>About synergy</source>
+        <translation>Au sujet de synergy</translation>
     </message>
     <message>
         <location line="+39"/>
-        <source>&lt;b&gt;bitswift&lt;/b&gt; version</source>
-        <translation>Version de &lt;b&gt;bitswift&lt;/b&gt;</translation>
+        <source>&lt;b&gt;synergy&lt;/b&gt; version</source>
+        <translation>Version de &lt;b&gt;synergy&lt;/b&gt;</translation>
     </message>
     <message>
         <location line="+41"/>
         <source>Copyright © 2009-2014 The Bitcoin developers
 Copyright © 2012-2014 The NovaCoin developers
-Copyright © 2014 The bitswift developers</source>
+Copyright © 2014 The synergy developers</source>
         <translation>Copyright © 2009-2014 Les développeurs Bitcoin
 Copyright © 2012-2014 Les développeurs NovaCoin
-Copyright © 2014 Les développeurs bitswift</translation>
+Copyright © 2014 Les développeurs synergy</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -65,7 +65,7 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-46"/>
-        <source>These are your bitswift addresses for receiving payments. You may want to give a different one to each sender so you can keep track of who is paying you.</source>
+        <source>These are your synergy addresses for receiving payments. You may want to give a different one to each sender so you can keep track of who is paying you.</source>
         <translation>Ce sont vos adresses pour recevoir vos paiements. Vous pouvez utiliser une adresse différente pour chaque réception afin d&apos;identifier facilement le payeur.</translation>
     </message>
     <message>
@@ -80,8 +80,8 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="+11"/>
-        <source>Sign a message to prove you own a bitswift address</source>
-        <translation>Signer un message afin de valider l&apos;identité de votre adresse bitswift</translation>
+        <source>Sign a message to prove you own a synergy address</source>
+        <translation>Signer un message afin de valider l&apos;identité de votre adresse synergy</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -95,8 +95,8 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-14"/>
-        <source>Verify a message to ensure it was signed with a specified bitswift address</source>
-        <translation>Vérifier un message pour s&apos;assurer qu&apos;il vient d&apos;un adresse bitswift spécifique.</translation>
+        <source>Verify a message to ensure it was signed with a specified synergy address</source>
+        <translation>Vérifier un message pour s&apos;assurer qu&apos;il vient d&apos;un adresse synergy spécifique.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -237,7 +237,7 @@ This product includes software developed by the OpenSSL Project for use in the O
     <message>
         <location line="+1"/>
         <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR COINS&lt;/b&gt;!</source>
-        <translation>ATTENTION : Si vous cryptez votre portefeuille et perdez votre passphrase, vous ne pourrez plus accéder à vos bitswifts</translation>
+        <translation>ATTENTION : Si vous cryptez votre portefeuille et perdez votre passphrase, vous ne pourrez plus accéder à vos synergys</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -263,8 +263,8 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-58"/>
-        <source>bitswift will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your coins from being stolen by malware infecting your computer.</source>
-        <translation>L&apos;application bitswift va désormais se terminer afin de finaliser le processus de cryptage. Merci de noter que le cryptage du portefeuille ne garantit pas de se prémunir du vol via l&apos;utilisation de malware, qui auraient pu infecter votre ordinateur. </translation>
+        <source>synergy will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your coins from being stolen by malware infecting your computer.</source>
+        <translation>L&apos;application synergy va désormais se terminer afin de finaliser le processus de cryptage. Merci de noter que le cryptage du portefeuille ne garantit pas de se prémunir du vol via l&apos;utilisation de malware, qui auraient pu infecter votre ordinateur. </translation>
     </message>
     <message>
         <location line="+13"/>
@@ -352,7 +352,7 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-13"/>
-        <source>&amp;Receive SWIFT</source>
+        <source>&amp;Receive SNRG</source>
         <translation>&amp;Recevoir des monnaies</translation>
     </message>
     <message>
@@ -362,7 +362,7 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-7"/>
-        <source>&amp;Send SWIFT</source>
+        <source>&amp;Send SNRG</source>
         <translation>&amp;Envoyer des monnaies</translation>
     </message>
     <message>
@@ -377,8 +377,8 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="+6"/>
-        <source>Show information about bitswift</source>
-        <translation>Afficher des informations au sujet du bitswift</translation>
+        <source>Show information about synergy</source>
+        <translation>Afficher des informations au sujet du synergy</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -427,13 +427,13 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-64"/>
-        <source>Send SWIFT to a bitswift address</source>
-        <translation>Envoyer des monnaies vers une adresse bitswift</translation>
+        <source>Send SNRG to a synergy address</source>
+        <translation>Envoyer des monnaies vers une adresse synergy</translation>
     </message>
     <message>
         <location line="+47"/>
-        <source>Modify configuration options for bitswift</source>
-        <translation>Modification des options de configuration de bitswift</translation>
+        <source>Modify configuration options for synergy</source>
+        <translation>Modification des options de configuration de synergy</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -472,8 +472,8 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-202"/>
-        <source>bitswift</source>
-        <translation>bitswift</translation>
+        <source>synergy</source>
+        <translation>synergy</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -482,8 +482,8 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="+180"/>
-        <source>&amp;About bitswift</source>
-        <translation>A propos de bitswift</translation>
+        <source>&amp;About synergy</source>
+        <translation>A propos de synergy</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -539,13 +539,13 @@ This product includes software developed by the OpenSSL Project for use in the O
     <message>
         <location line="+0"/>
         <location line="+60"/>
-        <source>bitswift client</source>
-        <translation>Client bitswift</translation>
+        <source>synergy client</source>
+        <translation>Client synergy</translation>
     </message>
     <message numerus="yes">
         <location line="+75"/>
-        <source>%n active connection(s) to bitswift network</source>
-        <translation><numerusform>%n connexion active au réseau bitswift</numerusform><numerusform>%n connexions actives au réseau bitswift</numerusform></translation>
+        <source>%n active connection(s) to synergy network</source>
+        <translation><numerusform>%n connexion active au réseau synergy</numerusform><numerusform>%n connexions actives au réseau synergy</numerusform></translation>
     </message>
     <message>
         <location line="+40"/>
@@ -584,13 +584,13 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-312"/>
-        <source>About bitswift card</source>
-        <translation>Au sujet de la carte bitswift</translation>
+        <source>About synergy card</source>
+        <translation>Au sujet de la carte synergy</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Show information about bitswift card</source>
-        <translation>Informations sur la carte bitswift</translation>
+        <source>Show information about synergy card</source>
+        <translation>Informations sur la carte synergy</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -629,7 +629,7 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="+59"/>
-        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SWIFT, which rewards all users of the BitSwift network as a result of your usage. Do you want to pay this fee?</source>
+        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SNRG, which rewards all users of the Synergy network as a result of your usage. Do you want to pay this fee?</source>
         <translation>Cette transaction dépasse la limite autorisée. Vous pouvez tout de même effectuer cette opération, moyennant %1 de frais, qui seront envoyés aux noeuds qui valideront cette transaction, et dont l&apos;objectif vise à supporter le réseau. Etes-vous d&apos;accord pour payer ces frais ?</translation>
     </message>
     <message>
@@ -669,8 +669,8 @@ Adresse : %4
     <message>
         <location line="-15"/>
         <location line="+15"/>
-        <source>URI can not be parsed! This can be caused by an invalid bitswift address or malformed URI parameters.</source>
-        <translation>L&apos;adresse du portefeuille bitswift n&apos;as pas pu être correctement identifiée, car invalide ou malformée.</translation>
+        <source>URI can not be parsed! This can be caused by an invalid synergy address or malformed URI parameters.</source>
+        <translation>L&apos;adresse du portefeuille synergy n&apos;as pas pu être correctement identifiée, car invalide ou malformée.</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -729,8 +729,8 @@ Adresse : %4
     </message>
     <message>
         <location filename="../bitcoin.cpp" line="+109"/>
-        <source>A fatal error occurred. bitswift can no longer continue safely and will quit.</source>
-        <translation>Une erreur fatale a été rencontrée. L&apos;application bitswift ne peut plus être s&apos;exécuter de façon correcte et doit se terminer.</translation>
+        <source>A fatal error occurred. synergy can no longer continue safely and will quit.</source>
+        <translation>Une erreur fatale a été rencontrée. L&apos;application synergy ne peut plus être s&apos;exécuter de façon correcte et doit se terminer.</translation>
     </message>
 </context>
 <context>
@@ -1063,8 +1063,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="-5"/>
-        <source>The entered address &quot;%1&quot; is not a valid bitswift address.</source>
-        <translation>L&apos;adresse &quot;%1&quot; renseignée n&apos;est pas une adresse bitswift valide.</translation>
+        <source>The entered address &quot;%1&quot; is not a valid synergy address.</source>
+        <translation>L&apos;adresse &quot;%1&quot; renseignée n&apos;est pas une adresse synergy valide.</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1082,8 +1082,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     <message>
         <location filename="../guiutil.cpp" line="+420"/>
         <location line="+12"/>
-        <source>bitswift-Qt</source>
-        <translation>bitswift-Qt</translation>
+        <source>synergy-Qt</source>
+        <translation>synergy-Qt</translation>
     </message>
     <message>
         <location line="-12"/>
@@ -1155,13 +1155,13 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+31"/>
-        <source>Automatically start bitswift after logging in to the system.</source>
-        <translation>Démarrage automatique du client bitswift lors de la connexion au système</translation>
+        <source>Automatically start synergy after logging in to the system.</source>
+        <translation>Démarrage automatique du client synergy lors de la connexion au système</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>&amp;Start bitswift on system login</source>
-        <translation>&amp;Démarrage du client bitswift à la connexion au système</translation>
+        <source>&amp;Start synergy on system login</source>
+        <translation>&amp;Démarrage du client synergy à la connexion au système</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -1180,8 +1180,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+6"/>
-        <source>Automatically open the bitswift client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Ouverture automatique du port client de bitswift sur le routeur. Ceci ne fonctionne que dans le cas où le support UPnP sur votre routeur existe et est actif.</translation>
+        <source>Automatically open the synergy client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Ouverture automatique du port client de synergy sur le routeur. Ceci ne fonctionne que dans le cas où le support UPnP sur votre routeur existe et est actif.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1190,8 +1190,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+7"/>
-        <source>Connect to the bitswift network through a SOCKS proxy (e.g. when connecting through Tor).</source>
-        <translation>Connexion au réseau bitswift à travers un proxy SOCKS (e.g. Connexion via le réseau Tor).</translation>
+        <source>Connect to the synergy network through a SOCKS proxy (e.g. when connecting through Tor).</source>
+        <translation>Connexion au réseau synergy à travers un proxy SOCKS (e.g. Connexion via le réseau Tor).</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1265,8 +1265,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+13"/>
-        <source>The user interface language can be set here. This setting will take effect after restarting bitswift.</source>
-        <translation>La langue d&apos;interface de de l&apos;utilisateur peut être définie ici. Ces modification seront effectives après redémarrage de l&apos;application bitswift</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting synergy.</source>
+        <translation>La langue d&apos;interface de de l&apos;utilisateur peut être définie ici. Ces modification seront effectives après redémarrage de l&apos;application synergy</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -1280,8 +1280,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+9"/>
-        <source>Whether to show bitswift addresses in the transaction list or not.</source>
-        <translation>Afficher les adresses bitswift au sein de la liste de transactions</translation>
+        <source>Whether to show synergy addresses in the transaction list or not.</source>
+        <translation>Afficher les adresses synergy au sein de la liste de transactions</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1327,8 +1327,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     <message>
         <location line="-9"/>
         <location line="+9"/>
-        <source>This setting will take effect after restarting bitswift.</source>
-        <translation>Les paramètres prendront effet après redémarrage du client bitswift</translation>
+        <source>This setting will take effect after restarting synergy.</source>
+        <translation>Les paramètres prendront effet après redémarrage du client synergy</translation>
     </message>
     <message>
         <location line="+29"/>
@@ -1346,8 +1346,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     <message>
         <location line="+33"/>
         <location line="+231"/>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the bitswift network after a connection is established, but this process has not completed yet.</source>
-        <translation>Les informations affichées peuvent être obsolètes. Votre portefeuille se synchronise automatiquement avec le réseau bitswift mais ce processus n&apos;est pas encore terminé.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the synergy network after a connection is established, but this process has not completed yet.</source>
+        <translation>Les informations affichées peuvent être obsolètes. Votre portefeuille se synchronise automatiquement avec le réseau synergy mais ce processus n&apos;est pas encore terminé.</translation>
     </message>
     <message>
         <location line="-160"/>
@@ -1562,8 +1562,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+7"/>
-        <source>Show the bitswift-Qt help message to get a list with possible bitswift command-line options.</source>
-        <translation>Afficher le message d&apos;aide bitswift-Qt afin d&apos;obtenir la liste des options de de L&apos;outil en ligne de commande bitswift</translation>
+        <source>Show the synergy-Qt help message to get a list with possible synergy command-line options.</source>
+        <translation>Afficher le message d&apos;aide synergy-Qt afin d&apos;obtenir la liste des options de de L&apos;outil en ligne de commande synergy</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1582,13 +1582,13 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="-104"/>
-        <source>bitswift - Debug window</source>
-        <translation>bitswift - Fenêtre de déboggage</translation>
+        <source>synergy - Debug window</source>
+        <translation>synergy - Fenêtre de déboggage</translation>
     </message>
     <message>
         <location line="+25"/>
-        <source>bitswift Core</source>
-        <translation>bitswift Core</translation>
+        <source>synergy Core</source>
+        <translation>synergy Core</translation>
     </message>
     <message>
         <location line="+279"/>
@@ -1597,8 +1597,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+7"/>
-        <source>Open the bitswift debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Ouvrir le fichier journal de debug bitswift au sein du répertoire courant. Cette opération peut prendre quelques secondes dans le cas de fichiers journaux volumineux.</translation>
+        <source>Open the synergy debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Ouvrir le fichier journal de debug synergy au sein du répertoire courant. Cette opération peut prendre quelques secondes dans le cas de fichiers journaux volumineux.</translation>
     </message>
     <message>
         <location line="+102"/>
@@ -1607,8 +1607,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location filename="../rpcconsole.cpp" line="-33"/>
-        <source>Welcome to the bitswift RPC console.</source>
-        <translation>Bienvenue sur la console bitswift RPC.</translation>
+        <source>Welcome to the synergy RPC console.</source>
+        <translation>Bienvenue sur la console synergy RPC.</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1766,8 +1766,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="-173"/>
-        <source>Enter a bitswift address (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Entrer une adresse bitswift (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>Enter a synergy address (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Entrer une adresse synergy (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -1866,8 +1866,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+251"/>
-        <source>WARNING: Invalid bitswift address</source>
-        <translation>AVERTISSEMENT: Adresse bitswift Invalide</translation>
+        <source>WARNING: Invalid synergy address</source>
+        <translation>AVERTISSEMENT: Adresse synergy Invalide</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -1877,7 +1877,7 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     <message>
         <location line="+4"/>
         <source>WARNING: unknown change address</source>
-        <translation>AVERTISSEMET: Adresse bitswift Invalide</translation>
+        <translation>AVERTISSEMET: Adresse synergy Invalide</translation>
     </message>
 </context>
 <context>
@@ -1910,8 +1910,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to send the payment to  (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Adresse destinataire du paiement ( ex : bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>The address to send the payment to  (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Adresse destinataire du paiement ( ex : synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1940,8 +1940,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="+1"/>
-        <source>Enter a bitswift address (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Entrer une adresse bitswift (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>Enter a synergy address (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Entrer une adresse synergy (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
 </context>
 <context>
@@ -1964,8 +1964,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to sign the message with (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Entrer une adresse bitswift (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>The address to sign the message with (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Entrer une adresse synergy (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -2001,8 +2001,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+21"/>
-        <source>Sign the message to prove you own this bitswift address</source>
-        <translation>Signer le message afin de prouver l&apos;identité de votre adresse bitswift</translation>
+        <source>Sign the message to prove you own this synergy address</source>
+        <translation>Signer le message afin de prouver l&apos;identité de votre adresse synergy</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -2028,13 +2028,13 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+21"/>
-        <source>The address the message was signed with (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>L&apos;adresse avec laquelle le message à été signé (ex: bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>The address the message was signed with (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>L&apos;adresse avec laquelle le message à été signé (ex: synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="+40"/>
-        <source>Verify the message to ensure it was signed with the specified bitswift address</source>
-        <translation>Vérifier un message pour s&apos;assurer qu&apos;il vient d&apos;un adresse bitswift spécifique.</translation>
+        <source>Verify the message to ensure it was signed with the specified synergy address</source>
+        <translation>Vérifier un message pour s&apos;assurer qu&apos;il vient d&apos;un adresse synergy spécifique.</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -2044,8 +2044,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     <message>
         <location filename="../signverifymessagedialog.cpp" line="+27"/>
         <location line="+3"/>
-        <source>Enter a bitswift address (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Entrer une adresse bitswift (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>Enter a synergy address (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Entrer une adresse synergy (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="-2"/>
@@ -2054,8 +2054,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+3"/>
-        <source>Enter bitswift signature</source>
-        <translation>Entrer une signature bitswift</translation>
+        <source>Enter synergy signature</source>
+        <translation>Entrer une signature synergy</translation>
     </message>
     <message>
         <location line="+82"/>
@@ -2625,8 +2625,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     <name>bitcoin-core</name>
     <message>
         <location filename="../bitcoinstrings.cpp" line="+33"/>
-        <source>bitswift version</source>
-        <translation>Version bitswift</translation>
+        <source>synergy version</source>
+        <translation>Version synergy</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2635,8 +2635,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+1"/>
-        <source>Send command to -server or bitswiftd</source>
-        <translation>Envoyer commande à -server ou bitswiftd</translation>
+        <source>Send command to -server or synergyd</source>
+        <translation>Envoyer commande à -server ou synergyd</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2655,13 +2655,13 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+2"/>
-        <source>Specify configuration file (default: bitswift.conf)</source>
-        <translation>Spécifier le fichier de configuration (defaut: bitswift.conf)</translation>
+        <source>Specify configuration file (default: synergy.conf)</source>
+        <translation>Spécifier le fichier de configuration (defaut: synergy.conf)</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Specify pid file (default: bitswiftd.pid)</source>
-        <translation>Spécifier le fichier pid (defaut: bitswiftd.pid)
+        <source>Specify pid file (default: synergyd.pid)</source>
+        <translation>Spécifier le fichier pid (defaut: synergyd.pid)
 </translation>
     </message>
     <message>
@@ -2811,8 +2811,8 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
     </message>
     <message>
         <location line="+61"/>
-        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong bitswift will not work properly.</source>
-        <translation>Avertissement: Veuillez vérifier la date et l&apos;heure de votre ordinateur. bitswift ne pourra pas fonctionner correctement si l&apos;horloge est réglée de façon incorrecte</translation>
+        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong synergy will not work properly.</source>
+        <translation>Avertissement: Veuillez vérifier la date et l&apos;heure de votre ordinateur. synergy ne pourra pas fonctionner correctement si l&apos;horloge est réglée de façon incorrecte</translation>
     </message>
     <message>
         <location line="-31"/>
@@ -3001,24 +3001,24 @@ Les montants inférieurs à  0.546 fois les frais minimum de relais apparaissent
         <source>%s, you must set a rpcpassword in the configuration file:
  %s
 It is recommended you use the following random password:
-rpcuser=bitswiftrpc
+rpcuser=synergyrpc
 rpcpassword=%s
 (you do not need to remember this password)
 The username and password MUST NOT be the same.
 If the file does not exist, create it with owner-readable-only file permissions.
 It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s &quot;bitswift Alert&quot; admin@foo.com
+for example: alertnotify=echo %%s | mail -s &quot;synergy Alert&quot; admin@foo.com
 </source>
         <translation>%s, vous devez définir un mot de passe rpc &apos;rpcpassword&apos; au sein du fichier de configuration:
  %s
 Il est recommandé d&apos;utiliser le mot de passe aléatoire suivant:
-rpcuser=bitswiftrpc
+rpcuser=synergyrpc
 rpcpassword=%s
 (il n&apos;est pas nécessaire de retenir ce mot de passe)
 Le nom d&apos;utilisateur et le mot de passe doivent IMPERATIVEMENT être différents.
 Si le fichier n&apos;existe pas, il est nécessaire de le créer, avec les droit de lecture au propriétaire seulement.
 Il est également recommandé d&apos;utiliser l&apos;option alertnotify afin d&apos;être notifié des problèmes;
-par exemple: alertnotify=echo %%s | mail -s &quot;Alerte bitswift&quot; admin@foo.com
+par exemple: alertnotify=echo %%s | mail -s &quot;Alerte synergy&quot; admin@foo.com
 </translation>
     </message>
     <message>
@@ -3143,13 +3143,13 @@ par exemple: alertnotify=echo %%s | mail -s &quot;Alerte bitswift&quot; admin@fo
     </message>
     <message>
         <location line="+1"/>
-        <source>Cannot obtain a lock on data directory %s.  bitswift is probably already running.</source>
-        <translation>Echec lors de la tentative de verrouillage des données du répertoire %s. L&apos;application bitswift est probablement déjà en cours d&apos;exécution</translation>
+        <source>Cannot obtain a lock on data directory %s.  synergy is probably already running.</source>
+        <translation>Echec lors de la tentative de verrouillage des données du répertoire %s. L&apos;application synergy est probablement déjà en cours d&apos;exécution</translation>
     </message>
     <message>
         <location line="-98"/>
-        <source>bitswift</source>
-        <translation>bitswift</translation>
+        <source>synergy</source>
+        <translation>synergy</translation>
     </message>
     <message>
         <location line="+140"/>
@@ -3183,13 +3183,13 @@ par exemple: alertnotify=echo %%s | mail -s &quot;Alerte bitswift&quot; admin@fo
     </message>
     <message>
         <location line="+4"/>
-        <source>Error loading wallet.dat: Wallet requires newer version of bitswift</source>
-        <translation>Erreur de chargement du fichier wallet.dat: le portefeuille nécessite une version plus récente de l&apos;application bitswift</translation>
+        <source>Error loading wallet.dat: Wallet requires newer version of synergy</source>
+        <translation>Erreur de chargement du fichier wallet.dat: le portefeuille nécessite une version plus récente de l&apos;application synergy</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Wallet needed to be rewritten: restart bitswift to complete</source>
-        <translation>le portefeuille nécessite d&apos;être réédité : Merci de relancer l&apos;application bitswift</translation>
+        <source>Wallet needed to be rewritten: restart synergy to complete</source>
+        <translation>le portefeuille nécessite d&apos;être réédité : Merci de relancer l&apos;application synergy</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -3258,8 +3258,8 @@ par exemple: alertnotify=echo %%s | mail -s &quot;Alerte bitswift&quot; admin@fo
     </message>
     <message>
         <location line="+122"/>
-        <source>Unable to bind to %s on this computer. bitswift is probably already running.</source>
-        <translation>Connexion au port %s impossible. L&apos;application bitswift est probablement déjà en cours d&apos;exécution</translation>
+        <source>Unable to bind to %s on this computer. synergy is probably already running.</source>
+        <translation>Connexion au port %s impossible. L&apos;application synergy est probablement déjà en cours d&apos;exécution</translation>
     </message>
     <message>
         <location line="-97"/>

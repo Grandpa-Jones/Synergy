@@ -3,19 +3,19 @@
     <name>AboutDialog</name>
     <message>
         <location filename="../forms/aboutdialog.ui" line="+14"/>
-        <source>About bitswift</source>
-        <translation>Tietoa bitswiftista</translation>
+        <source>About synergy</source>
+        <translation>Tietoa synergyista</translation>
     </message>
     <message>
         <location line="+39"/>
-        <source>&lt;b&gt;bitswift&lt;/b&gt; version</source>
-        <translation>&lt;b&gt;bitswift&lt;/b&gt; versio</translation>
+        <source>&lt;b&gt;synergy&lt;/b&gt; version</source>
+        <translation>&lt;b&gt;synergy&lt;/b&gt; versio</translation>
     </message>
     <message>
         <location line="+41"/>
         <source>Copyright © 2009-2014 The Bitcoin developers
 Copyright © 2012-2014 The NovaCoin developers
-Copyright © 2014 The bitswift developers</source>
+Copyright © 2014 The synergy developers</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -64,8 +64,8 @@ Tämä tuote sisältää OpenSSL-projektin kehittämää ohjelmistoa OpenSSL-ty�
     </message>
     <message>
         <location line="-46"/>
-        <source>These are your bitswift addresses for receiving payments. You may want to give a different one to each sender so you can keep track of who is paying you.</source>
-        <translation>Nämä ovat bitswift-osoitteesi rahansiirtojen vastaanottoa varten. Jos haluat, voit antaa jokaiselle lähettäjälle oman osoitteen jotta voit pitää kirjaa sinulle rahaa siirtäneistä henkilöistä.</translation>
+        <source>These are your synergy addresses for receiving payments. You may want to give a different one to each sender so you can keep track of who is paying you.</source>
+        <translation>Nämä ovat synergy-osoitteesi rahansiirtojen vastaanottoa varten. Jos haluat, voit antaa jokaiselle lähettäjälle oman osoitteen jotta voit pitää kirjaa sinulle rahaa siirtäneistä henkilöistä.</translation>
     </message>
     <message>
         <location line="+60"/>
@@ -79,8 +79,8 @@ Tämä tuote sisältää OpenSSL-projektin kehittämää ohjelmistoa OpenSSL-ty�
     </message>
     <message>
         <location line="+11"/>
-        <source>Sign a message to prove you own a bitswift address</source>
-        <translation>Allekirjoita viesti osoittaaksesi bitswift-osoitteesi omistajuus</translation>
+        <source>Sign a message to prove you own a synergy address</source>
+        <translation>Allekirjoita viesti osoittaaksesi synergy-osoitteesi omistajuus</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -94,8 +94,8 @@ Tämä tuote sisältää OpenSSL-projektin kehittämää ohjelmistoa OpenSSL-ty�
     </message>
     <message>
         <location line="-14"/>
-        <source>Verify a message to ensure it was signed with a specified bitswift address</source>
-        <translation>Vahvista viesti varmistaaksesi että kyseinen bitswift-osoitteesi on allekirjoittanut sen</translation>
+        <source>Verify a message to ensure it was signed with a specified synergy address</source>
+        <translation>Vahvista viesti varmistaaksesi että kyseinen synergy-osoitteesi on allekirjoittanut sen</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -262,8 +262,8 @@ Tämä tuote sisältää OpenSSL-projektin kehittämää ohjelmistoa OpenSSL-ty�
     </message>
     <message>
         <location line="-58"/>
-        <source>bitswift will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your coins from being stolen by malware infecting your computer.</source>
-        <translation>bitswift-ohjelma sulkee itsensä päättääkseen salauksen luonnin. Muista, että lompakon salaaminen ei täysin turvaa kolikoitasi haittaohjelmien aiheuttamien varkauksien uhalta.</translation>
+        <source>synergy will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your coins from being stolen by malware infecting your computer.</source>
+        <translation>synergy-ohjelma sulkee itsensä päättääkseen salauksen luonnin. Muista, että lompakon salaaminen ei täysin turvaa kolikoitasi haittaohjelmien aiheuttamien varkauksien uhalta.</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -351,7 +351,7 @@ Tämä tuote sisältää OpenSSL-projektin kehittämää ohjelmistoa OpenSSL-ty�
     </message>
     <message>
         <location line="-13"/>
-        <source>&amp;Receive SWIFT</source>
+        <source>&amp;Receive SNRG</source>
         <translation>&amp;Vastaanota kolikoita</translation>
     </message>
     <message>
@@ -361,7 +361,7 @@ Tämä tuote sisältää OpenSSL-projektin kehittämää ohjelmistoa OpenSSL-ty�
     </message>
     <message>
         <location line="-7"/>
-        <source>&amp;Send SWIFT</source>
+        <source>&amp;Send SNRG</source>
         <translation>&amp;Lähetä kolikoita</translation>
     </message>
     <message>
@@ -376,8 +376,8 @@ Tämä tuote sisältää OpenSSL-projektin kehittämää ohjelmistoa OpenSSL-ty�
     </message>
     <message>
         <location line="+6"/>
-        <source>Show information about bitswift</source>
-        <translation>Näytä tietoja bitswiftista</translation>
+        <source>Show information about synergy</source>
+        <translation>Näytä tietoja synergyista</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -426,13 +426,13 @@ Tämä tuote sisältää OpenSSL-projektin kehittämää ohjelmistoa OpenSSL-ty�
     </message>
     <message>
         <location line="-64"/>
-        <source>Send SWIFT to a bitswift address</source>
-        <translation>Lähetä kolikkoja bitswift osoitteeseen</translation>
+        <source>Send SNRG to a synergy address</source>
+        <translation>Lähetä kolikkoja synergy osoitteeseen</translation>
     </message>
     <message>
         <location line="+47"/>
-        <source>Modify configuration options for bitswift</source>
-        <translation>Mukauta bitswiftin konfigurointiasetuksia</translation>
+        <source>Modify configuration options for synergy</source>
+        <translation>Mukauta synergyin konfigurointiasetuksia</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -471,8 +471,8 @@ Tämä tuote sisältää OpenSSL-projektin kehittämää ohjelmistoa OpenSSL-ty�
     </message>
     <message>
         <location line="-202"/>
-        <source>bitswift</source>
-        <translation>bitswift</translation>
+        <source>synergy</source>
+        <translation>synergy</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -481,8 +481,8 @@ Tämä tuote sisältää OpenSSL-projektin kehittämää ohjelmistoa OpenSSL-ty�
     </message>
     <message>
         <location line="+180"/>
-        <source>&amp;About bitswift</source>
-        <translation>&amp;Tietoa bitswiftista</translation>
+        <source>&amp;About synergy</source>
+        <translation>&amp;Tietoa synergyista</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -538,13 +538,13 @@ Tämä tuote sisältää OpenSSL-projektin kehittämää ohjelmistoa OpenSSL-ty�
     <message>
         <location line="+0"/>
         <location line="+60"/>
-        <source>bitswift client</source>
-        <translation>bitswift-asiakas</translation>
+        <source>synergy client</source>
+        <translation>synergy-asiakas</translation>
     </message>
     <message numerus="yes">
         <location line="+75"/>
-        <source>%n active connection(s) to bitswift network</source>
-        <translation><numerusform>%n aktiivinen yhteys bitswift-verkkoon</numerusform><numerusform>%n aktiivista yhteyttä bitswift-verkkoon</numerusform></translation>
+        <source>%n active connection(s) to synergy network</source>
+        <translation><numerusform>%n aktiivinen yhteys synergy-verkkoon</numerusform><numerusform>%n aktiivista yhteyttä synergy-verkkoon</numerusform></translation>
     </message>
     <message>
         <location line="+40"/>
@@ -583,12 +583,12 @@ Tämä tuote sisältää OpenSSL-projektin kehittämää ohjelmistoa OpenSSL-ty�
     </message>
     <message>
         <location line="-312"/>
-        <source>About bitswift card</source>
+        <source>About synergy card</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location line="+1"/>
-        <source>Show information about bitswift card</source>
+        <source>Show information about synergy card</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -628,7 +628,7 @@ Tämä tuote sisältää OpenSSL-projektin kehittämää ohjelmistoa OpenSSL-ty�
     </message>
     <message>
         <location line="+59"/>
-        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SWIFT, which rewards all users of the BitSwift network as a result of your usage. Do you want to pay this fee?</source>
+        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SNRG, which rewards all users of the Synergy network as a result of your usage. Do you want to pay this fee?</source>
         <translation>Tämä rahansiirto ylittää siirtorajan. Voit silti lähettää sen %1 rahansiirtopalkkiota vastaan, joka siirretään rahansiirtoasi käsitteleville solmuille jotta se auttaisi ja tukisi verkkoa. Haluatko maksaa rahansiirtopalkkion?</translation>
     </message>
     <message>
@@ -667,8 +667,8 @@ Osoite: %4</translation>
     <message>
         <location line="-15"/>
         <location line="+15"/>
-        <source>URI can not be parsed! This can be caused by an invalid bitswift address or malformed URI parameters.</source>
-        <translation>URI-merkkijonoa ei voida jäsentää! Tämä voi johtua väärästä bitswift-osoitteesta tai väärässä muodossa olevista URI-parametreistä.</translation>
+        <source>URI can not be parsed! This can be caused by an invalid synergy address or malformed URI parameters.</source>
+        <translation>URI-merkkijonoa ei voida jäsentää! Tämä voi johtua väärästä synergy-osoitteesta tai väärässä muodossa olevista URI-parametreistä.</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -727,8 +727,8 @@ Osoite: %4</translation>
     </message>
     <message>
         <location filename="../bitcoin.cpp" line="+109"/>
-        <source>A fatal error occurred. bitswift can no longer continue safely and will quit.</source>
-        <translation>Vakava virhe kohdattu. bitswift-ohjelma ei voi enää jatkaa turvallisesti ja sulkee itsensä.</translation>
+        <source>A fatal error occurred. synergy can no longer continue safely and will quit.</source>
+        <translation>Vakava virhe kohdattu. synergy-ohjelma ei voi enää jatkaa turvallisesti ja sulkee itsensä.</translation>
     </message>
 </context>
 <context>
@@ -1061,8 +1061,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="-5"/>
-        <source>The entered address &quot;%1&quot; is not a valid bitswift address.</source>
-        <translation>Syöttämäsi osoite &quot;%1&quot; ei ole hyväksytty bitswift-osoite.</translation>
+        <source>The entered address &quot;%1&quot; is not a valid synergy address.</source>
+        <translation>Syöttämäsi osoite &quot;%1&quot; ei ole hyväksytty synergy-osoite.</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1080,8 +1080,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     <message>
         <location filename="../guiutil.cpp" line="+420"/>
         <location line="+12"/>
-        <source>bitswift-Qt</source>
-        <translation>bitswift-Qt</translation>
+        <source>synergy-Qt</source>
+        <translation>synergy-Qt</translation>
     </message>
     <message>
         <location line="-12"/>
@@ -1153,13 +1153,13 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+31"/>
-        <source>Automatically start bitswift after logging in to the system.</source>
-        <translation>Käynnistä bitswift-asiakasohjelma automaattisesti kun olet kirjautunut järjestelmään.</translation>
+        <source>Automatically start synergy after logging in to the system.</source>
+        <translation>Käynnistä synergy-asiakasohjelma automaattisesti kun olet kirjautunut järjestelmään.</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>&amp;Start bitswift on system login</source>
-        <translation>%Käynnistä bitswift-asiakasohjelma kirjautuessasi</translation>
+        <source>&amp;Start synergy on system login</source>
+        <translation>%Käynnistä synergy-asiakasohjelma kirjautuessasi</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -1178,8 +1178,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+6"/>
-        <source>Automatically open the bitswift client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Avaa bitswift-asiakkaalle automaattisesti portti reitittimestä. Tämä toimii vain, kun reitittimesi tukee UPnP:tä ja se on aktivoituna.</translation>
+        <source>Automatically open the synergy client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Avaa synergy-asiakkaalle automaattisesti portti reitittimestä. Tämä toimii vain, kun reitittimesi tukee UPnP:tä ja se on aktivoituna.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1188,8 +1188,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+7"/>
-        <source>Connect to the bitswift network through a SOCKS proxy (e.g. when connecting through Tor).</source>
-        <translation>Yhdistä bitswift-verkkoon SOCKS-välityspalvelimen lävitse. (esim. yhdistettäessä Tor:n läpi).</translation>
+        <source>Connect to the synergy network through a SOCKS proxy (e.g. when connecting through Tor).</source>
+        <translation>Yhdistä synergy-verkkoon SOCKS-välityspalvelimen lävitse. (esim. yhdistettäessä Tor:n läpi).</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1263,8 +1263,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+13"/>
-        <source>The user interface language can be set here. This setting will take effect after restarting bitswift.</source>
-        <translation>Käyttöliittymän kieli voidaan valita tästä. Tämä asetus tulee voimaan vasta bitswift-asiakasohjelman uudelleenkäynnistyksen jälkeen.</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting synergy.</source>
+        <translation>Käyttöliittymän kieli voidaan valita tästä. Tämä asetus tulee voimaan vasta synergy-asiakasohjelman uudelleenkäynnistyksen jälkeen.</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -1278,8 +1278,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+9"/>
-        <source>Whether to show bitswift addresses in the transaction list or not.</source>
-        <translation>Näytä tai piilota bitswift-osoitteet rahansiirtolistassa.</translation>
+        <source>Whether to show synergy addresses in the transaction list or not.</source>
+        <translation>Näytä tai piilota synergy-osoitteet rahansiirtolistassa.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1325,8 +1325,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     <message>
         <location line="-9"/>
         <location line="+9"/>
-        <source>This setting will take effect after restarting bitswift.</source>
-        <translation>Tämä asetus tulee voimaan vasta bitswift-asiakasohjelman uudelleenkäynnistyksen jälkeen.</translation>
+        <source>This setting will take effect after restarting synergy.</source>
+        <translation>Tämä asetus tulee voimaan vasta synergy-asiakasohjelman uudelleenkäynnistyksen jälkeen.</translation>
     </message>
     <message>
         <location line="+29"/>
@@ -1344,8 +1344,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     <message>
         <location line="+33"/>
         <location line="+231"/>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the bitswift network after a connection is established, but this process has not completed yet.</source>
-        <translation>Näytettävät tiedot voivat olla vanhentuneet. Lompakkosi synkronoituu automaattisesti bitswift-verkon kanssa kun yhteys on muodostettu, mutta tätä prosessia ei ole viety vielä päätökseen.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the synergy network after a connection is established, but this process has not completed yet.</source>
+        <translation>Näytettävät tiedot voivat olla vanhentuneet. Lompakkosi synkronoituu automaattisesti synergy-verkon kanssa kun yhteys on muodostettu, mutta tätä prosessia ei ole viety vielä päätökseen.</translation>
     </message>
     <message>
         <location line="-160"/>
@@ -1560,8 +1560,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+7"/>
-        <source>Show the bitswift-Qt help message to get a list with possible bitswift command-line options.</source>
-        <translation>Näytä bitswift-Qt:n avustusohje saadaksesi listan käytettävistä bitswiftin komentokehotteen määritteistä.</translation>
+        <source>Show the synergy-Qt help message to get a list with possible synergy command-line options.</source>
+        <translation>Näytä synergy-Qt:n avustusohje saadaksesi listan käytettävistä synergyin komentokehotteen määritteistä.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1580,13 +1580,13 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="-104"/>
-        <source>bitswift - Debug window</source>
-        <translation>bitswift - Debug-ikkuna</translation>
+        <source>synergy - Debug window</source>
+        <translation>synergy - Debug-ikkuna</translation>
     </message>
     <message>
         <location line="+25"/>
-        <source>bitswift Core</source>
-        <translation>bitswiftin ydin</translation>
+        <source>synergy Core</source>
+        <translation>synergyin ydin</translation>
     </message>
     <message>
         <location line="+279"/>
@@ -1595,8 +1595,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+7"/>
-        <source>Open the bitswift debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Avaa bitswift-asiakasohjelman debug-lokitiedosto nykyisestä hakemistostaan. Tämä voi kestää muutaman sekunnin avattaessa suuria lokitiedostoja.</translation>
+        <source>Open the synergy debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Avaa synergy-asiakasohjelman debug-lokitiedosto nykyisestä hakemistostaan. Tämä voi kestää muutaman sekunnin avattaessa suuria lokitiedostoja.</translation>
     </message>
     <message>
         <location line="+102"/>
@@ -1605,8 +1605,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location filename="../rpcconsole.cpp" line="-33"/>
-        <source>Welcome to the bitswift RPC console.</source>
-        <translation>Tervetuloa bitswiftin RPC-konsoliin.</translation>
+        <source>Welcome to the synergy RPC console.</source>
+        <translation>Tervetuloa synergyin RPC-konsoliin.</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1764,8 +1764,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="-173"/>
-        <source>Enter a bitswift address (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Syötä bitswift-osoite (esim. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>Enter a synergy address (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Syötä synergy-osoite (esim. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -1864,8 +1864,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+251"/>
-        <source>WARNING: Invalid bitswift address</source>
-        <translation>VAROITUS: Epäkelpo bitswift-osoite</translation>
+        <source>WARNING: Invalid synergy address</source>
+        <translation>VAROITUS: Epäkelpo synergy-osoite</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -1908,8 +1908,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to send the payment to  (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Osoite, johon maksu lähetetään (esim. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>The address to send the payment to  (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Osoite, johon maksu lähetetään (esim. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1938,8 +1938,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="+1"/>
-        <source>Enter a bitswift address (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Syötä bitswift-osoite (esim. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>Enter a synergy address (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Syötä synergy-osoite (esim. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
 </context>
 <context>
@@ -1962,8 +1962,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to sign the message with (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Osoite, jolle viesti kirjataan (esim. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>The address to sign the message with (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Osoite, jolle viesti kirjataan (esim. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1999,8 +1999,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+21"/>
-        <source>Sign the message to prove you own this bitswift address</source>
-        <translation>Allekirjoita viesti vahvistaaksesi, että omistat tämän bitswift-osoitteen</translation>
+        <source>Sign the message to prove you own this synergy address</source>
+        <translation>Allekirjoita viesti vahvistaaksesi, että omistat tämän synergy-osoitteen</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -2026,13 +2026,13 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+21"/>
-        <source>The address the message was signed with (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Osoite, jolla viesti on allekirjoitettu (esim. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2) </translation>
+        <source>The address the message was signed with (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Osoite, jolla viesti on allekirjoitettu (esim. synergyfwYhBmGXcFP2Po1NpRUEiK8km2) </translation>
     </message>
     <message>
         <location line="+40"/>
-        <source>Verify the message to ensure it was signed with the specified bitswift address</source>
-        <translation>Vahvista viesti varmistaaksesi että se on allekirjoitettu kyseisellä bitswift-osoitteella</translation>
+        <source>Verify the message to ensure it was signed with the specified synergy address</source>
+        <translation>Vahvista viesti varmistaaksesi että se on allekirjoitettu kyseisellä synergy-osoitteella</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -2042,8 +2042,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     <message>
         <location filename="../signverifymessagedialog.cpp" line="+27"/>
         <location line="+3"/>
-        <source>Enter a bitswift address (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Syötä bitswift-osoite (esim. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>Enter a synergy address (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Syötä synergy-osoite (esim. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="-2"/>
@@ -2052,8 +2052,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>Enter bitswift signature</source>
-        <translation>Syötä bitswift-allekirjoitus</translation>
+        <source>Enter synergy signature</source>
+        <translation>Syötä synergy-allekirjoitus</translation>
     </message>
     <message>
         <location line="+82"/>
@@ -2623,8 +2623,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     <name>bitcoin-core</name>
     <message>
         <location filename="../bitcoinstrings.cpp" line="+33"/>
-        <source>bitswift version</source>
-        <translation>bitswiftin versio</translation>
+        <source>synergy version</source>
+        <translation>synergyin versio</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2633,8 +2633,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Send command to -server or bitswiftd</source>
-        <translation>Syötä komento kohteeseen -server tai bitswiftd</translation>
+        <source>Send command to -server or synergyd</source>
+        <translation>Syötä komento kohteeseen -server tai synergyd</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2653,13 +2653,13 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+2"/>
-        <source>Specify configuration file (default: bitswift.conf)</source>
-        <translation>Määritä asetustiedosto (oletus: bitswift.conf)</translation>
+        <source>Specify configuration file (default: synergy.conf)</source>
+        <translation>Määritä asetustiedosto (oletus: synergy.conf)</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Specify pid file (default: bitswiftd.pid)</source>
-        <translation>Määritä prosessitiedosto (oletus: bitswift.pid)</translation>
+        <source>Specify pid file (default: synergyd.pid)</source>
+        <translation>Määritä prosessitiedosto (oletus: synergy.pid)</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -2808,8 +2808,8 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
     </message>
     <message>
         <location line="+61"/>
-        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong bitswift will not work properly.</source>
-        <translation>Varoitus: Tarkista, että tietokoneesi aika ja päivämäärä ovat oikeassa! Jos kellosi on väärässä, bitswift ei toimi oikein.</translation>
+        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong synergy will not work properly.</source>
+        <translation>Varoitus: Tarkista, että tietokoneesi aika ja päivämäärä ovat oikeassa! Jos kellosi on väärässä, synergy ei toimi oikein.</translation>
     </message>
     <message>
         <location line="-31"/>
@@ -2998,23 +2998,23 @@ Tämä tarkoittaa, että ainakin %2 rahansiirtopalkkio tarvitaan.</translation>
         <source>%s, you must set a rpcpassword in the configuration file:
  %s
 It is recommended you use the following random password:
-rpcuser=bitswiftrpc
+rpcuser=synergyrpc
 rpcpassword=%s
 (you do not need to remember this password)
 The username and password MUST NOT be the same.
 If the file does not exist, create it with owner-readable-only file permissions.
 It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s &quot;bitswift Alert&quot; admin@foo.com
+for example: alertnotify=echo %%s | mail -s &quot;synergy Alert&quot; admin@foo.com
 </source>
         <translation>%s, sinun on asetettava rpcpassword asetustiedostoon:
 %s
 On suositeltavaa, että käytät seuraavaa arvottua salasanaa:
-rpcuser=bitswiftrpc
+rpcuser=synergyrpc
 rpcpassword=%s
 (Sinun ei tarvitse muistaa tätä salasanaa)
 Käyttäjänimen ja salasanan EI TULE OLLA SAMOJA.
 Jos tiedostoa ei ole olemassa, luo se asettaen samalla omistajan lukuoikeudet.
-On myös suositeltavaa asettaa alertnotify jolloin olet tiedotettu ongelmista; esimerkiksi: alertnotify=echo %%s | mail -s &quot;bitswift Alert&quot; admin@foo.com
+On myös suositeltavaa asettaa alertnotify jolloin olet tiedotettu ongelmista; esimerkiksi: alertnotify=echo %%s | mail -s &quot;synergy Alert&quot; admin@foo.com
 </translation>
     </message>
     <message>
@@ -3139,13 +3139,13 @@ On myös suositeltavaa asettaa alertnotify jolloin olet tiedotettu ongelmista; e
     </message>
     <message>
         <location line="+1"/>
-        <source>Cannot obtain a lock on data directory %s.  bitswift is probably already running.</source>
-        <translation>Ei voida saavuttaa lukkoa datatiedostossa %s. bitswift-asiakasohjelma on ehkä jo käynnissä.</translation>
+        <source>Cannot obtain a lock on data directory %s.  synergy is probably already running.</source>
+        <translation>Ei voida saavuttaa lukkoa datatiedostossa %s. synergy-asiakasohjelma on ehkä jo käynnissä.</translation>
     </message>
     <message>
         <location line="-98"/>
-        <source>bitswift</source>
-        <translation>bitswift</translation>
+        <source>synergy</source>
+        <translation>synergy</translation>
     </message>
     <message>
         <location line="+140"/>
@@ -3179,13 +3179,13 @@ On myös suositeltavaa asettaa alertnotify jolloin olet tiedotettu ongelmista; e
     </message>
     <message>
         <location line="+4"/>
-        <source>Error loading wallet.dat: Wallet requires newer version of bitswift</source>
-        <translation>Virhe ladattaessa wallet.dat-tiedostoa: Lompakko tarvitsee uudemman version bitswift-asiakasohjelmasta</translation>
+        <source>Error loading wallet.dat: Wallet requires newer version of synergy</source>
+        <translation>Virhe ladattaessa wallet.dat-tiedostoa: Lompakko tarvitsee uudemman version synergy-asiakasohjelmasta</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Wallet needed to be rewritten: restart bitswift to complete</source>
-        <translation>Lompakko on kirjoitettava uudelleen: käynnistä bitswift-asiakasohjelma uudelleen päättääksesi toiminnon</translation>
+        <source>Wallet needed to be rewritten: restart synergy to complete</source>
+        <translation>Lompakko on kirjoitettava uudelleen: käynnistä synergy-asiakasohjelma uudelleen päättääksesi toiminnon</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -3254,8 +3254,8 @@ On myös suositeltavaa asettaa alertnotify jolloin olet tiedotettu ongelmista; e
     </message>
     <message>
         <location line="+122"/>
-        <source>Unable to bind to %s on this computer. bitswift is probably already running.</source>
-        <translation>Ei voitu liittää %s tällä tietokoneella. bitswift-asiakasohjelma on jo ehkä päällä.</translation>
+        <source>Unable to bind to %s on this computer. synergy is probably already running.</source>
+        <translation>Ei voitu liittää %s tällä tietokoneella. synergy-asiakasohjelma on jo ehkä päällä.</translation>
     </message>
     <message>
         <location line="-97"/>

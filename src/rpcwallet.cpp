@@ -149,7 +149,7 @@ Value getnewaddress(const Array& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "getnewaddress [account]\n"
-            "Returns a new bitswift address for receiving payments.  "
+            "Returns a new synergy address for receiving payments.  "
             "If [account] is specified (recommended), it is added to the address book "
             "so payments received with the address will be credited to [account].");
 
@@ -216,7 +216,7 @@ Value getaccountaddress(const Array& params, bool fHelp)
     if (fHelp || params.size() != 1)
         throw runtime_error(
             "getaccountaddress <account>\n"
-            "Returns the current bitswift address for receiving payments to this account.");
+            "Returns the current synergy address for receiving payments to this account.");
 
     // Parse the account first so we don't generate a key if there's an error
     string strAccount = AccountFromValue(params[0]);
@@ -234,12 +234,12 @@ Value setaccount(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "setaccount <bitswiftaddress> <account>\n"
+            "setaccount <synergyaddress> <account>\n"
             "Sets the account associated with the given address.");
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid bitswift address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid synergy address");
 
 
     string strAccount;
@@ -264,12 +264,12 @@ Value getaccount(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "getaccount <bitswiftaddress>\n"
+            "getaccount <synergyaddress>\n"
             "Returns the account associated with the given address.");
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid bitswift address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid synergy address");
 
     string strAccount;
     map<CTxDestination, string>::iterator mi = pwalletMain->mapAddressBook.find(address.Get());
@@ -304,18 +304,18 @@ Value sendtoaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 7)
         throw runtime_error(
-            "sendtoaddress <bitswiftaddress> <amount> [comment] [comment-to] [tx-comment] [product-id] [narration]\n"
+            "sendtoaddress <synergyaddress> <amount> [comment] [comment-to] [tx-comment] [product-id] [narration]\n"
             "<amount> is a real and is rounded to the nearest 0.000001\n"
             "[tx-comment] max size is " + sMAX_TX_COMMENT_LEN + "\n"
             "[product-id] is a positive integer\n"
 	    "[narration] is a short (<=24 char) note"
             + HelpRequiringPassphrase());
 
-    unsigned int nProdTypeID = SWIFT_NONE;
+    unsigned int nProdTypeID = SNRG_NONE;
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid bitswift address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid synergy address");
 
     // Amount
     int64_t nAmount = AmountFromValue(params[1]);
@@ -398,7 +398,7 @@ Value signmessage(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 2)
         throw runtime_error(
-            "signmessage <bitswiftaddress> <message>\n"
+            "signmessage <synergyaddress> <message>\n"
             "Sign a message with the private key of an address");
 
     EnsureWalletIsUnlocked();
@@ -433,7 +433,7 @@ Value verifymessage(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 3)
         throw runtime_error(
-            "verifymessage <bitswiftaddress> <signature> <message>\n"
+            "verifymessage <synergyaddress> <signature> <message>\n"
             "Verify a signed message");
 
     string strAddress  = params[0].get_str();
@@ -470,14 +470,14 @@ Value getreceivedbyaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "getreceivedbyaddress <bitswiftaddress> [minconf=1]\n"
-            "Returns the total amount received by <bitswiftaddress> in transactions with at least [minconf] confirmations.");
+            "getreceivedbyaddress <synergyaddress> [minconf=1]\n"
+            "Returns the total amount received by <synergyaddress> in transactions with at least [minconf] confirmations.");
 
     // Bitcoin address
     CBitcoinAddress address = CBitcoinAddress(params[0].get_str());
     CScript scriptPubKey;
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid bitswift address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid synergy address");
     scriptPubKey.SetDestination(address.Get());
     if (!IsMine(*pwalletMain,scriptPubKey))
         return (double)0.0;
@@ -698,7 +698,7 @@ Value sendfrom(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 3 || params.size() > 7)
         throw runtime_error(
-            "sendfrom <fromaccount> <tobitswiftaddress> <amount> [minconf=1] [comment] [comment-to] [tx-comment] [product-id] [narration]\n"
+            "sendfrom <fromaccount> <tosynergyaddress> <amount> [minconf=1] [comment] [comment-to] [tx-comment] [product-id] [narration]\n"
             "<amount> is a real and is rounded to the nearest 0.000001\n"
             "[tx-comment] max size is " + sMAX_TX_COMMENT_LEN + "\n"
             "[product-id] is a positive integer\n"
@@ -706,11 +706,11 @@ Value sendfrom(const Array& params, bool fHelp)
 
             + HelpRequiringPassphrase());
 
-    unsigned int nProdTypeID = SWIFT_NONE;
+    unsigned int nProdTypeID = SNRG_NONE;
     string strAccount = AccountFromValue(params[0]);
     CBitcoinAddress address(params[1].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid bitswift address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid synergy address");
     int64_t nAmount = AmountFromValue(params[2]);
 
     int nMinDepth = 1;
@@ -770,7 +770,7 @@ Value sendmany(const Array& params, bool fHelp)
             "[product-id] is a positive integer"
             + HelpRequiringPassphrase());
 
-    unsigned int nProdTypeID = SWIFT_NONE;
+    unsigned int nProdTypeID = SNRG_NONE;
 
     string strAccount = AccountFromValue(params[0]);
     Object sendTo = params[1].get_obj();
@@ -800,7 +800,7 @@ Value sendmany(const Array& params, bool fHelp)
     {
         CBitcoinAddress address(s.name_);
         if (!address.IsValid())
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid bitswift address: ")+s.name_);
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid synergy address: ")+s.name_);
 
         if (setAddress.count(address))
             throw JSONRPCError(RPC_INVALID_PARAMETER, string("Invalid parameter, duplicated address: ")+s.name_);
@@ -847,7 +847,7 @@ Value addmultisigaddress(const Array& params, bool fHelp)
     {
         string msg = "addmultisigaddress <nrequired> <'[\"key\",\"key\"]'> [account]\n"
             "Add a nrequired-to-sign multisignature address to the wallet\"\n"
-            "each key is a bitswift address or hex-encoded public key\n"
+            "each key is a synergy address or hex-encoded public key\n"
             "If [account] is specified, assign address to [account].";
         throw runtime_error(msg);
     }
@@ -1449,7 +1449,7 @@ Value keypoolrefill(const Array& params, bool fHelp)
 void ThreadTopUpKeyPool(void* parg)
 {
     // Make this thread recognisable as the key-topping-up thread
-    RenameThread("bitswift-key-top");
+    RenameThread("synergy-key-top");
 
     pwalletMain->TopUpKeyPool();
 }
@@ -1457,7 +1457,7 @@ void ThreadTopUpKeyPool(void* parg)
 void ThreadCleanWalletPassphrase(void* parg)
 {
     // Make this thread recognisable as the wallet relocking thread
-    RenameThread("bitswift-lock-wa");
+    RenameThread("synergy-lock-wa");
 
     int64_t nMyWakeTime = GetTimeMillis() + *((int64_t*)parg) * 1000;
 
@@ -1628,7 +1628,7 @@ Value encryptwallet(const Array& params, bool fHelp)
     // slack space in .dat files; that is bad if the old data is
     // unencrypted private keys. So:
     StartShutdown();
-    return "wallet encrypted; bitswift server stopping, restart to run with encrypted wallet.  The keypool has been flushed, you need to make a new backup.";
+    return "wallet encrypted; synergy server stopping, restart to run with encrypted wallet.  The keypool has been flushed, you need to make a new backup.";
 }
 
 class DescribeAddressVisitor : public boost::static_visitor<Object>
@@ -1679,8 +1679,8 @@ Value validateaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "validateaddress <bitswiftaddress>\n"
-            "Return information about <bitswiftaddress>.");
+            "validateaddress <synergyaddress>\n"
+            "Return information about <synergyaddress>.");
 
     CBitcoinAddress address(params[0].get_str());
     bool isValid = address.IsValid();
@@ -1708,8 +1708,8 @@ Value validatepubkey(const Array& params, bool fHelp)
 {
     if (fHelp || !params.size() || params.size() > 2)
         throw runtime_error(
-            "validatepubkey <bitswiftpubkey>\n"
-            "Return information about <bitswiftpubkey>.");
+            "validatepubkey <synergypubkey>\n"
+            "Return information about <synergypubkey>.");
 
     std::vector<unsigned char> vchPubKey = ParseHex(params[0].get_str());
     CPubKey pubKey(vchPubKey);
@@ -2069,7 +2069,7 @@ Value sendtostealthaddress(const Array& params, bool fHelp)
 
     if (!sxAddr.SetEncoded(sEncoded))
     {
-        result.push_back(Pair("result", "Invalid BitSwift Stealth Address."));
+        result.push_back(Pair("result", "Invalid Synergy Stealth Address."));
         return result;
     };
 

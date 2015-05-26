@@ -10,6 +10,7 @@
 #include "strlcpy.h"
 #include "addrman.h"
 #include "ui_interface.h"
+#include "onionseed.h"
 
 #ifdef WIN32
 #include <string.h>
@@ -22,8 +23,14 @@
 #include <miniupnpc/upnperrors.h>
 #endif
 
+extern unsigned short onion_port;
+
 using namespace std;
 using namespace boost;
+
+extern "C" {
+    int tor_main(int argc, char *argv[]);
+}
 
 static const int MAX_OUTBOUND_CONNECTIONS = 16;
 
@@ -85,6 +92,11 @@ void AddOneShot(string strDest)
 unsigned short GetListenPort()
 {
     return (unsigned short)(GetArg("-port", GetDefaultPort()));
+}
+
+unsigned short GetTorPort()
+{
+    return onion_port;
 }
 
 void CNode::PushGetBlocks(CBlockIndex* pindexBegin, uint256 hashEnd)
@@ -373,7 +385,7 @@ bool GetMyExternalIP(CNetAddr& ipRet)
 
             pszGet = "GET / HTTP/1.1\r\n"
                      "Host: checkip.dyndns.org\r\n"
-                     "User-Agent: bitswift\r\n"
+                     "User-Agent: synergy\r\n"
                      "Connection: close\r\n"
                      "\r\n";
 
@@ -392,7 +404,7 @@ bool GetMyExternalIP(CNetAddr& ipRet)
 
             pszGet = "GET /simple/ HTTP/1.1\r\n"
                      "Host: www.showmyip.com\r\n"
-                     "User-Agent: bitswift\r\n"
+                     "User-Agent: synergy\r\n"
                      "Connection: close\r\n"
                      "\r\n";
 
@@ -409,7 +421,7 @@ bool GetMyExternalIP(CNetAddr& ipRet)
 void ThreadGetMyExternalIP(void* parg)
 {
     // Make this thread recognisable as the external IP detection thread
-    RenameThread("bitswift-ext-ip");
+    RenameThread("synergy-ext-ip");
 
     CNetAddr addrLocalHost;
     if (GetMyExternalIP(addrLocalHost))
@@ -634,7 +646,7 @@ void CNode::copyStats(CNodeStats &stats)
 void ThreadSocketHandler(void* parg)
 {
     // Make this thread recognisable as the networking thread
-    RenameThread("bitswift-net");
+    RenameThread("synergy-net");
 
     try
     {
@@ -795,11 +807,7 @@ void ThreadSocketHandler2(void* parg)
         BOOST_FOREACH(SOCKET hListenSocket, vhListenSocket)
         if (hListenSocket != INVALID_SOCKET && FD_ISSET(hListenSocket, &fdsetRecv))
         {
-#ifdef USE_IPV6
             struct sockaddr_storage sockaddr;
-#else
-            struct sockaddr sockaddr;
-#endif
             socklen_t len = sizeof(sockaddr);
             SOCKET hSocket = accept(hListenSocket, (struct sockaddr*)&sockaddr, &len);
             CAddress addr;
@@ -988,7 +996,7 @@ void ThreadSocketHandler2(void* parg)
 void ThreadMapPort(void* parg)
 {
     // Make this thread recognisable as the UPnP thread
-    RenameThread("bitswift-UPnP");
+    RenameThread("synergy-UPnP");
 
     try
     {
@@ -1049,7 +1057,7 @@ void ThreadMapPort2(void* parg)
             }
         }
 
-        string strDesc = "bitswift " + FormatFullVersion();
+        string strDesc = "synergy " + FormatFullVersion();
 #ifndef UPNPDISCOVER_SUCCESS
         /* miniupnpc 1.5 */
         r = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype,
@@ -1127,86 +1135,36 @@ void MapPort()
 #endif
 
 
-
-
-
-
-
-
-
-// DNS seeds
-// Each pair gives a source name and a seed name.
-// The first name is used as information source for addrman.
-// The second name should resolve to a list of seed addresses.
-static const char *strDNSSeed[][2] = {
-    {"seednode", "178.62.145.25"},      // ?
-    {"seednode", "104.236.9.136"},      // ok
-	
-};
-
-void ThreadDNSAddressSeed(void* parg)
+void ThreadOnionSeed(void* parg)
 {
-    // Make this thread recognisable as the DNS seeding thread
-    RenameThread("bitswift-dnsseed");
 
-    try
-    {
-        vnThreadsRunning[THREAD_DNSSEED]++;
-        ThreadDNSAddressSeed2(parg);
-        vnThreadsRunning[THREAD_DNSSEED]--;
-    }
-    catch (std::exception& e) {
-        vnThreadsRunning[THREAD_DNSSEED]--;
-        PrintException(&e, "ThreadDNSAddressSeed()");
-    } catch (...) {
-        vnThreadsRunning[THREAD_DNSSEED]--;
-        throw; // support pthread_cancel()
-    }
-    printf("ThreadDNSAddressSeed exited\n");
-}
+    // Make this thread recognisable as the tor thread
+    RenameThread("onionseed");
 
-void ThreadDNSAddressSeed2(void* parg)
-{
-    printf("ThreadDNSAddressSeed started\n");
+    static const char *(*strOnionSeed)[1] = fTestNet ? strTestNetOnionSeed : strMainNetOnionSeed;
+
     int found = 0;
 
-    if (!fTestNet)
-    {
-        printf("Loading addresses from DNS seeds (could take a while)\n");
+    printf("Loading addresses from .onion seeds\n");
 
-        for (unsigned int seed_idx = 0; seed_idx < ARRAYLEN(strDNSSeed); seed_idx++) {
-            if (HaveNameProxy()) {
-                AddOneShot(strDNSSeed[seed_idx][1]);
-            } else {
-                vector<CNetAddr> vaddr;
-                vector<CAddress> vAdd;
-                if (LookupHost(strDNSSeed[seed_idx][1], vaddr))
-                {
-                    BOOST_FOREACH(CNetAddr& ip, vaddr)
-                    {
-                        int nOneDay = 24*3600;
-                        CAddress addr = CAddress(CService(ip, GetDefaultPort()));
-                        addr.nTime = GetTime() - 3*nOneDay - GetRand(4*nOneDay); // use a random age between 3 and 7 days old
-                        vAdd.push_back(addr);
-                        found++;
-                    }
-                }
-                addrman.Add(vAdd, CNetAddr(strDNSSeed[seed_idx][0], true));
-            }
+    for (unsigned int seed_idx = 0; strOnionSeed[seed_idx][0] != NULL; seed_idx++) {
+        CNetAddr parsed;
+        if (
+            !parsed.SetSpecial(
+                strOnionSeed[seed_idx][0]
+            )
+        ) {
+            throw runtime_error("ThreadOnionSeed() : invalid .onion seed");
         }
+        int nOneDay = 24*3600;
+        CAddress addr = CAddress(CService(parsed, GetDefaultPort()));
+        addr.nTime = GetTime() - 3*nOneDay - GetRand(4*nOneDay); // use a random age between 3 and 7 days old
+        found++;
+        addrman.Add(addr, parsed);
     }
 
-    printf("%d addresses found from DNS seeds\n", found);
+    printf("%d addresses found from .onion seeds\n", found);
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1249,7 +1207,7 @@ void ThreadDumpAddress2(void* parg)
 void ThreadDumpAddress(void* parg)
 {
     // Make this thread recognisable as the address dumping thread
-    RenameThread("bitswift-adrdump");
+    RenameThread("synergy-adrdump");
 
     try
     {
@@ -1264,7 +1222,7 @@ void ThreadDumpAddress(void* parg)
 void ThreadOpenConnections(void* parg)
 {
     // Make this thread recognisable as the connection opening thread
-    RenameThread("bitswift-opencon");
+    RenameThread("synergy-opencon");
 
     try
     {
@@ -1445,7 +1403,7 @@ void ThreadOpenConnections2(void* parg)
 void ThreadOpenAddedConnections(void* parg)
 {
     // Make this thread recognisable as the connection opening thread
-    RenameThread("bitswift-opencon");
+    RenameThread("synergy-opencon");
 
     try
     {
@@ -1576,7 +1534,7 @@ bool OpenNetworkConnection(const CAddress& addrConnect, CSemaphoreGrant *grantOu
 void ThreadMessageHandler(void* parg)
 {
     // Make this thread recognisable as the message handling thread
-    RenameThread("bitswift-msghand");
+    RenameThread("synergy-msghand");
 
     try
     {
@@ -1675,11 +1633,7 @@ bool BindListenPort(const CService &addrBind, string& strError)
 #endif
 
     // Create socket for listening for incoming connections
-#ifdef USE_IPV6
     struct sockaddr_storage sockaddr;
-#else
-    struct sockaddr sockaddr;
-#endif
     socklen_t len = sizeof(sockaddr);
     if (!addrBind.GetSockAddr((struct sockaddr*)&sockaddr, &len))
     {
@@ -1720,7 +1674,6 @@ bool BindListenPort(const CService &addrBind, string& strError)
         return false;
     }
 
-#ifdef USE_IPV6
     // some systems don't have IPV6_V6ONLY but are always v6only; others do have the option
     // and enable it by default or not. Try to enable it, if possible.
     if (addrBind.IsIPv6()) {
@@ -1738,13 +1691,12 @@ bool BindListenPort(const CService &addrBind, string& strError)
         setsockopt(hListenSocket, IPPROTO_IPV6, nParameterId, (const char*)&nProtLevel, sizeof(int));
 #endif
     }
-#endif
 
     if (::bind(hListenSocket, (struct sockaddr*)&sockaddr, len) == SOCKET_ERROR)
     {
         int nErr = WSAGetLastError();
         if (nErr == WSAEADDRINUSE)
-            strError = strprintf(_("Unable to bind to %s on this computer. bitswift is probably already running."), addrBind.ToString().c_str());
+            strError = strprintf(_("Unable to bind to %s on this computer. synergy is probably already running."), addrBind.ToString().c_str());
         else
             strError = strprintf(_("Unable to bind to %s on this computer (bind returned error %d, %s)"), addrBind.ToString().c_str(), nErr, strerror(nErr));
         printf("%s\n", strError.c_str());
@@ -1770,64 +1722,47 @@ bool BindListenPort(const CService &addrBind, string& strError)
 
 void static Discover()
 {
-    if (!fDiscover)
-        return;
+   // no network discovery
+}
 
-#ifdef WIN32
-    // Get local host IP
-    char pszHostName[1000] = "";
-    if (gethostname(pszHostName, sizeof(pszHostName)) != SOCKET_ERROR)
-    {
-        vector<CNetAddr> vaddr;
-        if (LookupHost(pszHostName, vaddr))
-        {
-            BOOST_FOREACH (const CNetAddr &addr, vaddr)
-            {
-                AddLocal(addr, LOCAL_IF);
-            }
-        }
-    }
-#else
-    // Get local host ip
-    struct ifaddrs* myaddrs;
-    if (getifaddrs(&myaddrs) == 0)
-    {
-        for (struct ifaddrs* ifa = myaddrs; ifa != NULL; ifa = ifa->ifa_next)
-        {
-            if (ifa->ifa_addr == NULL) continue;
-            if ((ifa->ifa_flags & IFF_UP) == 0) continue;
-            if (strcmp(ifa->ifa_name, "lo") == 0) continue;
-            if (strcmp(ifa->ifa_name, "lo0") == 0) continue;
-            if (ifa->ifa_addr->sa_family == AF_INET)
-            {
-                struct sockaddr_in* s4 = (struct sockaddr_in*)(ifa->ifa_addr);
-                CNetAddr addr(s4->sin_addr);
-                if (AddLocal(addr, LOCAL_IF))
-                    printf("IPv4 %s: %s\n", ifa->ifa_name, addr.ToString().c_str());
-            }
-#ifdef USE_IPV6
-            else if (ifa->ifa_addr->sa_family == AF_INET6)
-            {
-                struct sockaddr_in6* s6 = (struct sockaddr_in6*)(ifa->ifa_addr);
-                CNetAddr addr(s6->sin6_addr);
-                if (AddLocal(addr, LOCAL_IF))
-                    printf("IPv6 %s: %s\n", ifa->ifa_name, addr.ToString().c_str());
-            }
-#endif
-        }
-        freeifaddrs(myaddrs);
-    }
-#endif
+static void run_tor() {
+    printf("TOR thread started.\n");
 
-    // Don't use external IPv4 discovery, when -onlynet="IPv6"
-    if (!IsLimited(NET_IPV4))
-        NewThread(ThreadGetMyExternalIP, NULL);
+    std::string logDecl = "notice file " + GetDataDir().string() + "/tor/tor.log";
+    char *argvLogDecl = (char*) logDecl.c_str();
+
+    char* argv[] = {
+        "tor",
+        "--hush",
+        "--Log",
+        argvLogDecl
+    };
+
+    tor_main(4, argv);
+}
+
+
+void StartTor(void* parg)
+{
+    // Make this thread recognisable as the tor thread
+    RenameThread("onion");
+
+    try
+    {
+      run_tor();
+    }
+    catch (std::exception& e) {
+      PrintException(&e, "StartTor()");
+    }
+
+    printf("Onion thread exited.");
+
 }
 
 void StartNode(void* parg)
 {
     // Make this thread recognisable as the startup thread
-    RenameThread("bitswift-start");
+    RenameThread("synergy-start");
 
     if (semOutbound == NULL) {
         // initialize semaphore
@@ -1838,27 +1773,27 @@ void StartNode(void* parg)
     if (pnodeLocalHost == NULL)
         pnodeLocalHost = new CNode(INVALID_SOCKET, CAddress(CService("127.0.0.1", 0), nLocalServices));
 
+    printf("StartNode(): pnodeLocalHost addr: %s\n",
+           pnodeLocalHost->addr.ToString().c_str());
+
     Discover();
 
     //
     // Start threads
     //
 
-    if (!GetBoolArg("-dnsseed", true))
-        printf("DNS seeding disabled\n");
+    // start the onion seeder
+    if (!GetBoolArg("-onionseed", true))
+        printf(".onion seeding disabled\n");
     else
-        if (!NewThread(ThreadDNSAddressSeed, NULL))
-            printf("Error: NewThread(ThreadDNSAddressSeed) failed\n");
+        if (!NewThread(ThreadOnionSeed, NULL))
+              printf("Error: could not start .onion seeding\n");
 
-    // Map ports with UPnP
-# ifdef USE_UPNP
+    // Map ports with UPnP (default)
+#ifdef USE_UPNP
     if (fUseUPnP)
-        MapPort();
+        MapPort(fUseUPnP);
 #endif
-
-    // Get addresses from IRC and advertise ours
-    if (!NewThread(ThreadIRCSeed, NULL))
-        printf("Error: NewThread(ThreadIRCSeed) failed\n");
 
     // Send and receive from sockets, accept connections
     if (!NewThread(ThreadSocketHandler, NULL))
@@ -1881,11 +1816,15 @@ void StartNode(void* parg)
         printf("Error; NewThread(ThreadDumpAddress) failed\n");
 
     // Mine proof-of-stake blocks in the background
-    if (!GetBoolArg("-staking", true))
+    if (!GetBoolArg("-staking", true)) {
         printf("Staking disabled\n");
+    }
     else
-        if (!NewThread(ThreadStakeMiner, pwalletMain))
+    {
+        if (!NewThread(ThreadStakeMiner, pwalletMain)) {
             printf("Error: NewThread(ThreadStakeMiner) failed\n");
+        }
+    }
 }
 
 bool StopNode()

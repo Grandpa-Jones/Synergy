@@ -9,6 +9,7 @@
 #include "init.h"
 #include "miner.h"
 #include "bitcoinrpc.h"
+#include <boost/lexical_cast.hpp>
 
 using namespace json_spirit;
 using namespace std;
@@ -17,13 +18,48 @@ extern unsigned int nTargetSpacing;
 
 Value getsubsidy(const Array& params, bool fHelp)
 {
-    if (fHelp || params.size() > 1)
+    if (fHelp || params.size() > 2) {
         throw runtime_error(
-            "getsubsidy [nTarget]\n"
-            "Returns proof-of-work subsidy value for the specified value of target.");
+            "getsubsidy [height] [height]\n"
+            "If no height is provided, return subsidy of current block.\n"
+            "Returns the pow reward for block at height or from one to the other.\n"
+            "Biggest height should be no more than the last pow block.");
+    }
+    if (params.size() == 0) {
+            return GetPoWSubsidy(nBestHeight + 1);
+    }
+    if (params.size() == 1) {
+            return GetPoWSubsidy(params[0].get_int());
+    }
+    else {
+            int p1, p2;
+            p1 = params[0].get_int();
+            p2 = params[1].get_int();
+            if ((p1 < 0) || (p2 < 0) || (p1 > LAST_POW_BLOCK) || (p2 > LAST_POW_BLOCK)) {
+                  throw runtime_error(
+                    "getsubsidy height [height]\n"
+                    "If no height is provided, return subsidy of current block.\n"
+                    "Returns the pow reward for block at height or from one to the other.\n"
+                    "Biggest height should be no more than the last pow block.");
+            }
+            int first, last;
+            if (p1 > p2) {
+                    first = p2;
+                    last = p1;
+            }
+            else {
+                    first = p1;
+                    last = p2;
+            }
 
-    return (uint64_t)GetProofOfWorkReward(0);
+           Object ret;
+           for (int i = first; i <= last; i++) {
+              ret.push_back(Pair(boost::lexical_cast<string>(i), GetPoWSubsidy(i)));
+           }
+           return ret;
+    }
 }
+
 
 Value getmininginfo(const Array& params, bool fHelp)
 {
@@ -45,7 +81,7 @@ Value getmininginfo(const Array& params, bool fHelp)
     diff.push_back(Pair("search-interval",      (int)nLastCoinStakeSearchInterval));
     obj.push_back(Pair("difficulty",    diff));
 
-    obj.push_back(Pair("blockvalue",    (uint64_t)GetProofOfWorkReward(0)));
+    obj.push_back(Pair("blockvalue",    (uint64_t)GetProofOfWorkReward(nBestHeight+1, 0)));
     obj.push_back(Pair("netmhashps",     GetPoWMHashPS()));
     obj.push_back(Pair("netstakeweight", GetPoSKernelPS()));
     obj.push_back(Pair("errors",        GetWarnings("statusbar")));
@@ -56,7 +92,7 @@ Value getmininginfo(const Array& params, bool fHelp)
     weight.push_back(Pair("combined",  (uint64_t)nWeight));
     obj.push_back(Pair("stakeweight", weight));
 
-    obj.push_back(Pair("stakeinterest",    (uint64_t)COIN_YEAR_REWARD));
+    obj.push_back(Pair("stakeinterest",    (uint64_t)MAX_MINT_PROOF_OF_STAKE));
     obj.push_back(Pair("testnet",       fTestNet));
     return obj;
 }
@@ -105,12 +141,12 @@ Value getworkex(const Array& params, bool fHelp)
         );
 
     if (vNodes.empty())
-        throw JSONRPCError(-9, "bitswift is not connected!");
+        throw JSONRPCError(-9, "synergy is not connected!");
 
     if (IsInitialBlockDownload())
-        throw JSONRPCError(-10, "bitswift is downloading blocks...");
+        throw JSONRPCError(-10, "synergy is downloading blocks...");
 
-    if ((pindexBest->GetBlockTime() >= LAST_POW_TIME) && !fTestNet)
+    if (pindexBest->nHeight >= LAST_POW_BLOCK)
         throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
 
     typedef map<uint256, pair<CBlock*, CScript> > mapNewBlock_t;
@@ -239,12 +275,12 @@ Value getwork(const Array& params, bool fHelp)
             "If [data] is specified, tries to solve the block and returns true if it was successful.");
 
     if (vNodes.empty())
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "bitswift is not connected!");
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "synergy is not connected!");
 
     if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "bitswift is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "synergy is downloading blocks...");
 
-    if ((pindexBest->GetBlockTime() >= LAST_POW_TIME) && !fTestNet)
+    if (pindexBest->nHeight >= LAST_POW_BLOCK)
         throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
 
     typedef map<uint256, pair<CBlock*, CScript> > mapNewBlock_t;
@@ -259,8 +295,10 @@ Value getwork(const Array& params, bool fHelp)
         static CBlockIndex* pindexPrev;
         static int64_t nStart;
         static CBlock* pblock;
-        if (pindexPrev != pindexBest ||
-            (nTransactionsUpdated != nTransactionsUpdatedLast && GetTime() - nStart > 60))
+        if ((pindexPrev != pindexBest) ||
+            ((nTransactionsUpdated != nTransactionsUpdatedLast) && (GetTime() - nStart > 60)) ||
+            // give it 120 seconds for a new getwork
+            (pblock->GetBlockTime() >= FutureDrift((int64_t)pblock->vtx[0].nTime) + 120))
         {
             if (pindexPrev != pindexBest)
             {
@@ -383,12 +421,12 @@ Value getblocktemplate(const Array& params, bool fHelp)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid mode");
 
     if (vNodes.empty())
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "bitswift is not connected!");
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "synergy is not connected!");
 
     if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "bitswift is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "synergy is downloading blocks...");
 
-    if ((pindexBest->GetBlockTime() >= LAST_POW_TIME) && !fTestNet)
+    if (pindexBest->nHeight >= LAST_POW_BLOCK)
         throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
 
     static CReserveKey reservekey(pwalletMain);
@@ -521,6 +559,10 @@ Value submitblock(const Array& params, bool fHelp)
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Block decode failed");
     }
 
+    if (fDebug) {
+          printf("The rpc block is.\n");
+          block.print();
+    }
     bool fAccepted = ProcessBlock(NULL, &block);
     if (!fAccepted)
         return "rejected";

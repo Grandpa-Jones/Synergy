@@ -32,8 +32,8 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
     model(0)
 {
 
-    // bitswift service ID
-    nProdTypeID = SWIFT_NONE;
+    // synergy service ID
+    nProdTypeID = SNRG_NONE;
 
     ui->setupUi(this);
 
@@ -45,27 +45,9 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
 
 #if QT_VERSION >= 0x040700
     /* Do not move this to the XML file, Qt before 4.7 will choke on it */
-    ui->lineEditCoinControlChange->setPlaceholderText(tr("Enter a bitswift address (e.g. bT8WRazwxzXTDM4tFc6EqwCNYzk8sZUwYH)"));
+    ui->lineEditCoinControlChange->setPlaceholderText(tr("Enter a synergy address (e.g. SNRGYpMJNUfY2Usbj7eNqxSRP9EHMzuSuq)"));
     ui->editTxComment->setPlaceholderText(tr("Enter a transaction comment (Note: This information is public)"));
 #endif
-
- /* maybe just ignore tx comments on creation instead, no reason to disable
-    ui->editTxComment->setMaxLength(MAX_TX_COMMENT_LEN);
-    ui->editTxComment->setEnabled(false);
-
-    fTestNet = GetBoolArg("-testnet");
-    if (fTestNet) {
-          ui->editTxComment->setEnabled(true);
-    } else {
-        printf("not test net");
-        if (!IsInitialBlockDownload()) {
-              if (pindexBest->nTime >= CTXV2_LIVE) {
-                    ui->editTxComment->setEnabled(true);
-              }
-        }
-    }
-  */
-
 
     connect(ui->pushButtonServices, SIGNAL(pressed()), this, SLOT(openExist()));
 
@@ -161,7 +143,7 @@ void SendCoinsDialog::openExist()
 
         sprintf(outputBuffer, "{\"hash\":\"%s\"}", hashBuffer);
         qUserFeedback = QString(outputBuffer);
-        nProdTypeID = SWIFT_EXIST;
+        nProdTypeID = SNRG_EXIST;
     } else {
         qUserFeedback = QString("");
     }
@@ -212,8 +194,8 @@ void SendCoinsDialog::on_sendButton_clicked()
     if(!model)
         return;
 
-    QString txcomment;
-    if ((pindexBest->nTime >= (CTXV2_LIVE + 600)) || fTestNet) {
+    QString txcomment = ui->editTxComment->text();
+    if (nBestHeight >= LAST_POW_BLOCK) {
           txcomment = ui->editTxComment->text();
     } else {
           txcomment = "";
@@ -335,7 +317,7 @@ void SendCoinsDialog::on_sendButton_clicked()
 
 void SendCoinsDialog::clear()
 {
-    nProdTypeID = SWIFT_NONE;
+    nProdTypeID = SNRG_NONE;
     ui->editTxComment->clear();
 
     // Remove entries until only one left
@@ -576,7 +558,7 @@ void SendCoinsDialog::coinControlChangeEdited(const QString & text)
         else if (!CBitcoinAddress(text.toStdString()).IsValid())
         {
             ui->labelCoinControlChangeLabel->setStyleSheet("QLabel{color:red;}");
-            ui->labelCoinControlChangeLabel->setText(tr("WARNING: Invalid bitswift address"));
+            ui->labelCoinControlChangeLabel->setText(tr("WARNING: Invalid synergy address"));
         }
         else
         {

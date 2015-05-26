@@ -88,7 +88,7 @@ public:
         QString hex; // is filled with the transaction hash if status is "OK"
     };
 
-    // Send SWIFT to a list of recipients
+    // Send SNRG to a list of recipients
     SendCoinsReturn sendCoins(const QString &txcomment, const QList<SendCoinsRecipient> &recipients, unsigned int nProdTypeID, const CCoinControl *coinControl=NULL);
 
     // Wallet encryption

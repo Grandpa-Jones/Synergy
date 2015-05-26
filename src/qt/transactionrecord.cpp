@@ -30,6 +30,27 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     int64_t nNet = nCredit - nDebit;
     uint256 hash = wtx.GetHash(), hashPrev = 0;
     std::map<std::string, std::string> mapValue = wtx.mapValue;
+
+    // Negative means no turbo
+    int64_t nTurbo = -1;
+
+    if (wtx.IsCoinStake())
+    {
+       // Find the block the tx is in
+       CBlockIndex* pindex = NULL;
+       std::map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(wtx.hashBlock);
+       if (mi != mapBlockIndex.end()) {
+            pindex = (*mi).second;
+       }
+       // Grab the address
+       if ((pindex != NULL) && (pindex->pprev != NULL)) {
+            CTxDestination sigaddr;
+            if (ExtractDestination(wtx.vout[1].scriptPubKey, sigaddr)) {
+                  nTurbo = GetTurboStakeMultiplier(CBitcoinAddress(sigaddr), nTime, pindex->pprev);
+            }
+       }
+
+    }
     
     char cbuf[256];
     
@@ -45,7 +66,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             
             if (wallet->IsMine(txout))
             {
-                TransactionRecord sub(hash, nTime);
+                TransactionRecord sub(hash, nTime, nTurbo);
                 CTxDestination address;
                 sub.idx = parts.size(); // sequence number
                 sub.credit = txout.nValue;
@@ -130,7 +151,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             };
 
             parts.append(TransactionRecord(hash, nTime, TransactionRecord::SendToSelf, "", narration,
-                            -(nDebit - nChange), nCredit - nChange));
+                            nTurbo, -(nDebit - nChange), nCredit - nChange));
         }
         else if (fAllFromMe)
         {
@@ -142,7 +163,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             for (unsigned int nOut = 0; nOut < wtx.vout.size(); nOut++)
             {
                 const CTxOut& txout = wtx.vout[nOut];
-                TransactionRecord sub(hash, nTime);
+                TransactionRecord sub(hash, nTime, nTurbo);
                 sub.idx = parts.size();
 
                 opcodetype firstOpCode;
@@ -194,7 +215,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             //
             // Mixed debit transaction, can't break down payees
             //
-            parts.append(TransactionRecord(hash, nTime, TransactionRecord::Other, "", "", nNet, 0));
+            parts.append(TransactionRecord(hash, nTime, TransactionRecord::Other, "", "", nTurbo, nNet, 0));
         }
     }
 

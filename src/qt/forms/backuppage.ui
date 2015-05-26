@@ -31,9 +31,9 @@
      <property name="url">
       <url>
     <!--
-       <string>http://databack.bitswift.io/</string>
+       <string>http://databack.synergy.io/</string>
       -->
-       <string>http://backup.bitswift.io/</string>
+       <string>http://backup.synergy.io/</string>
       </url>
      </property>
     </widget>

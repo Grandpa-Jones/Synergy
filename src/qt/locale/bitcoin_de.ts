@@ -3,19 +3,19 @@
     <name>AboutDialog</name>
     <message>
         <location filename="../forms/aboutdialog.ui" line="+14"/>
-        <source>About bitswift</source>
-        <translation>Über bitswift</translation>
+        <source>About synergy</source>
+        <translation>Über synergy</translation>
     </message>
     <message>
         <location line="+39"/>
-        <source>&lt;b&gt;bitswift&lt;/b&gt; version</source>
-        <translation>&lt;b&gt;bitswift&lt;/b&gt; Version</translation>
+        <source>&lt;b&gt;synergy&lt;/b&gt; version</source>
+        <translation>&lt;b&gt;synergy&lt;/b&gt; Version</translation>
     </message>
     <message>
         <location line="+41"/>
         <source>Copyright © 2009-2014 The Bitcoin developers
 Copyright © 2012-2014 The NovaCoin developers
-Copyright © 2014 The bitswift developers</source>
+Copyright © 2014 The synergy developers</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -63,7 +63,7 @@ Dieses Produkt enthält Software, die vom OpenSSL-Projekt zur Verwendung im Open
     </message>
     <message>
         <location line="-46"/>
-        <source>These are your bitswift addresses for receiving payments. You may want to give a different one to each sender so you can keep track of who is paying you.</source>
+        <source>These are your synergy addresses for receiving payments. You may want to give a different one to each sender so you can keep track of who is paying you.</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -78,7 +78,7 @@ Dieses Produkt enthält Software, die vom OpenSSL-Projekt zur Verwendung im Open
     </message>
     <message>
         <location line="+11"/>
-        <source>Sign a message to prove you own a bitswift address</source>
+        <source>Sign a message to prove you own a synergy address</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -93,7 +93,7 @@ Dieses Produkt enthält Software, die vom OpenSSL-Projekt zur Verwendung im Open
     </message>
     <message>
         <location line="-14"/>
-        <source>Verify a message to ensure it was signed with a specified bitswift address</source>
+        <source>Verify a message to ensure it was signed with a specified synergy address</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -261,7 +261,7 @@ Dieses Produkt enthält Software, die vom OpenSSL-Projekt zur Verwendung im Open
     </message>
     <message>
         <location line="-58"/>
-        <source>bitswift will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your coins from being stolen by malware infecting your computer.</source>
+        <source>synergy will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your coins from being stolen by malware infecting your computer.</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -350,7 +350,7 @@ Dieses Produkt enthält Software, die vom OpenSSL-Projekt zur Verwendung im Open
     </message>
     <message>
         <location line="-13"/>
-        <source>&amp;Receive SWIFT</source>
+        <source>&amp;Receive SNRG</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -360,7 +360,7 @@ Dieses Produkt enthält Software, die vom OpenSSL-Projekt zur Verwendung im Open
     </message>
     <message>
         <location line="-7"/>
-        <source>&amp;Send SWIFT</source>
+        <source>&amp;Send SNRG</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -375,7 +375,7 @@ Dieses Produkt enthält Software, die vom OpenSSL-Projekt zur Verwendung im Open
     </message>
     <message>
         <location line="+6"/>
-        <source>Show information about bitswift</source>
+        <source>Show information about synergy</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -425,12 +425,12 @@ Dieses Produkt enthält Software, die vom OpenSSL-Projekt zur Verwendung im Open
     </message>
     <message>
         <location line="-64"/>
-        <source>Send SWIFT to a bitswift address</source>
+        <source>Send SNRG to a synergy address</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location line="+47"/>
-        <source>Modify configuration options for bitswift</source>
+        <source>Modify configuration options for synergy</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -470,7 +470,7 @@ Dieses Produkt enthält Software, die vom OpenSSL-Projekt zur Verwendung im Open
     </message>
     <message>
         <location line="-202"/>
-        <source>bitswift</source>
+        <source>synergy</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -480,7 +480,7 @@ Dieses Produkt enthält Software, die vom OpenSSL-Projekt zur Verwendung im Open
     </message>
     <message>
         <location line="+180"/>
-        <source>&amp;About bitswift</source>
+        <source>&amp;About synergy</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -537,12 +537,12 @@ Dieses Produkt enthält Software, die vom OpenSSL-Projekt zur Verwendung im Open
     <message>
         <location line="+0"/>
         <location line="+60"/>
-        <source>bitswift client</source>
+        <source>synergy client</source>
         <translation type="unfinished"/>
     </message>
     <message numerus="yes">
         <location line="+75"/>
-        <source>%n active connection(s) to bitswift network</source>
+        <source>%n active connection(s) to synergy network</source>
         <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message>
@@ -582,12 +582,12 @@ Dieses Produkt enthält Software, die vom OpenSSL-Projekt zur Verwendung im Open
     </message>
     <message>
         <location line="-312"/>
-        <source>About bitswift card</source>
+        <source>About synergy card</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location line="+1"/>
-        <source>Show information about bitswift card</source>
+        <source>Show information about synergy card</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -627,7 +627,7 @@ Dieses Produkt enthält Software, die vom OpenSSL-Projekt zur Verwendung im Open
     </message>
     <message>
         <location line="+59"/>
-        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SWIFT, which rewards all users of the BitSwift network as a result of your usage. Do you want to pay this fee?</source>
+        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SNRG, which rewards all users of the Synergy network as a result of your usage. Do you want to pay this fee?</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -666,7 +666,7 @@ Adresse: %4</translation>
     <message>
         <location line="-15"/>
         <location line="+15"/>
-        <source>URI can not be parsed! This can be caused by an invalid bitswift address or malformed URI parameters.</source>
+        <source>URI can not be parsed! This can be caused by an invalid synergy address or malformed URI parameters.</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -726,7 +726,7 @@ Adresse: %4</translation>
     </message>
     <message>
         <location filename="../bitcoin.cpp" line="+109"/>
-        <source>A fatal error occurred. bitswift can no longer continue safely and will quit.</source>
+        <source>A fatal error occurred. synergy can no longer continue safely and will quit.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -1046,8 +1046,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="-5"/>
-        <source>The entered address &quot;%1&quot; is not a valid bitswift address.</source>
-        <translation>Die eingegebene Adresse &quot;%1&quot; ist keine gültige bitswift Adresse.</translation>
+        <source>The entered address &quot;%1&quot; is not a valid synergy address.</source>
+        <translation>Die eingegebene Adresse &quot;%1&quot; ist keine gültige synergy Adresse.</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1065,7 +1065,7 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     <message>
         <location filename="../guiutil.cpp" line="+420"/>
         <location line="+12"/>
-        <source>bitswift-Qt</source>
+        <source>synergy-Qt</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1138,13 +1138,13 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+31"/>
-        <source>Automatically start bitswift after logging in to the system.</source>
-        <translation>Automatisch bitswift starten beim Einloggen in das System.</translation>
+        <source>Automatically start synergy after logging in to the system.</source>
+        <translation>Automatisch synergy starten beim Einloggen in das System.</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>&amp;Start bitswift on system login</source>
-        <translation>&amp;Starte bitswift bei Systemstart</translation>
+        <source>&amp;Start synergy on system login</source>
+        <translation>&amp;Starte synergy bei Systemstart</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -1163,8 +1163,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+6"/>
-        <source>Automatically open the bitswift client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Automatisch den bitswift client port auf dem Router öffnen. Das funktioniert nur wenn der Router UPnP unterstützt und UPnP aktiviert ist.</translation>
+        <source>Automatically open the synergy client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Automatisch den synergy client port auf dem Router öffnen. Das funktioniert nur wenn der Router UPnP unterstützt und UPnP aktiviert ist.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1173,7 +1173,7 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+7"/>
-        <source>Connect to the bitswift network through a SOCKS proxy (e.g. when connecting through Tor).</source>
+        <source>Connect to the synergy network through a SOCKS proxy (e.g. when connecting through Tor).</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1248,7 +1248,7 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+13"/>
-        <source>The user interface language can be set here. This setting will take effect after restarting bitswift.</source>
+        <source>The user interface language can be set here. This setting will take effect after restarting synergy.</source>
         <translation>Die Sprache der GUI kann hier verändert werden. Die Einstellung wird nach einem Neustart übernommen.</translation>
     </message>
     <message>
@@ -1263,8 +1263,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+9"/>
-        <source>Whether to show bitswift addresses in the transaction list or not.</source>
-        <translation>bitswift Adressen in der Überweisung anzeigen oder nicht.</translation>
+        <source>Whether to show synergy addresses in the transaction list or not.</source>
+        <translation>synergy Adressen in der Überweisung anzeigen oder nicht.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1310,7 +1310,7 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     <message>
         <location line="-9"/>
         <location line="+9"/>
-        <source>This setting will take effect after restarting bitswift.</source>
+        <source>This setting will take effect after restarting synergy.</source>
         <translation>Diese Einstellung wird nach einem Neustart übernommen.</translation>
     </message>
     <message>
@@ -1329,8 +1329,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     <message>
         <location line="+33"/>
         <location line="+231"/>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the bitswift network after a connection is established, but this process has not completed yet.</source>
-        <translation>Die angezeigte Information kann falsch sein. Die Brieftasche synchronisiert automatisch mit dem bitswift Netzwerk nachdem eine Verbindung zustande gekommen ist, aber dieser Prozess ist nicht abgeschlossen.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the synergy network after a connection is established, but this process has not completed yet.</source>
+        <translation>Die angezeigte Information kann falsch sein. Die Brieftasche synchronisiert automatisch mit dem synergy Netzwerk nachdem eine Verbindung zustande gekommen ist, aber dieser Prozess ist nicht abgeschlossen.</translation>
     </message>
     <message>
         <location line="-160"/>
@@ -1545,7 +1545,7 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+7"/>
-        <source>Show the bitswift-Qt help message to get a list with possible bitswift command-line options.</source>
+        <source>Show the synergy-Qt help message to get a list with possible synergy command-line options.</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1565,13 +1565,13 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="-104"/>
-        <source>bitswift - Debug window</source>
-        <translation>bitswift - Debug Fenster</translation>
+        <source>synergy - Debug window</source>
+        <translation>synergy - Debug Fenster</translation>
     </message>
     <message>
         <location line="+25"/>
-        <source>bitswift Core</source>
-        <translation>bitswift Kern</translation>
+        <source>synergy Core</source>
+        <translation>synergy Kern</translation>
     </message>
     <message>
         <location line="+279"/>
@@ -1580,7 +1580,7 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+7"/>
-        <source>Open the bitswift debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <source>Open the synergy debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1590,7 +1590,7 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location filename="../rpcconsole.cpp" line="-33"/>
-        <source>Welcome to the bitswift RPC console.</source>
+        <source>Welcome to the synergy RPC console.</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1749,7 +1749,7 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="-173"/>
-        <source>Enter a bitswift address (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <source>Enter a synergy address (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1849,7 +1849,7 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+251"/>
-        <source>WARNING: Invalid bitswift address</source>
+        <source>WARNING: Invalid synergy address</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1893,8 +1893,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to send the payment to  (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Empfängeradresse (z.b. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>The address to send the payment to  (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Empfängeradresse (z.b. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1923,7 +1923,7 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="+1"/>
-        <source>Enter a bitswift address (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <source>Enter a synergy address (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -1947,7 +1947,7 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to sign the message with (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <source>The address to sign the message with (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1984,8 +1984,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+21"/>
-        <source>Sign the message to prove you own this bitswift address</source>
-        <translation>Signiere die Nachricht um zu beweisen das du Besitzer dieser bitswift Adresse bist.</translation>
+        <source>Sign the message to prove you own this synergy address</source>
+        <translation>Signiere die Nachricht um zu beweisen das du Besitzer dieser synergy Adresse bist.</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -2011,12 +2011,12 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+21"/>
-        <source>The address the message was signed with (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <source>The address the message was signed with (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location line="+40"/>
-        <source>Verify the message to ensure it was signed with the specified bitswift address</source>
+        <source>Verify the message to ensure it was signed with the specified synergy address</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -2027,7 +2027,7 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     <message>
         <location filename="../signverifymessagedialog.cpp" line="+27"/>
         <location line="+3"/>
-        <source>Enter a bitswift address (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <source>Enter a synergy address (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -2037,8 +2037,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+3"/>
-        <source>Enter bitswift signature</source>
-        <translation>bitswift Signatur eingeben</translation>
+        <source>Enter synergy signature</source>
+        <translation>synergy Signatur eingeben</translation>
     </message>
     <message>
         <location line="+82"/>
@@ -2608,7 +2608,7 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     <name>bitcoin-core</name>
     <message>
         <location filename="../bitcoinstrings.cpp" line="+33"/>
-        <source>bitswift version</source>
+        <source>synergy version</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -2618,8 +2618,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+1"/>
-        <source>Send command to -server or bitswiftd</source>
-        <translation>Kommando versenden an -server oder bitswiftd </translation>
+        <source>Send command to -server or synergyd</source>
+        <translation>Kommando versenden an -server oder synergyd </translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2638,13 +2638,13 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+2"/>
-        <source>Specify configuration file (default: bitswift.conf)</source>
-        <translation>Konfigurationsdatei angeben (Standard: bitswift.conf)</translation>
+        <source>Specify configuration file (default: synergy.conf)</source>
+        <translation>Konfigurationsdatei angeben (Standard: synergy.conf)</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Specify pid file (default: bitswiftd.pid)</source>
-        <translation>PID Datei angeben (Standard: bitswift.pid)</translation>
+        <source>Specify pid file (default: synergyd.pid)</source>
+        <translation>PID Datei angeben (Standard: synergy.pid)</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -2793,8 +2793,8 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
     </message>
     <message>
         <location line="+61"/>
-        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong bitswift will not work properly.</source>
-        <translation>Wanung : Bitte prüfen Sie ob Datum und Uhrzeit richtig eingestellt sind. Wenn das Datum falsch ist bitswift nicht richtig funktionieren.</translation>
+        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong synergy will not work properly.</source>
+        <translation>Wanung : Bitte prüfen Sie ob Datum und Uhrzeit richtig eingestellt sind. Wenn das Datum falsch ist synergy nicht richtig funktionieren.</translation>
     </message>
     <message>
         <location line="-31"/>
@@ -2982,13 +2982,13 @@ This label turns red, if the priority is smaller than &quot;medium&quot;.
         <source>%s, you must set a rpcpassword in the configuration file:
  %s
 It is recommended you use the following random password:
-rpcuser=bitswiftrpc
+rpcuser=synergyrpc
 rpcpassword=%s
 (you do not need to remember this password)
 The username and password MUST NOT be the same.
 If the file does not exist, create it with owner-readable-only file permissions.
 It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s &quot;bitswift Alert&quot; admin@foo.com
+for example: alertnotify=echo %%s | mail -s &quot;synergy Alert&quot; admin@foo.com
 </source>
         <translation type="unfinished"/>
     </message>
@@ -3114,13 +3114,13 @@ for example: alertnotify=echo %%s | mail -s &quot;bitswift Alert&quot; admin@foo
     </message>
     <message>
         <location line="+1"/>
-        <source>Cannot obtain a lock on data directory %s.  bitswift is probably already running.</source>
-        <translation>Kann das Verzeichniss nicht einbinden %s. bitswift Brieftasche läuft wahrscheinlich bereits.</translation>
+        <source>Cannot obtain a lock on data directory %s.  synergy is probably already running.</source>
+        <translation>Kann das Verzeichniss nicht einbinden %s. synergy Brieftasche läuft wahrscheinlich bereits.</translation>
     </message>
     <message>
         <location line="-98"/>
-        <source>bitswift</source>
-        <translation>bitswift</translation>
+        <source>synergy</source>
+        <translation>synergy</translation>
     </message>
     <message>
         <location line="+140"/>
@@ -3154,13 +3154,13 @@ for example: alertnotify=echo %%s | mail -s &quot;bitswift Alert&quot; admin@foo
     </message>
     <message>
         <location line="+4"/>
-        <source>Error loading wallet.dat: Wallet requires newer version of bitswift</source>
-        <translation>Fehler beim Laden wallet.dat. Brieftasche benötigt neuere Version der bitswift Brieftasche.</translation>
+        <source>Error loading wallet.dat: Wallet requires newer version of synergy</source>
+        <translation>Fehler beim Laden wallet.dat. Brieftasche benötigt neuere Version der synergy Brieftasche.</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Wallet needed to be rewritten: restart bitswift to complete</source>
-        <translation>Brieftasche muss neu geschrieben werden. Starte die bitswift Brieftasche neu zum komplettieren.</translation>
+        <source>Wallet needed to be rewritten: restart synergy to complete</source>
+        <translation>Brieftasche muss neu geschrieben werden. Starte die synergy Brieftasche neu zum komplettieren.</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -3229,7 +3229,7 @@ for example: alertnotify=echo %%s | mail -s &quot;bitswift Alert&quot; admin@foo
     </message>
     <message>
         <location line="+122"/>
-        <source>Unable to bind to %s on this computer. bitswift is probably already running.</source>
+        <source>Unable to bind to %s on this computer. synergy is probably already running.</source>
         <translation>Fehler beim anbinden %s auf diesem Computer. BlaclCoin Client läuft wahrscheinlich bereits.</translation>
     </message>
     <message>

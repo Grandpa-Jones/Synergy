@@ -25,7 +25,7 @@ SendCoinsEntry::SendCoinsEntry(QWidget *parent) :
 #if QT_VERSION >= 0x040700
     /* Do not move this to the XML file, Qt before 4.7 will choke on it */
     ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
-    ui->payTo->setPlaceholderText(tr("Enter a bitswift address (e.g. bT8WRazwxzXTDM4tFc6EqwCNYzk8sZUwYH)"));
+    ui->payTo->setPlaceholderText(tr("Enter a Synergy address (e.g. SNRGYpMJNUfY2Usbj7eNqxSRP9EHMzuSuq)"));
     ui->narration->setPlaceholderText(tr("Enter a short note to send with payment (max 24 characters)"));
 #endif
     setFocusPolicy(Qt::TabFocus);
@@ -33,15 +33,6 @@ SendCoinsEntry::SendCoinsEntry(QWidget *parent) :
 
     GUIUtil::setupAddressWidget(ui->payTo, this);
     ui->narration->setMaxLength(24);
-
- /*
-    ui->narration->setEnabled(false);
-    if ((!IsInitialBlockDownload()) && (fTestNet || (pindexBest->nTime >= CTXV2_LIVE))) {
-        ui->narration->setEnabled(true);
-    } else {
-        ui->narration->setEnabled(false);
-    }
-  */
 }
 
 SendCoinsEntry::~SendCoinsEntry()
@@ -72,6 +63,7 @@ void SendCoinsEntry::on_payTo_textChanged(const QString &address)
 {
     if(!model)
         return;
+
     // Fill in label from address book, if address has an associated label
     QString associatedLabel = model->getAddressTableModel()->labelForAddress(address);
     if(!associatedLabel.isEmpty())
@@ -146,12 +138,7 @@ SendCoinsRecipient SendCoinsEntry::getValue()
 
     rv.address = ui->payTo->text();
     rv.label = ui->addAsLabel->text();
-    if ((!IsInitialBlockDownload()) &&
-        (fTestNet ||
-         // make them wait 10 minutes to buffer for clock drift
-         (pindexBest->nTime >= (CTXV2_LIVE + 600)))) {
-            rv.narration = ui->narration->text();
-    }
+    rv.narration = ui->narration->text();
 
     if (rv.address.length() > 75
         && IsStealthAddress(rv.address.toStdString()))

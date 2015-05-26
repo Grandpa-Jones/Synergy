@@ -1611,7 +1611,11 @@ bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet)
 
     if (whichType == TX_PUBKEY)
     {
-        addressRet = CPubKey(vSolutions[0]).GetID();
+        CPubKey pubKey(vSolutions[0]);
+        if (!pubKey.IsValid())
+            return false;
+
+        addressRet = pubKey.GetID();
         return true;
     }
     else if (whichType == TX_PUBKEYHASH)

@@ -44,8 +44,10 @@ Temporary Items
 
 # qt
 *.user
+*.user.*
 *.qm
 *~
 
-# bitswift
-bitswiftd
+# synergy
+synergyd
+

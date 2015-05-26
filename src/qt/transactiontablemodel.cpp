@@ -19,13 +19,14 @@
 #include <QDateTime>
 #include <QtAlgorithms>
 
-// Amount column is right-aligned it contains numbers
+// Turbo, Amount columns are right-aligned because they contains numbers
 static int column_alignments[] = {
         Qt::AlignLeft|Qt::AlignVCenter,
         Qt::AlignLeft|Qt::AlignVCenter,
         Qt::AlignLeft|Qt::AlignVCenter,
         Qt::AlignLeft|Qt::AlignVCenter,
         Qt::AlignLeft|Qt::AlignVCenter,
+        Qt::AlignRight|Qt::AlignVCenter,
         Qt::AlignRight|Qt::AlignVCenter
     };
 
@@ -230,7 +231,8 @@ TransactionTableModel::TransactionTableModel(CWallet* wallet, WalletModel *paren
         priv(new TransactionTablePriv(wallet, this)),
         cachedNumBlocks(0)
 {
-    columns << QString() << tr("Date") << tr("Type") << tr("Address") << tr("Narration") << tr("Amount");
+    columns << QString() << tr("Date") << tr("Type") << tr("Address") << tr("Narration") 
+                         << tr("Turbo") << tr("Amount");
 
     priv->refreshWallet();
 
@@ -434,6 +436,18 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
     return QVariant();
 }
 
+QString TransactionTableModel::formatTurbo(const TransactionRecord *wtx) const
+{
+   if (wtx->turbo >= 0)
+   {
+        return QString::number(wtx->turbo) + QString("x");
+   }
+   else
+   {
+        return QString("");
+   }
+}
+
 QString TransactionTableModel::formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed) const
 {
     QString str = BitcoinUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->credit + wtx->debit);
@@ -522,6 +536,8 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
             return formatTxToAddress(rec, false);
         case Narration:
             return formatNarration(rec);
+        case Turbo:
+            return formatTurbo(rec);
         case Amount:
             return formatTxAmount(rec);
         }
@@ -538,6 +554,8 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
             return formatTxType(rec);
         case ToAddress:
             return formatTxToAddress(rec, true);
+        case Turbo:
+            return rec->turbo;
         case Amount:
             return rec->credit + rec->debit;
         }
@@ -571,6 +589,8 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
         return QString::fromStdString(rec->address);
     case LabelRole:
         return walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(rec->address));
+    case TurboRole:
+        return rec->turbo;
     case AmountRole:
         return rec->credit + rec->debit;
     case TxIDRole:
@@ -608,6 +628,8 @@ QVariant TransactionTableModel::headerData(int section, Qt::Orientation orientat
                 return tr("Type of transaction.");
             case ToAddress:
                 return tr("Destination address of transaction.");
+            case Turbo:
+                return tr("TurboStake multiplier.");
             case Amount:
                 return tr("Amount removed from or added to balance.");
             }

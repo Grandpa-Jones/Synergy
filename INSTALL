@@ -1,4 +1,4 @@
-Building bitswift
-See doc/readme-qt.rst for instructions on building bitswift QT.
+Building synergy
+See doc/readme-qt.rst for instructions on building synergy QT.
 
-See doc/build-*.txt for instructions on building bitswiftd.
+See doc/build-*.txt for instructions on building synergyd.

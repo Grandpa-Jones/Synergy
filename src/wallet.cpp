@@ -19,8 +19,8 @@
 using namespace std;
 extern unsigned int nStakeMaxAge;
 
-unsigned int nStakeSplitAge = 1 * 24 * 60 * 60;
-int64_t nStakeCombineThreshold = 1000 * COIN;
+unsigned int nStakeSplitAge = 2 * 24 * 60 * 60;
+int64_t nStakeCombineThreshold = 100 * COIN;
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -466,7 +466,7 @@ void CWallet::WalletUpdateSpent(const CTransaction &tx, bool fBlock)
                     printf("WalletUpdateSpent: bad wtx %s\n", wtx.GetHash().ToString().c_str());
                 else if (!wtx.IsSpent(txin.prevout.n) && IsMine(wtx.vout[txin.prevout.n]))
                 {
-                    printf("WalletUpdateSpent found spent coin %s SWIFT %s\n", FormatMoney(wtx.GetCredit()).c_str(), wtx.GetHash().ToString().c_str());
+                    printf("WalletUpdateSpent found spent coin %s SNRG %s\n", FormatMoney(wtx.GetCredit()).c_str(), wtx.GetHash().ToString().c_str());
                     wtx.MarkSpent(txin.prevout.n);
                     wtx.WriteToDisk();
                     NotifyTransactionChanged(this, txin.prevout.hash, CT_UPDATED);
@@ -1013,7 +1013,7 @@ void CWallet::ReacceptWalletTransactions()
                 }
                 if (fUpdated)
                 {
-                    printf("ReacceptWalletTransactions found spent coin %s SWIFT %s\n", FormatMoney(wtx.GetCredit()).c_str(), wtx.GetHash().ToString().c_str());
+                    printf("ReacceptWalletTransactions found spent coin %s SNRG %s\n", FormatMoney(wtx.GetCredit()).c_str(), wtx.GetHash().ToString().c_str());
                     wtx.MarkDirty();
                     wtx.WriteToDisk();
                 }
@@ -1218,9 +1218,10 @@ void CWallet::AvailableCoinsMinConf(vector<COutput>& vCoins, int nConf) const
             if(pcoin->GetDepthInMainChain() < nConf)
                 continue;
 
-            for (unsigned int i = 0; i < pcoin->vout.size(); i++)
+            for (unsigned int i = 0; i < pcoin->vout.size(); i++) {
                 if (!(pcoin->IsSpent(i)) && IsMine(pcoin->vout[i]) && pcoin->vout[i].nValue >= nMinimumInputValue)
                     vCoins.push_back(COutput(pcoin, i, pcoin->GetDepthInMainChain()));
+            }
         }
     }
 }
@@ -1492,11 +1493,7 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, int64_t> >& vecSend,
         // txdb must be opened before the mapWallet lock
         CTxDB txdb("r");
         {
-            if (wtxNew.nTime < CTXV2_LIVE) {
-              nFeeRet = nTransactionFee;  // <-- 0
-            } else {
-              nFeeRet = MIN_TX_FEE;       // <-- reasonable
-            }
+            nFeeRet = MIN_TX_FEE;
             while (true)
             {
                 wtxNew.vin.clear();
@@ -1620,7 +1617,7 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, int64_t> >& vecSend,
                                 int64_t& nFeeRet, const CCoinControl* coinControl) {
     int nChangePos;
     bool rv = CreateTransaction(vecSend, wtxNew, reservekey, nFeeRet, nChangePos,
-                                  "", SWIFT_NONE, coinControl);
+                                  "", SNRG_NONE, coinControl);
     return rv;
 
 }
@@ -1633,7 +1630,7 @@ bool CWallet::CreateTransaction(CScript scriptPubKey, int64_t nValue, std::strin
     vector< pair<CScript, int64_t> > vecSend;
     vecSend.push_back(make_pair(scriptPubKey, nValue));
     
-    if ((sNarr.length() > 0) && ((wtxNew.nTime >= (CTXV2_LIVE + 600)) || fTestNet))
+    if (sNarr.length() > 0)
     {
         std::vector<uint8_t> vNarr(sNarr.c_str(), sNarr.c_str() + sNarr.length());
         std::vector<uint8_t> vNDesc;
@@ -1669,7 +1666,7 @@ bool CWallet::CreateTransaction(CScript scriptPubKey, int64_t nValue, CWalletTx&
     vecSend.push_back(make_pair(scriptPubKey, nValue));
     int nChangePos;
     bool rv = CreateTransaction(vecSend, wtxNew, reservekey, nFeeRet, nChangePos,
-                                  "", SWIFT_NONE, coinControl);
+                                  "", SNRG_NONE, coinControl);
     return rv;
 }
 
@@ -2126,7 +2123,7 @@ bool CWallet::SendStealthMoneyToDestination(CStealthAddress& sxAddress, int64_t 
     };
 
     std::vector<unsigned char> vchNarr;
-    if ((sNarr.length() > 0) && ((wtxNew.nTime >= (CTXV2_LIVE + 600)) || fTestNet))
+    if (sNarr.length() > 0)
     {
         SecMsgCrypter crypter;
         crypter.SetKey(&secretShared.e[0], &ephem_pubkey[0]);
@@ -2444,6 +2441,7 @@ bool CWallet::GetStakeWeight(const CKeyStore& keystore, uint64_t& nMinWeight, ui
     return true;
 }
 
+// coin stake is CBlock::vtx[1] and has vout[0] empty
 bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nSearchInterval, int64_t nFees, CTransaction& txNew, CKey& key)
 {
     CBlockIndex* pindexPrev = pindexBest;
@@ -2453,7 +2451,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     txNew.vin.clear();
     txNew.vout.clear();
 
-    // Mark coin stake transaction
+    // Mark coin stake transaction (vout[0] empty)
     CScript scriptEmpty;
     scriptEmpty.clear();
     txNew.vout.push_back(CTxOut(0, scriptEmpty));
@@ -2469,12 +2467,15 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     set<pair<const CWalletTx*,unsigned int> > setCoins;
     int64_t nValueIn = 0;
 
-    // Select coins with suitable depth
-    if (!SelectCoinsSimple(nBalance - nReserveBalance, txNew.nTime, nCoinbaseMaturity + 10, setCoins, nValueIn))
-        return false;
 
-    if (setCoins.empty())
+    // Select coins with suitable depth
+    if (!SelectCoinsSimple(nBalance - nReserveBalance, txNew.nTime, nCoinbaseMaturity + 10, setCoins, nValueIn)) {
         return false;
+    }
+
+    if (setCoins.empty()) {
+        return false;
+    }
 
     int64_t nCredit = 0;
     CScript scriptPubKeyKernel;
@@ -2495,6 +2496,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             if (!block.ReadFromDisk(txindex.pos.nFile, txindex.pos.nBlockPos, false))
                 continue;
         }
+
 
         static int nMaxStakeSearchInterval = 60;
         if (block.GetBlockTime() + nStakeMinAge > txNew.nTime - nMaxStakeSearchInterval)
@@ -2621,9 +2623,18 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         if (!txNew.GetCoinAge(txdb, nCoinAge))
             return error("CreateCoinStake : failed to calculate coin age");
 
-        int64_t nReward = GetProofOfStakeReward(nCoinAge, nFees);
-        if (nReward <= 0)
-            return false;
+        CTxDestination dAddr;
+        if (!ExtractDestination(txNew.vout[1].scriptPubKey, dAddr)) {
+                return error("CreateCoinStake : Could not determine address from scriptPubKeyOut");
+        }
+        CBitcoinAddress sigaddr(dAddr);
+
+        int64_t nReward = GetProofOfStakeReward(nCoinAge, sigaddr, txNew.nTime, pindexPrev);
+
+        if (nReward <= 0) {
+              printf("CreateCoinStake: Reward is 0.\n");
+              return false;
+        }
 
         nCredit += nReward;
     }
@@ -3216,7 +3227,7 @@ void CWallet::FixSpentCoins(int& nMismatchFound, int64_t& nBalanceInQuestion, bo
         {
             if (IsMine(pcoin->vout[n]) && pcoin->IsSpent(n) && (txindex.vSpent.size() <= n || txindex.vSpent[n].IsNull()))
             {
-                printf("FixSpentCoins found lost coin %s SWIFT %s[%d], %s\n",
+                printf("FixSpentCoins found lost coin %s SNRG %s[%d], %s\n",
                     FormatMoney(pcoin->vout[n].nValue).c_str(), pcoin->GetHash().ToString().c_str(), n, fCheckOnly? "repair not attempted" : "repairing");
                 nMismatchFound++;
                 nBalanceInQuestion += pcoin->vout[n].nValue;
@@ -3228,7 +3239,7 @@ void CWallet::FixSpentCoins(int& nMismatchFound, int64_t& nBalanceInQuestion, bo
             }
             else if (IsMine(pcoin->vout[n]) && !pcoin->IsSpent(n) && (txindex.vSpent.size() > n && !txindex.vSpent[n].IsNull()))
             {
-                printf("FixSpentCoins found spent coin %s SWIFT %s[%d], %s\n",
+                printf("FixSpentCoins found spent coin %s SNRG %s[%d], %s\n",
                     FormatMoney(pcoin->vout[n].nValue).c_str(), pcoin->GetHash().ToString().c_str(), n, fCheckOnly? "repair not attempted" : "repairing");
                 nMismatchFound++;
                 nBalanceInQuestion += pcoin->vout[n].nValue;

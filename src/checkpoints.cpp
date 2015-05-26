@@ -25,8 +25,7 @@ namespace Checkpoints
     static MapCheckpoints mapCheckpoints =
         boost::assign::map_list_of
         (           0, hashGenesisBlock )
-        (      177030, uint256("0x9a57302716feeafd4b09ca8e096f61725d389630e90ef650726bdc7208240c8e"))
-        (      231988, uint256("0x3c4bc92bd6e867ee0f3c6820269ab5809c32f28cc525863d8f83e10e8dc85bd4"))
+        // (        n, uint256("0x"))
     ;
 
     // TestNet has no checkpoints
@@ -350,11 +349,11 @@ namespace Checkpoints
 
 // ppcoin: sync-checkpoint master key
 const std::string CSyncCheckpoint::strMasterPubKey = 
-              "046dc9ff24df9d5ec9b80a40f0b304"
-              "d120ec4140d896ed97c801a902b682"
-              "e24ca21f6b517e006afdce11e0e734"
-              "81895bdc97756f179b909ce3a64ae4"
-              "ac9dcbf20d";
+              "044acd64a1c62f42b0b2ec0bf41323"
+              "28094ca158a1eb276baf876c88288f"
+              "34414ff3e0bafa4851b692abafdfd9"
+              "a5828b1af1e28033f086516264ca90"
+              "6878f1ad2c";
 
 std::string CSyncCheckpoint::strMasterPrivKey = "";
 

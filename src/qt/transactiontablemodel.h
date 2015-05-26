@@ -24,7 +24,8 @@ public:
         Type = 2,
         ToAddress = 3,
         Narration = 4,
-        Amount = 5
+        Turbo = 5,
+        Amount = 6
     };
 
     /** Roles to get specific information from a transaction row.
@@ -41,6 +42,8 @@ public:
         AddressRole,
         /** Label of address related to transaction */
         LabelRole,
+        /** TurboStake multiplier */
+        TurboRole,
         /** Net amount of transaction */
         AmountRole,
         /** Unique identifier */
@@ -71,6 +74,7 @@ private:
     QString formatTxDate(const TransactionRecord *wtx) const;
     QString formatTxType(const TransactionRecord *wtx) const;
     QString formatTxToAddress(const TransactionRecord *wtx, bool tooltip) const;
+    QString formatTurbo(const TransactionRecord *wtx) const;
     QString formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed=true) const;
     QString formatNarration(const TransactionRecord *wtx) const;
     QString formatTooltip(const TransactionRecord *rec) const;

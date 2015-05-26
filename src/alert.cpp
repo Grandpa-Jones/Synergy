@@ -20,20 +20,20 @@ map<uint256, CAlert> mapAlerts;
 CCriticalSection cs_mapAlerts;
 
 static const char* pszMainKey = 
-              "046dc9ff24df9d5ec9b80a40f0b304"
-              "d120ec4140d896ed97c801a902b682"
-              "e24ca21f6b517e006afdce11e0e734"
-              "81895bdc97756f179b909ce3a64ae4"
-              "ac9dcbf20d";
+              "04ca7f11af08caf84eb96699ac773e"
+              "5988f5dd58120bcf26b066f87a1286"
+              "8fb7c51901eabe06c0496e85ba8d64"
+              "f667daa73737b8bac09f5782592cdd"
+              "e7bc8403ee";
 
 
 // TestNet alerts pubKey
 static const char* pszTestKey =
-              "046dc9ff24df9d5ec9b80a40f0b304"
-              "d120ec4140d896ed97c801a902b682"
-              "e24ca21f6b517e006afdce11e0e734"
-              "81895bdc97756f179b909ce3a64ae4"
-              "ac9dcbf20d";
+              "04ca7f11af08caf84eb96699ac773e"
+              "5988f5dd58120bcf26b066f87a1286"
+              "8fb7c51901eabe06c0496e85ba8d64"
+              "f667daa73737b8bac09f5782592cdd"
+              "e7bc8403ee";
 
 
 // TestNet alerts private key

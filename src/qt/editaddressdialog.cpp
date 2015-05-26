@@ -22,11 +22,7 @@ EditAddressDialog::EditAddressDialog(Mode mode, QWidget *parent) :
         setWindowTitle(tr("New receiving address"));
         ui->addressEdit->setEnabled(false);
         ui->addressEdit->setVisible(false);
-        if (fTestNet || (pindexBest->nTime >= CTXV2_LIVE)) {
-             ui->stealthCB->setEnabled(true);
-        } else {
-             ui->stealthCB->setEnabled(false);
-        }
+        ui->stealthCB->setEnabled(true);
         ui->stealthCB->setVisible(true);
         break;
     case NewSendingAddress:
@@ -118,7 +114,7 @@ void EditAddressDialog::accept()
             break;
         case AddressTableModel::INVALID_ADDRESS:
             QMessageBox::warning(this, windowTitle(),
-                tr("The entered address \"%1\" is not a valid bitswift address.").arg(ui->addressEdit->text()),
+                tr("The entered address \"%1\" is not a valid synergy address.").arg(ui->addressEdit->text()),
                 QMessageBox::Ok, QMessageBox::Ok);
             break;
         case AddressTableModel::DUPLICATE_ADDRESS:

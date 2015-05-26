@@ -277,9 +277,9 @@ class CBitcoinAddress : public CBase58Data
 public:
     enum
     {
-        PUBKEY_ADDRESS = 85,  // b
+        PUBKEY_ADDRESS = 63,  // SNRGY, SYNERGY
         SCRIPT_ADDRESS = 28,
-        PUBKEY_ADDRESS_TEST = 111,
+        PUBKEY_ADDRESS_TEST = 125,  // snrg (synergy is too high)
         SCRIPT_ADDRESS_TEST = 196,
     };
 

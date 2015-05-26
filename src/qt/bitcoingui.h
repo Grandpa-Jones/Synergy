@@ -153,13 +153,13 @@ private slots:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
     /** Switch to statistics page*/
-    void gotoStatisticsPage();
+//     void gotoStatisticsPage();
 //	/** Switch to trade page*/
 //    void gotoTradePage();
 	/** Switch to block explorer*/
-    void gotoBlockBrowser();
-    void gotoBackupPage();
-    void gotoChatPage();
+//     void gotoBlockBrowser();
+//     void gotoBackupPage();
+//     void gotoChatPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to address book page */

@@ -72,24 +72,24 @@ public:
     };
 
     /** Number of confirmation recommended for accepting a transaction */
-    static const int RecommendedNumConfirmations = 10;
+    static const int RecommendedNumConfirmations = 6;
 
     TransactionRecord():
-            hash(), time(0), type(Other), address(""), narration(""), debit(0), credit(0), idx(0)
+            hash(), time(0), type(Other), address(""), narration(""), turbo(-1), debit(0), credit(0), idx(0)
     {
     }
 
-    TransactionRecord(uint256 hash, int64_t time):
-            hash(hash), time(time), type(Other), address(""), narration(""), debit(0),
+    TransactionRecord(uint256 hash, int64_t time, int64_t turbo):
+            hash(hash), time(time), type(Other), address(""), narration(""), turbo(turbo), debit(0),
             credit(0), idx(0)
     {
     }
 
     TransactionRecord(uint256 hash, int64_t time,
                 Type type, const std::string &address, const std::string &narration,
-                int64_t debit, int64_t credit):
-            hash(hash), time(time), type(type), address(address), narration(narration), debit(debit), credit(credit),
-            idx(0)
+                int64_t turbo, int64_t debit, int64_t credit):
+            hash(hash), time(time), type(type), address(address), narration(narration),
+                                           turbo(turbo), debit(debit), credit(credit), idx(0)
     {
     }
 
@@ -105,6 +105,7 @@ public:
     Type type;
     std::string address;
     std::string narration;
+    qint64 turbo;
     qint64 debit;
     qint64 credit;
     /**@}*/

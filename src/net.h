@@ -24,7 +24,8 @@ class CNode;
 class CBlockIndex;
 extern int nBestHeight;
 
-
+// random port number, not used much
+unsigned short const TOR_PORT = 38155;
 
 inline unsigned int ReceiveBufferSize() { return 1000*GetArg("-maxreceivebuffer", 5*1000); }
 inline unsigned int SendBufferSize() { return 1000*GetArg("-maxsendbuffer", 1*1000); }
@@ -40,6 +41,7 @@ void MapPort();
 unsigned short GetListenPort();
 bool BindListenPort(const CService &bindAddr, std::string& strError=REF(std::string()));
 void StartNode(void* parg);
+void StartTor(void* parg);
 bool StopNode();
 
 enum

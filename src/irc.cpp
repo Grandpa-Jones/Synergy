@@ -189,7 +189,7 @@ bool GetIPFromIRC(SOCKET hSocket, string strMyName, CNetAddr& ipRet)
 void ThreadIRCSeed(void* parg)
 {
     // Make this thread recognisable as the IRC seeding thread
-    RenameThread("bitswift-ircseed");
+    RenameThread("synergy-ircseed");
 
     try
     {
@@ -302,16 +302,16 @@ void ThreadIRCSeed2(void* parg)
         }
 
         if (fTestNet) {
-            Send(hSocket, "JOIN #bitswiftTEST\r");
-            Send(hSocket, "WHO #bitswiftTEST\r");
+            Send(hSocket, "JOIN #synergyTEST\r");
+            Send(hSocket, "WHO #synergyTEST\r");
         } else {
-            // randomly join #bitswift00-#bitswift05
+            // randomly join #synergy00-#synergy05
             //int channel_number = GetRandInt(5);
             int channel_number = 0;
             // Channel number is always 0 for initial release
             //int channel_number = 0;
-            Send(hSocket, strprintf("JOIN #bitswift%02d\r", channel_number).c_str());
-            Send(hSocket, strprintf("WHO #bitswift%02d\r", channel_number).c_str());
+            Send(hSocket, strprintf("JOIN #synergy%02d\r", channel_number).c_str());
+            Send(hSocket, strprintf("WHO #synergy%02d\r", channel_number).c_str());
         }
 
         int64_t nStart = GetTime();

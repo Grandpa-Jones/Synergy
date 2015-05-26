@@ -8,6 +8,11 @@
 #include "miner.h"
 #include "kernel.h"
 
+// from main.cpp
+extern unsigned int nTargetSpacing;
+
+extern unsigned int nLaunchTime;
+
 using namespace std;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -121,6 +126,9 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake, int64_t* pFees)
     txNew.vin.resize(1);
     txNew.vin[0].prevout.SetNull();
     txNew.vout.resize(1);
+    
+    
+    int nHeight = pindexPrev->nHeight+1; // height of new block
 
     if (!fProofOfStake)
     {
@@ -133,7 +141,7 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake, int64_t* pFees)
     else
     {
         // Height first in coinbase required for block.version=2
-        txNew.vin[0].scriptSig = (CScript() << pindexPrev->nHeight+1) + COINBASE_FLAGS;
+        txNew.vin[0].scriptSig = (CScript() << nHeight) + COINBASE_FLAGS;
         assert(txNew.vin[0].scriptSig.size() <= 100);
 
         txNew.vout[0].SetEmpty();
@@ -360,7 +368,7 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake, int64_t* pFees)
             printf("CreateNewBlock(): total size %"PRIu64"\n", nBlockSize);
 
         if (!fProofOfStake)
-            pblock->vtx[0].vout[0].nValue = GetProofOfWorkReward(nFees);
+            pblock->vtx[0].vout[0].nValue = GetProofOfWorkReward(nHeight, nFees);
 
         if (pFees)
             *pFees = nFees;
@@ -454,6 +462,9 @@ bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
     if (hashBlock > hashTarget)
         return error("CheckWork() : proof-of-work not meeting target");
 
+    if (pblock->nTime < nLaunchTime)
+         return error("CheckWork() : time stamp before launch");
+
     //// debug print
     printf("CheckWork() : new proof-of-work block found  \n  hash: %s  \ntarget: %s\n", hashBlock.GetHex().c_str(), hashTarget.GetHex().c_str());
     pblock->print();
@@ -524,7 +535,7 @@ void StakeMiner(CWallet *pwallet)
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
 
     // Make this thread recognisable as the mining thread
-    RenameThread("bitswift-miner");
+    RenameThread("synergy-miner");
 
     bool fTryToSync = true;
 
@@ -574,9 +585,11 @@ void StakeMiner(CWallet *pwallet)
             SetThreadPriority(THREAD_PRIORITY_NORMAL);
             CheckStake(pblock.get(), *pwallet);
             SetThreadPriority(THREAD_PRIORITY_LOWEST);
-            MilliSleep(30000);
+            MilliSleep(nTargetSpacing * 1000);
         }
         else
+        {
             MilliSleep(nMinerSleep);
+        }
     }
 }

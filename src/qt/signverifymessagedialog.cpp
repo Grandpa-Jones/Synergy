@@ -24,11 +24,11 @@ SignVerifyMessageDialog::SignVerifyMessageDialog(QWidget *parent) :
 
 #if (QT_VERSION >= 0x040700)
     /* Do not move this to the XML file, Qt before 4.7 will choke on it */
-    ui->addressIn_SM->setPlaceholderText(tr("Enter a bitswift address (e.g. bT8WRazwxzXTDM4tFc6EqwCNYzk8sZUwYH)"));
+    ui->addressIn_SM->setPlaceholderText(tr("Enter a synergy address (e.g. SNRGYpMJNUfY2Usbj7eNqxSRP9EHMzuSuq)"));
     ui->signatureOut_SM->setPlaceholderText(tr("Click \"Sign Message\" to generate signature"));
 
-    ui->addressIn_VM->setPlaceholderText(tr("Enter a bitswift address (e.g. bT8WRazwxzXTDM4tFc6EqwCNYzk8sZUwYH)"));
-    ui->signatureIn_VM->setPlaceholderText(tr("Enter bitswift signature"));
+    ui->addressIn_VM->setPlaceholderText(tr("Enter a synergy address (e.g. SNRGYpMJNUfY2Usbj7eNqxSRP9EHMzuSuq)"));
+    ui->signatureIn_VM->setPlaceholderText(tr("Enter synergy signature"));
 #endif
 
     GUIUtil::setupAddressWidget(ui->addressIn_SM, this);

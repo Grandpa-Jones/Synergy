@@ -2,8 +2,24 @@
 # Distributed under the MIT/X11 software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+STATIC=1
+
+INCLUDEPATHS= \
+ -I"$(CURDIR)" \
+ -I"$(CURDIR)/obj" \
+ -I"$(CURDIR)/tor" \
+ -I"$(CURDIR)/tor/adapter" \
+ -I"$(CURDIR)/tor/common" \
+ -I"$(CURDIR)/tor/ext" \
+ -I"$(CURDIR)/tor/ext/curve25519_donna" \
+ -I"$(CURDIR)/tor/or" \
+ -I"/usr/include" \
+ -I"$(INC_LINUX)" \
+ -I"$(CURDIR)/leveldb/include" \
+ -I"$(CURDIR)/leveldb/helpers"
+CFLAGS += $(INCLUDEPATHS)
 USE_UPNP:=-
-USE_IPV6:=1
+USE_IPV6:=-
 
 STATIC:=1
 
@@ -18,10 +34,10 @@ LIBS = $(addprefix -L,$(BOOST_LIB_PATH) $(BDB_LIB_PATH) $(OPENSSL_LIB_PATH))
 LMODE = dynamic
 LMODE2 = dynamic
 ifdef STATIC
-	LMODE = static
-	ifeq (${STATIC}, all)
-		LMODE2 = static
-	endif
+    LMODE = static
+    ifeq (${STATIC}, all)
+        LMODE2 = static
+    endif
 endif
 
 # for boost 1.37, add -mt to the boost libraries
@@ -36,11 +52,11 @@ LIBS += \
    -l crypto
 
 ifndef USE_UPNP
-	override USE_UPNP = -
+    override USE_UPNP = -
 endif
 ifneq (${USE_UPNP}, -)
-	LIBS += -l miniupnpc
-	DEFS += -DUSE_UPNP=$(USE_UPNP)
+    LIBS += -l miniupnpc
+    DEFS += -DUSE_UPNP=$(USE_UPNP)
 endif
 
 ifneq (${USE_IPV6}, -)
@@ -49,6 +65,7 @@ endif
 
 LIBS+= \
  -Wl,-B$(LMODE2) \
+   -l event \
    -l z \
    -l dl \
    -l pthread
@@ -99,7 +116,7 @@ endif
 # CXXFLAGS can be specified on the make command line, so we use xCXXFLAGS that only
 # adds some defaults in front. Unfortunately, CXXFLAGS=... $(CXXFLAGS) does not work.
 xCXXFLAGS=-O2 $(EXT_OPTIONS) -pthread -Wall -Wextra -Wno-ignored-qualifiers -Wformat -Wformat-security -Wno-unused-parameter \
-    $(DEBUGFLAGS) $(DEFS) $(HARDENING) $(CXXFLAGS)
+    $(DEBUGFLAGS) $(DEFS) $(HARDENING) $(INCLUDEPATHS) $(CXXFLAGS)
 
 # LDFLAGS can be specified on the make command line, so we use xLDFLAGS that only
 # adds some defaults in front. Unfortunately, LDFLAGS=... $(LDFLAGS) does not work.
@@ -107,7 +124,6 @@ xLDFLAGS=$(LDHARDENING) $(LDFLAGS)
 
 OBJS= \
     obj/stealth.o \
-    obj/smessage.o \
     obj/groestl.o \
     obj/blake.o \
     obj/bmw.o \
@@ -119,10 +135,83 @@ OBJS= \
     obj/cubehash.o \
     obj/echo.o \
     obj/simd.o \
-    obj/hamsi.o \
-    obj/fugue.o \
-    obj/shabal.o\
-    obj/whirlpool.o \
+    obj/address.o \
+    obj/addressmap.o \
+    obj/aes.o \
+    obj/backtrace.o \
+    obj/buffers.o \
+    obj/channel.o \
+    obj/channeltls.o \
+    obj/circpathbias.o \
+    obj/circuitbuild.o \
+    obj/circuitlist.o \
+    obj/circuitmux.o \
+    obj/circuitmux_ewma.o \
+    obj/circuitstats.o \
+    obj/circuituse.o \
+    obj/command.o \
+    obj/tor_compat.o \
+    obj/compat_libevent.o \
+    obj/config.o \
+    obj/config_codedigest.o \
+    obj/confparse.o \
+    obj/connection.o \
+    obj/connection_edge.o \
+    obj/connection_or.o \
+    obj/container.o \
+    obj/control.o \
+    obj/cpuworker.o \
+    obj/crypto.o \
+    obj/csiphash.o \
+    obj/crypto_curve25519.o \
+    obj/crypto_format.o \
+    obj/curve25519-donna.o \
+    obj/di_ops.o \
+    obj/directory.o \
+    obj/dirserv.o \
+    obj/dirvote.o \
+    obj/dns.o \
+    obj/dnsserv.o \
+    obj/entrynodes.o \
+    obj/ext_orport.o \
+    obj/fp_pair.o \
+    obj/geoip.o \
+    obj/hibernate.o \
+    obj/log.o \
+    obj/memarea.o \
+    obj/mempool.o \
+    obj/microdesc.o \
+    obj/networkstatus.o \
+    obj/nodelist.o \
+    obj/onion.o \
+    obj/onion_fast.o \
+    obj/onion_main.o \
+    obj/onion_ntor.o \
+    obj/onion_tap.o \
+    obj/policies.o \
+    obj/procmon.o \
+    obj/reasons.o \
+    obj/relay.o \
+    obj/rendclient.o \
+    obj/rendcommon.o \
+    obj/rendmid.o \
+    obj/rendservice.o \
+    obj/rephist.o \
+    obj/replaycache.o \
+    obj/router.o \
+    obj/routerlist.o \
+    obj/routerparse.o \
+    obj/routerset.o \
+    obj/sandbox.o \
+    obj/statefile.o \
+    obj/status.o \
+    obj/tor_util.o \
+    obj/torgzip.o \
+    obj/tortls.o \
+    obj/tor_main.o \
+    obj/transports.o \
+    obj/util_codedigest.o \
+    obj/util_process.o \
     obj/alert.o \
     obj/version.o \
     obj/checkpoints.o \
@@ -156,9 +245,12 @@ OBJS= \
     obj/scrypt.o \
     obj/scrypt-arm.o \
     obj/scrypt-x86.o \
-    obj/scrypt-x86_64.o 
+    obj/scrypt-x86_64.o \
+    obj/smessage.o \
+    obj/stealth.o 
 
-all: bitswiftd
+
+all: synergyd
 
 LIBS += $(CURDIR)/leveldb/libleveldb.a $(CURDIR)/leveldb/libmemenv.a
 DEFS += $(addprefix -I,$(CURDIR)/leveldb/include)
@@ -168,6 +260,7 @@ leveldb/libleveldb.a:
 	@echo "Building LevelDB ..."; cd leveldb; make libleveldb.a libmemenv.a; cd ..;
 obj/txdb-leveldb.o: leveldb/libleveldb.a
 
+
 # auto-generated dependencies:
 -include obj/*.P
 
@@ -175,6 +268,58 @@ obj/build.h: FORCE
 	/bin/sh ../share/genbuild.sh obj/build.h
 version.cpp: obj/build.h
 DEFS += -DHAVE_BUILD_INFO
+
+
+obj/%.o: %.cpp
+	$(CXX) -c $(xCXXFLAGS) -MMD -MF $(@:%.o=%.d) -o $@ $<
+	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
+	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+	      -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
+	  rm -f $(@:%.o=%.d)
+
+
+obj/%.o: %.c
+	$(CC) -c $(CFLAGS) -MMD -MF $(@:%.o=%.d) -o $@ $<
+	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
+	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+	      -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
+	  rm -f $(@:%.o=%.d)
+
+obj/%.o: tor/common/%.c
+	$(CC) -c $(CFLAGS) -MMD -MF $(@:%.o=%.d) -o $@ $<
+	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
+	sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+            -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
+	rm -f $(@:%.o=%.d)
+
+obj/%.o: tor/ext/%.c
+	$(CC) -c $(CFLAGS) -MMD -MF $(@:%.o=%.d) -o $@ $<
+	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
+	sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+            -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
+	rm -f $(@:%.o=%.d)
+
+obj/%.o: tor/ext/curve25519_donna/%.c
+	$(CC) -c $(CFLAGS) -MMD -MF $(@:%.o=%.d) -o $@ $<
+	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
+	sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+            -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
+	rm -f $(@:%.o=%.d)
+
+
+obj/%.o: tor/or/%.c
+	$(CC) -c $(CFLAGS) -MMD -MF $(@:%.o=%.d) -o $@ $<
+	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
+	sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+            -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
+	rm -f $(@:%.o=%.d)
+
+obj/synergy.o: tor/adapter/synergy.cpp
+	$(CXX) -c $(xCXXFLAGS) -MMD -MF $(@:%.o=%.d) -o $@ $<
+	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
+	sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+            -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
+	rm -f $(@:%.o=%.d)
 
 obj/scrypt-x86.o: scrypt-x86.S
 	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
@@ -184,26 +329,13 @@ obj/scrypt-x86_64.o: scrypt-x86_64.S
 
 obj/scrypt-arm.o: scrypt-arm.S
 	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
-	
-obj/%.o: %.c
-	$(CXX) -c $(xCXXFLAGS) -fpermissive -MMD -MF $(@:%.o=%.d) -o $@ $<
-	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
-	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
-              -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
-	      
-	rm -f $(@:%.o=%.d)	
-obj/%.o: %.cpp
-	$(CXX) -c $(xCXXFLAGS) -MMD -MF $(@:%.o=%.d) -o $@ $<
-	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
-	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
-	      -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
-	  rm -f $(@:%.o=%.d)
 
-bitswiftd: $(OBJS:obj/%=obj/%)
-	$(LINK) $(xCXXFLAGS) -o $@ $^ $(xLDFLAGS) $(LIBS)
+synergyd: leveldb/libleveldb.a \
+              $(OBJS:obj/%=obj/%) obj/synergy.o
+	$(CXX) $(xCXXFLAGS) -o $@ $(LIBPATHS) $^ $(xLDFLAGS) $(LIBS)
 
 clean:
-	-rm -f bitswiftd
+	-rm -f synergyd
 	-rm -f obj/*.o
 	-rm -f obj/*.P
 	-rm -f obj/build.h

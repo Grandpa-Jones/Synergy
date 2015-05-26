@@ -19,11 +19,11 @@
 #include "addresstablemodel.h"
 #include "transactionview.h"
 #include "overviewpage.h"
-#include "statisticspage.h"
-#include "backuppage.h"
-#include "blockbrowser.h"
-#include "chatwindow.h"
-//#include "tradepage.h"
+// #include "statisticspage.h"
+// #include "backuppage.h"
+// #include "blockbrowser.h"
+// #include "chatwindow.h"
+// #include "tradepage.h"
 #include "bitcoinunits.h"
 #include "guiconstants.h"
 #include "askpassphrasedialog.h"
@@ -85,8 +85,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     rpcConsole(0)
 {
     setFixedSize(1100, 640);
-    setWindowTitle(tr("BitSwift") + " " + tr("Wallet"));
-    qApp->setStyleSheet("QMainWindow { background-image:url(:images/bkg);border:none;font-family:'Open Sans,sans-serif'; } #frame { } QToolBar QLabel { padding-top:15px;padding-bottom:10px;margin:0px; } #spacer { background:rgb(63,169,245);border:none; } #toolbar3 { border:none;width:1px; background-color: rgb(56,56,56); } #toolbar2 { border:none;width:28px; background-color:rgb(56,56,56); } #toolbar { border:none;height:100%;padding-top:20px; background: rgb(63,169,245); text-align: left; color: white;min-width:150px;max-width:150px;} QToolBar QToolButton:hover {background-color:qlineargradient(x1: 0, y1: 0, x2: 2, y2: 2,stop: 0 rgb(63,169,245), stop: 1 rgb(216,252,251),stop: 2 rgb(59,62,65));} QToolBar QToolButton { font-family:Century Gothic;padding-left:20px;padding-right:150px;padding-top:10px;padding-bottom:10px; width:100%; color: white; text-align: left; background-color: rgb(63,169,245) } #labelMiningIcon { padding-left:5px;font-family:Century Gothic;width:100%;font-size:10px;text-align:center;color:white; } QMenu { background: rgb(63,169,245); color:white; padding-bottom:10px; } QMenu::item { color:white; background-color: transparent; } QMenu::item:selected { background-color:qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5,stop: 0 rgb(63,169,245), stop: 1 rgb(149,204,244)); } QMenuBar { background: rgb(63,169,245); color:white; } QMenuBar::item { font-size:12px;padding-bottom:8px;padding-top:8px;padding-left:15px;padding-right:15px;color:white; background-color: transparent; } QMenuBar::item:selected { background-color:qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5,stop: 0 rgb(63,169,245), stop: 1 rgb(149,204,244)); }");
+    setWindowTitle(tr("Synergy") + " " + tr("Wallet"));
+    qApp->setStyleSheet("QMainWindow { background-image:url(:images/bkg);border:none;font-family:'Open Sans,sans-serif'; } #frame { } QToolBar QLabel { padding-top:15px;padding-bottom:10px;margin:0px; } #spacer { background:rgb(85,7,7);border:none; } #toolbar3 { border:none;width:1px; background-color: rgb(56,56,56); } #toolbar2 { border:none;width:28px; background-color:rgb(56,56,56); } #toolbar { border:none;height:100%;padding-top:20px; background: rgb(85,7,7); text-align: left; color: white;min-width:150px;max-width:150px;} QToolBar QToolButton:hover {background-color:qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,stop: 0 rgb(85,7,7), stop: 1 rgb(251,216,216),stop: 2 rgb(65,59,59));} QToolBar QToolButton { font-family:Century Gothic;padding-left:20px;padding-right:150px;padding-top:10px;padding-bottom:10px; width:100%; color: white; text-align: left; background-color: rgb(85,7,7) } #labelMiningIcon { padding-left:5px;font-family:Century Gothic;width:100%;font-size:10px;text-align:center;color:white; } QMenu { background: rgb(85,7,7); color:white; padding-bottom:10px; } QMenu::item { color:white; background-color: transparent; } QMenu::item:selected { background-color:qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5,stop: 0 rgb(85,7,7), stop: 1 rgb(244,177,177)); } QMenuBar { background: rgb(85,7,7); color:white; } QMenuBar::item { font-size:12px;padding-bottom:8px;padding-top:8px;padding-left:15px;padding-right:15px;color:white; background-color: transparent; } QMenuBar::item:selected { background-color:qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5,stop: 0 rgb(85,7,7), stop: 1 rgb(244,177,177)); }");
 #ifndef Q_OS_MAC
     qApp->setWindowIcon(QIcon(":icons/bitcoin"));
     setWindowIcon(QIcon(":icons/bitcoin"));
@@ -111,11 +111,11 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
 
     // Create tabs
     overviewPage = new OverviewPage();
-    statisticsPage = new StatisticsPage(this);
+//    statisticsPage = new StatisticsPage(this);
 //    tradePage = new TradePage(this);
-    blockBrowser = new BlockBrowser(this);
-    backupPage = new BackupPage(this);
-    chatWindow = new ChatWindow(this);
+//    blockBrowser = new BlockBrowser(this);
+//    backupPage = new BackupPage(this);
+//    chatWindow = new ChatWindow(this);
 
     transactionsPage = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout();
@@ -133,11 +133,11 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
 
     centralWidget = new QStackedWidget(this);
     centralWidget->addWidget(overviewPage);
-    centralWidget->addWidget(statisticsPage);
+//    centralWidget->addWidget(statisticsPage);
 //    centralWidget->addWidget(tradePage);
-    centralWidget->addWidget(blockBrowser);
-    centralWidget->addWidget(backupPage);
-    centralWidget->addWidget(chatWindow);
+//    centralWidget->addWidget(blockBrowser);
+//    centralWidget->addWidget(backupPage);
+//    centralWidget->addWidget(chatWindow);
     centralWidget->addWidget(transactionsPage);
     centralWidget->addWidget(addressBookPage);
     centralWidget->addWidget(receiveCoinsPage);
@@ -234,13 +234,13 @@ void BitcoinGUI::createActions()
     statisticsAction->setCheckable(true);
     tabGroup->addAction(statisticsAction);
 
-    sendCoinsAction = new QAction(QIcon(":/icons/send"), tr("&Send SWIFT"), this);
-    sendCoinsAction->setToolTip(tr("Send SWIFT to a BitSwift address"));
+    sendCoinsAction = new QAction(QIcon(":/icons/send"), tr("&Send SNRG"), this);
+    sendCoinsAction->setToolTip(tr("Send SNRG to a Synergy address"));
     sendCoinsAction->setCheckable(true);
     sendCoinsAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_2));
     tabGroup->addAction(sendCoinsAction);
 
-    receiveCoinsAction = new QAction(QIcon(":/icons/receiving_addresses"), tr("&Receive SWIFT"), this);
+    receiveCoinsAction = new QAction(QIcon(":/icons/receiving_addresses"), tr("&Receive SNRG"), this);
     receiveCoinsAction->setToolTip(tr("Show the list of addresses for receiving payments"));
     receiveCoinsAction->setCheckable(true);
     receiveCoinsAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_3));
@@ -264,30 +264,30 @@ void BitcoinGUI::createActions()
 //    tradeAction->setCheckable(true);
 //    tabGroup->addAction(tradeAction);
 
-    blockAction = new QAction(QIcon(":/icons/block"), tr("&Block Explorer"), this);
-    blockAction->setToolTip(tr("Explore the BlockChain"));
-    blockAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
-    blockAction->setCheckable(true);
-    tabGroup->addAction(blockAction);
+//     blockAction = new QAction(QIcon(":/icons/block"), tr("&Block Explorer"), this);
+//     blockAction->setToolTip(tr("Explore the BlockChain"));
+//     blockAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
+//     blockAction->setCheckable(true);
+//     tabGroup->addAction(blockAction);
 
-    backupAction = new QAction(QIcon(":/icons/backup"), tr("&swiftBackup"), this);
-    backupAction->setToolTip(tr("swiftBackup"));
-    backupAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_7));
-    backupAction->setCheckable(true);
-    tabGroup->addAction(backupAction);
+//     backupAction = new QAction(QIcon(":/icons/backup"), tr("&swiftBackup"), this);
+//     backupAction->setToolTip(tr("swiftBackup"));
+//     backupAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_7));
+//     backupAction->setCheckable(true);
+//     tabGroup->addAction(backupAction);
 
-    chatAction = new QAction(QIcon(":/icons/social"), tr("&Chat"), this);
-    chatAction->setToolTip(tr("Connect to chat"));
-    chatAction->setCheckable(true);
-    tabGroup->addAction(chatAction);
+//     chatAction = new QAction(QIcon(":/icons/social"), tr("&Chat"), this);
+//     chatAction->setToolTip(tr("Connect to chat"));
+//     chatAction->setCheckable(true);
+//     tabGroup->addAction(chatAction);
 
-    connect(blockAction, SIGNAL(triggered()), this, SLOT(gotoBlockBrowser()));
-    connect(backupAction, SIGNAL(triggered()), this, SLOT(gotoBackupPage()));
-    connect(chatAction, SIGNAL(triggered()), this, SLOT(gotoChatPage()));
+//     connect(blockAction, SIGNAL(triggered()), this, SLOT(gotoBlockBrowser()));
+//     connect(backupAction, SIGNAL(triggered()), this, SLOT(gotoBackupPage()));
+//     connect(chatAction, SIGNAL(triggered()), this, SLOT(gotoChatPage()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
-    connect(statisticsAction, SIGNAL(triggered()), this, SLOT(gotoStatisticsPage()));
-//    connect(tradeAction, SIGNAL(triggered()), this, SLOT(gotoTradePage()));
+//     connect(statisticsAction, SIGNAL(triggered()), this, SLOT(gotoStatisticsPage()));
+//     connect(tradeAction, SIGNAL(triggered()), this, SLOT(gotoTradePage()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
     connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -301,14 +301,14 @@ void BitcoinGUI::createActions()
     quitAction->setToolTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
-    aboutAction = new QAction(QIcon(":/icons/bitcoin"), tr("&About BitSwift"), this);
-    aboutAction->setToolTip(tr("Show information about BitSwift"));
+    aboutAction = new QAction(QIcon(":/icons/bitcoin"), tr("&About Synergy"), this);
+    aboutAction->setToolTip(tr("Show information about Synergy"));
     aboutAction->setMenuRole(QAction::AboutRole);
     aboutQtAction = new QAction(QIcon(":/icons/qtlogo"), tr("About &Qt"), this);
     aboutQtAction->setToolTip(tr("Show information about Qt"));
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
     optionsAction = new QAction(QIcon(":/icons/options"), tr("&Options..."), this);
-    optionsAction->setToolTip(tr("Modify configuration options for BitSwift"));
+    optionsAction->setToolTip(tr("Modify configuration options for Synergy"));
     optionsAction->setMenuRole(QAction::PreferencesRole);
     toggleHideAction = new QAction(QIcon(":/icons/bitcoin"), tr("&Show / Hide"), this);
     encryptWalletAction = new QAction(QIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
@@ -392,11 +392,11 @@ void BitcoinGUI::createToolBars()
     toolbar->addAction(receiveCoinsAction);
     toolbar->addAction(historyAction);
     toolbar->addAction(addressBookAction);
-// toolbar->addAction(tradeAction);
+//    toolbar->addAction(tradeAction);
 //    toolbar->addAction(statisticsAction);
-    toolbar->addAction(blockAction);
-    toolbar->addAction(backupAction);
-    toolbar->addAction(chatAction);
+//    toolbar->addAction(blockAction);
+//    toolbar->addAction(backupAction);
+//    toolbar->addAction(chatAction);
     QWidget* spacer = new QWidget();
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     toolbar->addWidget(spacer);
@@ -424,7 +424,7 @@ void BitcoinGUI::setClientModel(ClientModel *clientModel)
 #endif
             if(trayIcon)
             {
-                trayIcon->setToolTip(tr("BitSwift client") + QString(" ") + tr("[testnet]"));
+                trayIcon->setToolTip(tr("Synergy client") + QString(" ") + tr("[testnet]"));
                 trayIcon->setIcon(QIcon(":/icons/toolbar_testnet"));
                 toggleHideAction->setIcon(QIcon(":/icons/toolbar_testnet"));
             }
@@ -465,11 +465,11 @@ void BitcoinGUI::setWalletModel(WalletModel *walletModel)
         sendCoinsPage->setModel(walletModel);
         signVerifyMessageDialog->setModel(walletModel);
 
-        statisticsPage->setModel(clientModel);
-//      tradePage->setModel(clientModel);
-        blockBrowser->setModel(clientModel);
-//      backupPage->setModel(clientModel);
-        chatWindow->setModel(clientModel);
+//         statisticsPage->setModel(clientModel);
+//         tradePage->setModel(clientModel);
+//         blockBrowser->setModel(clientModel);
+//         backupPage->setModel(clientModel);
+//         chatWindow->setModel(clientModel);
         setEncryptionStatus(walletModel->getEncryptionStatus());
         connect(walletModel, SIGNAL(encryptionStatusChanged(int)), this, SLOT(setEncryptionStatus(int)));
 
@@ -489,7 +489,7 @@ void BitcoinGUI::createTrayIcon()
     trayIcon = new QSystemTrayIcon(this);
     trayIconMenu = new QMenu(this);
     trayIcon->setContextMenu(trayIconMenu);
-    trayIcon->setToolTip(tr("BitSwift client"));
+    trayIcon->setToolTip(tr("Synergy client"));
     trayIcon->setIcon(QIcon(":/icons/toolbar"));
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
@@ -559,7 +559,7 @@ void BitcoinGUI::setNumConnections(int count)
     default: icon = ":/icons/connect_4"; break;
     }
     labelConnectionsIcon->setPixmap(QIcon(icon).pixmap(28,54));
-    labelConnectionsIcon->setToolTip(tr("%n active connection(s) to BitSwift network", "", count));
+    labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Synergy network", "", count));
 }
 
 void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
@@ -715,7 +715,7 @@ void BitcoinGUI::askFee(qint64 nFeeRequired, bool *payFee)
 {
     QString strMessage =
         tr("This transaction requires a fee based on the services it uses. You may send it "
-           "for a fee of %2 SWIFT, which rewards all users of the BitSwift network as a result "
+           "for a fee of %2 SNRG, which rewards all users of the Synergy network as a result "
            "of your usage. Do you want to pay this fee?").arg(
                 BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, nFeeRequired));
     QMessageBox::StandardButton retval = QMessageBox::question(
@@ -781,43 +781,43 @@ void BitcoinGUI::gotoOverviewPage()
 //    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
 //}
 
-void BitcoinGUI::gotoBlockBrowser()
-{
-    blockAction->setChecked(true);
-    centralWidget->setCurrentWidget(blockBrowser);
+// void BitcoinGUI::gotoBlockBrowser()
+// {
+//     blockAction->setChecked(true);
+//     centralWidget->setCurrentWidget(blockBrowser);
 
-    exportAction->setEnabled(false);
-    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
-}
+//     exportAction->setEnabled(false);
+//     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+// }
 
-void BitcoinGUI::gotoBackupPage()
-{
-    backupAction->setChecked(true);
-    centralWidget->setCurrentWidget(backupPage);
+// void BitcoinGUI::gotoBackupPage()
+// {
+//     backupAction->setChecked(true);
+//     centralWidget->setCurrentWidget(backupPage);
+//
+//     exportAction->setEnabled(false);
+//     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+// }
 
-    exportAction->setEnabled(false);
-    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
-}
+// void BitcoinGUI::gotoChatPage()
+// {
+//     chatAction->setChecked(true);
+//     centralWidget->setCurrentWidget(chatWindow);
+//     centralWidget->setMaximumWidth(1100);
+//     centralWidget->setMaximumHeight(640);
+//
+//     exportAction->setEnabled(false);
+//     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+// }
 
-void BitcoinGUI::gotoChatPage()
-{
-    chatAction->setChecked(true);
-    centralWidget->setCurrentWidget(chatWindow);
-	centralWidget->setMaximumWidth(1100);
-	centralWidget->setMaximumHeight(640);
-
-    exportAction->setEnabled(false);
-    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
-}
-
-void BitcoinGUI::gotoStatisticsPage()
-{
-    statisticsAction->setChecked(true);
-    centralWidget->setCurrentWidget(statisticsPage);
-
-    exportAction->setEnabled(false);
-    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
-}
+// void BitcoinGUI::gotoStatisticsPage()
+// {
+//     statisticsAction->setChecked(true);
+//     centralWidget->setCurrentWidget(statisticsPage);
+//
+//     exportAction->setEnabled(false);
+//     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+// }
 
 void BitcoinGUI::gotoHistoryPage()
 {
@@ -899,7 +899,7 @@ void BitcoinGUI::dropEvent(QDropEvent *event)
         if (nValidUrisFound)
             gotoSendCoinsPage();
         else
-            notificator->notify(Notificator::Warning, tr("URI handling"), tr("URI can not be parsed! This can be caused by an invalid BitSwift address or malformed URI parameters."));
+            notificator->notify(Notificator::Warning, tr("URI handling"), tr("URI can not be parsed! This can be caused by an invalid Synergy address or malformed URI parameters."));
     }
 
     event->acceptProposedAction();
@@ -914,7 +914,7 @@ void BitcoinGUI::handleURI(QString strURI)
         gotoSendCoinsPage();
     }
     else
-        notificator->notify(Notificator::Warning, tr("URI handling"), tr("URI can not be parsed! This can be caused by an invalid BitSwift address or malformed URI parameters."));
+        notificator->notify(Notificator::Warning, tr("URI handling"), tr("URI can not be parsed! This can be caused by an invalid Synergy address or malformed URI parameters."));
 }
 
 void BitcoinGUI::setEncryptionStatus(int status)

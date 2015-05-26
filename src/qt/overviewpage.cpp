@@ -35,13 +35,16 @@ public:
         int xspace = DECORATION_SIZE + 8;
         int ypad = 6;
         int halfheight = (mainRect.height() - 2*ypad)/2;
-        QRect amountRect(mainRect.left() + xspace, mainRect.top()+ypad, mainRect.width() - xspace, halfheight);
-        QRect addressRect(mainRect.left() + xspace, mainRect.top()+ypad+halfheight, mainRect.width() - xspace, halfheight);
+        QRect amountRect(mainRect.left() + xspace, mainRect.top()+ypad,
+                                                   mainRect.width() - xspace, halfheight);
+        QRect addressRect(mainRect.left() + xspace, mainRect.top()+ypad+halfheight,
+                                                    mainRect.width() - xspace, halfheight);
         icon.paint(painter, decorationRect);
 
         QDateTime date = index.data(TransactionTableModel::DateRole).toDateTime();
         QString address = index.data(Qt::DisplayRole).toString();
         qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();
+        qint64 turbo = index.data(TransactionTableModel::TurboRole).toLongLong();
         bool confirmed = index.data(TransactionTableModel::ConfirmedRole).toBool();
         QVariant value = index.data(Qt::ForegroundRole);
         QColor foreground = option.palette.color(QPalette::Text);
@@ -51,6 +54,15 @@ public:
             foreground = brush.color();
         }
 
+        QString strTurbo;
+        if (turbo < 0) {
+             strTurbo = QString("");
+        } else {
+             strTurbo = QString("Turbo: ") + QString::number(turbo) + QString("x");
+        }
+
+        painter->setPen(COLOR_SYNERGY);
+        painter->drawText(addressRect, Qt::AlignRight|Qt::AlignVCenter, strTurbo);
         painter->setPen(foreground);
         painter->drawText(addressRect, Qt::AlignLeft|Qt::AlignVCenter, address);
 

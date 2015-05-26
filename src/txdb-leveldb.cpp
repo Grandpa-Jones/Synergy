@@ -357,6 +357,12 @@ bool CTxDB::LoadBlockIndex()
 
         uint256 blockHash = diskindex.GetBlockHash();
 
+        if (fDebug) {
+              printf("CTxDB::LoadBlockIndex: block %d %s\n", diskindex.nHeight, blockHash.ToString().c_str());
+              printf("                       prev %s\n", diskindex.hashPrev.ToString().c_str());
+              printf("                       next %s\n", diskindex.hashNext.ToString().c_str());
+        }
+
         // Construct block index object
         CBlockIndex* pindexNew    = InsertBlockIndex(blockHash);
         pindexNew->pprev          = InsertBlockIndex(diskindex.hashPrev);
@@ -370,7 +376,7 @@ bool CTxDB::LoadBlockIndex()
         pindexNew->nStakeModifier = diskindex.nStakeModifier;
         pindexNew->prevoutStake   = diskindex.prevoutStake;
         pindexNew->nStakeTime     = diskindex.nStakeTime;
-        pindexNew->hashProofOfStake = diskindex.hashProofOfStake;
+        pindexNew->hashProof      = diskindex.hashProof;
         pindexNew->nVersion       = diskindex.nVersion;
         pindexNew->hashMerkleRoot = diskindex.hashMerkleRoot;
         pindexNew->nTime          = diskindex.nTime;

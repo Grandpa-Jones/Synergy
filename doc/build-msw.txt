@@ -7,7 +7,7 @@ cryptographic software written by Eric Young (eay@cryptsoft.com) and UPnP
 software written by Thomas Bernard.
 
 
-See readme-qt.rst for instructions on building bitswift QT, the
+See readme-qt.rst for instructions on building synergy QT, the
 graphical user interface.
 
 WINDOWS BUILD NOTES
@@ -76,9 +76,9 @@ make -f Makefile.mingw
 mkdir miniupnpc
 cp *.h miniupnpc/
 
-bitswift
+synergy
 -------
 DOS prompt:
-cd \bitswift\src
+cd \synergy\src
 mingw32-make -f makefile.mingw
-strip bitswiftd.exe
+strip synergyd.exe

@@ -7,6 +7,7 @@
 
 #include "wallet.h"
 
+#include "synergy.h"
 
 extern CWallet* pwalletMain;
 extern std::string strWalletFileName;

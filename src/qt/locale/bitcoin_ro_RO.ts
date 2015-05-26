@@ -3,22 +3,22 @@
     <name>AboutDialog</name>
     <message>
         <location filename="../forms/aboutdialog.ui" line="+14"/>
-        <source>About bitswift</source>
-        <translation>Despre bitswift</translation>
+        <source>About synergy</source>
+        <translation>Despre synergy</translation>
     </message>
     <message>
         <location line="+39"/>
-        <source>&lt;b&gt;bitswift&lt;/b&gt; version</source>
-        <translation>Versiune &lt;b&gt;bitswift&lt;/b&gt;</translation>
+        <source>&lt;b&gt;synergy&lt;/b&gt; version</source>
+        <translation>Versiune &lt;b&gt;synergy&lt;/b&gt;</translation>
     </message>
     <message>
         <location line="+41"/>
         <source>Copyright © 2009-2014 The Bitcoin developers
 Copyright © 2012-2014 The NovaCoin developers
-Copyright © 2014 The bitswift developers</source>
+Copyright © 2014 The synergy developers</source>
         <translation>Copyright © 2009-2014 The Bitcoin developers
 Copyright © 2012-2014 The NovaCoin developers
-Copyright © 2014 The bitswift developers</translation>
+Copyright © 2014 The synergy developers</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -65,8 +65,8 @@ Acest produs include programe dezvoltate de către OpenSSL Project pentru a fi f
     </message>
     <message>
         <location line="-46"/>
-        <source>These are your bitswift addresses for receiving payments. You may want to give a different one to each sender so you can keep track of who is paying you.</source>
-        <translation>Acestea sunt adresele bitswift pentru a primi plăți. Poate doriți sa dați o adresa noua fiecarui expeditor pentru a putea ține evidența la cine efectuează plăti.</translation>
+        <source>These are your synergy addresses for receiving payments. You may want to give a different one to each sender so you can keep track of who is paying you.</source>
+        <translation>Acestea sunt adresele synergy pentru a primi plăți. Poate doriți sa dați o adresa noua fiecarui expeditor pentru a putea ține evidența la cine efectuează plăti.</translation>
     </message>
     <message>
         <location line="+60"/>
@@ -80,8 +80,8 @@ Acest produs include programe dezvoltate de către OpenSSL Project pentru a fi f
     </message>
     <message>
         <location line="+11"/>
-        <source>Sign a message to prove you own a bitswift address</source>
-        <translation>Semnează un mesaj pentru a dovedi că dețineti o adresă bitswift</translation>
+        <source>Sign a message to prove you own a synergy address</source>
+        <translation>Semnează un mesaj pentru a dovedi că dețineti o adresă synergy</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -95,8 +95,8 @@ Acest produs include programe dezvoltate de către OpenSSL Project pentru a fi f
     </message>
     <message>
         <location line="-14"/>
-        <source>Verify a message to ensure it was signed with a specified bitswift address</source>
-        <translation>Verifică un mesaj pentru a vă asigura că a fost semnat cu o anumită adresă bitswift</translation>
+        <source>Verify a message to ensure it was signed with a specified synergy address</source>
+        <translation>Verifică un mesaj pentru a vă asigura că a fost semnat cu o anumită adresă synergy</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -263,8 +263,8 @@ Acest produs include programe dezvoltate de către OpenSSL Project pentru a fi f
     </message>
     <message>
         <location line="-58"/>
-        <source>bitswift will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your coins from being stolen by malware infecting your computer.</source>
-        <translation>bitswift se va inchide pentru a termina procesul de encriptie. Amintiți-vă, criptarea portofelul dumneavoastră nu poate proteja pe deplin monedele dvs. de a fi furate de  infectarea cu malware a computerului.</translation>
+        <source>synergy will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your coins from being stolen by malware infecting your computer.</source>
+        <translation>synergy se va inchide pentru a termina procesul de encriptie. Amintiți-vă, criptarea portofelul dumneavoastră nu poate proteja pe deplin monedele dvs. de a fi furate de  infectarea cu malware a computerului.</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -352,7 +352,7 @@ Acest produs include programe dezvoltate de către OpenSSL Project pentru a fi f
     </message>
     <message>
         <location line="-13"/>
-        <source>&amp;Receive SWIFT</source>
+        <source>&amp;Receive SNRG</source>
         <translation>Primește monede</translation>
     </message>
     <message>
@@ -362,7 +362,7 @@ Acest produs include programe dezvoltate de către OpenSSL Project pentru a fi f
     </message>
     <message>
         <location line="-7"/>
-        <source>&amp;Send SWIFT</source>
+        <source>&amp;Send SNRG</source>
         <translation>&amp;Trimite monede</translation>
     </message>
     <message>
@@ -377,8 +377,8 @@ Acest produs include programe dezvoltate de către OpenSSL Project pentru a fi f
     </message>
     <message>
         <location line="+6"/>
-        <source>Show information about bitswift</source>
-        <translation>Arată informații despre bitswift</translation>
+        <source>Show information about synergy</source>
+        <translation>Arată informații despre synergy</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -427,13 +427,13 @@ Acest produs include programe dezvoltate de către OpenSSL Project pentru a fi f
     </message>
     <message>
         <location line="-64"/>
-        <source>Send SWIFT to a bitswift address</source>
-        <translation>Trimite monede către o adresă bitswift</translation>
+        <source>Send SNRG to a synergy address</source>
+        <translation>Trimite monede către o adresă synergy</translation>
     </message>
     <message>
         <location line="+47"/>
-        <source>Modify configuration options for bitswift</source>
-        <translation>Modifică opțiuni de configurare pentru bitswift</translation>
+        <source>Modify configuration options for synergy</source>
+        <translation>Modifică opțiuni de configurare pentru synergy</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -472,8 +472,8 @@ Acest produs include programe dezvoltate de către OpenSSL Project pentru a fi f
     </message>
     <message>
         <location line="-202"/>
-        <source>bitswift</source>
-        <translation>bitswift</translation>
+        <source>synergy</source>
+        <translation>synergy</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -482,8 +482,8 @@ Acest produs include programe dezvoltate de către OpenSSL Project pentru a fi f
     </message>
     <message>
         <location line="+180"/>
-        <source>&amp;About bitswift</source>
-        <translation>Despre bitswift</translation>
+        <source>&amp;About synergy</source>
+        <translation>Despre synergy</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -539,13 +539,13 @@ Acest produs include programe dezvoltate de către OpenSSL Project pentru a fi f
     <message>
         <location line="+0"/>
         <location line="+60"/>
-        <source>bitswift client</source>
-        <translation>Clientul bitswift</translation>
+        <source>synergy client</source>
+        <translation>Clientul synergy</translation>
     </message>
     <message numerus="yes">
         <location line="+75"/>
-        <source>%n active connection(s) to bitswift network</source>
-        <translation><numerusform>%n conexiune activă la reteaua bitswift</numerusform><numerusform>%n conexiuni active la reteaua bitswift</numerusform><numerusform>%n conexiuni active la reteaua bitswift</numerusform></translation>
+        <source>%n active connection(s) to synergy network</source>
+        <translation><numerusform>%n conexiune activă la reteaua synergy</numerusform><numerusform>%n conexiuni active la reteaua synergy</numerusform><numerusform>%n conexiuni active la reteaua synergy</numerusform></translation>
     </message>
     <message>
         <location line="+40"/>
@@ -584,13 +584,13 @@ Acest produs include programe dezvoltate de către OpenSSL Project pentru a fi f
     </message>
     <message>
         <location line="-312"/>
-        <source>About bitswift card</source>
-        <translation>Despre cardul bitswift</translation>
+        <source>About synergy card</source>
+        <translation>Despre cardul synergy</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Show information about bitswift card</source>
-        <translation>Arată informații despre card bitswift</translation>
+        <source>Show information about synergy card</source>
+        <translation>Arată informații despre card synergy</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -629,7 +629,7 @@ Acest produs include programe dezvoltate de către OpenSSL Project pentru a fi f
     </message>
     <message>
         <location line="+59"/>
-        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SWIFT, which rewards all users of the BitSwift network as a result of your usage. Do you want to pay this fee?</source>
+        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SNRG, which rewards all users of the Synergy network as a result of your usage. Do you want to pay this fee?</source>
         <translation>Această tranzactie este peste limita admisa. Puteți sa trimiteți pentru o taxa de 1%, care este pentru nodurile care proceseaza tranzactia si ajuta la sprijinirea retelei. Vrei să plătești taxa?</translation>
     </message>
     <message>
@@ -669,8 +669,8 @@ Adresa: %4
     <message>
         <location line="-15"/>
         <location line="+15"/>
-        <source>URI can not be parsed! This can be caused by an invalid bitswift address or malformed URI parameters.</source>
-        <translation>URI nu poate fi parsatt! Cauza poate fi o adresa bitswift invalidă sau parametrii URI malformați.</translation>
+        <source>URI can not be parsed! This can be caused by an invalid synergy address or malformed URI parameters.</source>
+        <translation>URI nu poate fi parsatt! Cauza poate fi o adresa synergy invalidă sau parametrii URI malformați.</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -729,8 +729,8 @@ Adresa: %4
     </message>
     <message>
         <location filename="../bitcoin.cpp" line="+109"/>
-        <source>A fatal error occurred. bitswift can no longer continue safely and will quit.</source>
-        <translation>A apărut o eroare fatală. bitswift nu mai poate continua în condiții de siguranță și va iesi.</translation>
+        <source>A fatal error occurred. synergy can no longer continue safely and will quit.</source>
+        <translation>A apărut o eroare fatală. synergy nu mai poate continua în condiții de siguranță și va iesi.</translation>
     </message>
 </context>
 <context>
@@ -1063,8 +1063,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="-5"/>
-        <source>The entered address &quot;%1&quot; is not a valid bitswift address.</source>
-        <translation>Adresa introdusă &quot;%1&quot; nu este o adresă bitswift validă</translation>
+        <source>The entered address &quot;%1&quot; is not a valid synergy address.</source>
+        <translation>Adresa introdusă &quot;%1&quot; nu este o adresă synergy validă</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1082,8 +1082,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     <message>
         <location filename="../guiutil.cpp" line="+420"/>
         <location line="+12"/>
-        <source>bitswift-Qt</source>
-        <translation>bitswift-Qt</translation>
+        <source>synergy-Qt</source>
+        <translation>synergy-Qt</translation>
     </message>
     <message>
         <location line="-12"/>
@@ -1155,13 +1155,13 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+31"/>
-        <source>Automatically start bitswift after logging in to the system.</source>
-        <translation>Pornește bitswift imdiat după logarea în sistem</translation>
+        <source>Automatically start synergy after logging in to the system.</source>
+        <translation>Pornește synergy imdiat după logarea în sistem</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>&amp;Start bitswift on system login</source>
-        <translation>$Pornește bitswift la logarea în sistem</translation>
+        <source>&amp;Start synergy on system login</source>
+        <translation>$Pornește synergy la logarea în sistem</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -1180,8 +1180,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+6"/>
-        <source>Automatically open the bitswift client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Deschide automat portul pentru cientul bitswift pe router. Aces lucru este posibil doara daca routerul suporta UPnP si este activat</translation>
+        <source>Automatically open the synergy client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Deschide automat portul pentru cientul synergy pe router. Aces lucru este posibil doara daca routerul suporta UPnP si este activat</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1190,8 +1190,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+7"/>
-        <source>Connect to the bitswift network through a SOCKS proxy (e.g. when connecting through Tor).</source>
-        <translation>Conecteaza la reteaua bitswift prinr-un proxy SOCKS(ex. cand te conectezi prin Tor)</translation>
+        <source>Connect to the synergy network through a SOCKS proxy (e.g. when connecting through Tor).</source>
+        <translation>Conecteaza la reteaua synergy prinr-un proxy SOCKS(ex. cand te conectezi prin Tor)</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1265,8 +1265,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+13"/>
-        <source>The user interface language can be set here. This setting will take effect after restarting bitswift.</source>
-        <translation>Limba interfeței utilizator poate fi setat aici. Această setare va avea efect după repornirea bitswift.</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting synergy.</source>
+        <translation>Limba interfeței utilizator poate fi setat aici. Această setare va avea efect după repornirea synergy.</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -1280,8 +1280,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+9"/>
-        <source>Whether to show bitswift addresses in the transaction list or not.</source>
-        <translation>Dacă să arate adrese bitswift din lista de tranzacție sau nu.</translation>
+        <source>Whether to show synergy addresses in the transaction list or not.</source>
+        <translation>Dacă să arate adrese synergy din lista de tranzacție sau nu.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1327,8 +1327,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     <message>
         <location line="-9"/>
         <location line="+9"/>
-        <source>This setting will take effect after restarting bitswift.</source>
-        <translation>Aceasta setare va avea efect dupa repornirea bitswift.</translation>
+        <source>This setting will take effect after restarting synergy.</source>
+        <translation>Aceasta setare va avea efect dupa repornirea synergy.</translation>
     </message>
     <message>
         <location line="+29"/>
@@ -1346,8 +1346,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     <message>
         <location line="+33"/>
         <location line="+231"/>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the bitswift network after a connection is established, but this process has not completed yet.</source>
-        <translation>Informatia afisata poate fi depasita.  Portofel se sincronizează automat cu rețeaua bitswift după ce se stabilește o conexiune, dar acest proces nu s-a finalizat încă.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the synergy network after a connection is established, but this process has not completed yet.</source>
+        <translation>Informatia afisata poate fi depasita.  Portofel se sincronizează automat cu rețeaua synergy după ce se stabilește o conexiune, dar acest proces nu s-a finalizat încă.</translation>
     </message>
     <message>
         <location line="-160"/>
@@ -1562,8 +1562,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+7"/>
-        <source>Show the bitswift-Qt help message to get a list with possible bitswift command-line options.</source>
-        <translation>Afișa mesajul de ajutor bitswift-Qt pentru a obține o listă cu posibile opțiuni de linie de comandă bitswift.</translation>
+        <source>Show the synergy-Qt help message to get a list with possible synergy command-line options.</source>
+        <translation>Afișa mesajul de ajutor synergy-Qt pentru a obține o listă cu posibile opțiuni de linie de comandă synergy.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1582,13 +1582,13 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="-104"/>
-        <source>bitswift - Debug window</source>
-        <translation>bitswift - fereastră depanare</translation>
+        <source>synergy - Debug window</source>
+        <translation>synergy - fereastră depanare</translation>
     </message>
     <message>
         <location line="+25"/>
-        <source>bitswift Core</source>
-        <translation>bitswift Core</translation>
+        <source>synergy Core</source>
+        <translation>synergy Core</translation>
     </message>
     <message>
         <location line="+279"/>
@@ -1597,8 +1597,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+7"/>
-        <source>Open the bitswift debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Deschideti fisierul de depanare bitswift din folderul curent. Acest lucru poate dura cateva secunde pentru fisiere de log mari.</translation>
+        <source>Open the synergy debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Deschideti fisierul de depanare synergy din folderul curent. Acest lucru poate dura cateva secunde pentru fisiere de log mari.</translation>
     </message>
     <message>
         <location line="+102"/>
@@ -1607,8 +1607,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location filename="../rpcconsole.cpp" line="-33"/>
-        <source>Welcome to the bitswift RPC console.</source>
-        <translation>Bine ati venit la consola bitswift RPC.</translation>
+        <source>Welcome to the synergy RPC console.</source>
+        <translation>Bine ati venit la consola synergy RPC.</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1766,8 +1766,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="-173"/>
-        <source>Enter a bitswift address (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Introduceți o adresă bitswift(ex:bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>Enter a synergy address (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Introduceți o adresă synergy(ex:synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -1866,8 +1866,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+251"/>
-        <source>WARNING: Invalid bitswift address</source>
-        <translation>Atenție: Adresă bitswift invalidă</translation>
+        <source>WARNING: Invalid synergy address</source>
+        <translation>Atenție: Adresă synergy invalidă</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -1910,8 +1910,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to send the payment to  (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Adresa catre care trimiteti plata(ex. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>The address to send the payment to  (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Adresa catre care trimiteti plata(ex. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -1940,8 +1940,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location filename="../sendcoinsentry.cpp" line="+1"/>
-        <source>Enter a bitswift address (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Introduceți o adresă bitswift(ex:bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>Enter a synergy address (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Introduceți o adresă synergy(ex:synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
 </context>
 <context>
@@ -1964,8 +1964,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+18"/>
-        <source>The address to sign the message with (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Adresa cu care semnati mesajul(ex. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>The address to sign the message with (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Adresa cu care semnati mesajul(ex. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -2001,8 +2001,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+21"/>
-        <source>Sign the message to prove you own this bitswift address</source>
-        <translation>Semnează un mesaj pentru a dovedi că dețineti o adresă bitswift</translation>
+        <source>Sign the message to prove you own this synergy address</source>
+        <translation>Semnează un mesaj pentru a dovedi că dețineti o adresă synergy</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -2028,13 +2028,13 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+21"/>
-        <source>The address the message was signed with (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Adresa cu care a fost semnat mesajul(ex. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>The address the message was signed with (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Adresa cu care a fost semnat mesajul(ex. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="+40"/>
-        <source>Verify the message to ensure it was signed with the specified bitswift address</source>
-        <translation>Verifică un mesaj pentru a vă asigura că a fost semnat cu o anumită adresă bitswift</translation>
+        <source>Verify the message to ensure it was signed with the specified synergy address</source>
+        <translation>Verifică un mesaj pentru a vă asigura că a fost semnat cu o anumită adresă synergy</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -2044,8 +2044,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     <message>
         <location filename="../signverifymessagedialog.cpp" line="+27"/>
         <location line="+3"/>
-        <source>Enter a bitswift address (e.g. bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
-        <translation>Introduceți o adresă bitswift(ex:bitswiftfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
+        <source>Enter a synergy address (e.g. synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</source>
+        <translation>Introduceți o adresă synergy(ex:synergyfwYhBmGXcFP2Po1NpRUEiK8km2)</translation>
     </message>
     <message>
         <location line="-2"/>
@@ -2054,8 +2054,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>Enter bitswift signature</source>
-        <translation>Introduceti semnatura bitswift</translation>
+        <source>Enter synergy signature</source>
+        <translation>Introduceti semnatura synergy</translation>
     </message>
     <message>
         <location line="+82"/>
@@ -2625,8 +2625,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     <name>bitcoin-core</name>
     <message>
         <location filename="../bitcoinstrings.cpp" line="+33"/>
-        <source>bitswift version</source>
-        <translation>Versiune bitswift</translation>
+        <source>synergy version</source>
+        <translation>Versiune synergy</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2635,8 +2635,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Send command to -server or bitswiftd</source>
-        <translation>Trimite comanda catre server sau bitswiftd</translation>
+        <source>Send command to -server or synergyd</source>
+        <translation>Trimite comanda catre server sau synergyd</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2655,13 +2655,13 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+2"/>
-        <source>Specify configuration file (default: bitswift.conf)</source>
-        <translation>Specifica fisier de configurare(implicit: bitswift.conf)</translation>
+        <source>Specify configuration file (default: synergy.conf)</source>
+        <translation>Specifica fisier de configurare(implicit: synergy.conf)</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Specify pid file (default: bitswiftd.pid)</source>
-        <translation>Speficica fisier pid(implicit: bitswift.pid)</translation>
+        <source>Specify pid file (default: synergyd.pid)</source>
+        <translation>Speficica fisier pid(implicit: synergy.pid)</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -2810,8 +2810,8 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
     </message>
     <message>
         <location line="+61"/>
-        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong bitswift will not work properly.</source>
-        <translation>Atentie: Va rugam verificati ca timpul si data calculatorului sunt corete. Daca timpul este gresit bitswift nu va functiona corect.</translation>
+        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong synergy will not work properly.</source>
+        <translation>Atentie: Va rugam verificati ca timpul si data calculatorului sunt corete. Daca timpul este gresit synergy nu va functiona corect.</translation>
     </message>
     <message>
         <location line="-31"/>
@@ -3000,22 +3000,22 @@ Acest lucru înseamnă că o taxă de cel puțin %2 este necesară</translation>
         <source>%s, you must set a rpcpassword in the configuration file:
  %s
 It is recommended you use the following random password:
-rpcuser=bitswiftrpc
+rpcuser=synergyrpc
 rpcpassword=%s
 (you do not need to remember this password)
 The username and password MUST NOT be the same.
 If the file does not exist, create it with owner-readable-only file permissions.
 It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s &quot;bitswift Alert&quot; admin@foo.com
+for example: alertnotify=echo %%s | mail -s &quot;synergy Alert&quot; admin@foo.com
 </source>
         <translation>%s, trebuie să configurați o parolă rpc în fișierul de configurare: %s
-Este recomandat să folosiți următoarea parolă generată aleator: rpcuser=bitswiftrpc
+Este recomandat să folosiți următoarea parolă generată aleator: rpcuser=synergyrpc
 rpcpassword=%s
 (nu trebuie să țineți minte această parolă)
 Username-ul și parola NU TREBUIE să fie aceleași.
 Dacă fișierul nu există, creați-l cu drepturi de citire doar de către deținător.
 Este deasemenea recomandat să setați alertnotify pentru a fi notificat de probleme;
-de exemplu: alertnotify=echo %%s | mail -s &quot;bitswift Alert&quot; admin@foo.com
+de exemplu: alertnotify=echo %%s | mail -s &quot;synergy Alert&quot; admin@foo.com
 </translation>
     </message>
     <message>
@@ -3140,13 +3140,13 @@ de exemplu: alertnotify=echo %%s | mail -s &quot;bitswift Alert&quot; admin@foo.
     </message>
     <message>
         <location line="+1"/>
-        <source>Cannot obtain a lock on data directory %s.  bitswift is probably already running.</source>
+        <source>Cannot obtain a lock on data directory %s.  synergy is probably already running.</source>
         <translation>Nu se poate obtine un lock pe directorul de date &amp;s. Blackoin probabil ruleaza deja.</translation>
     </message>
     <message>
         <location line="-98"/>
-        <source>bitswift</source>
-        <translation>bitswift</translation>
+        <source>synergy</source>
+        <translation>synergy</translation>
     </message>
     <message>
         <location line="+140"/>
@@ -3180,13 +3180,13 @@ de exemplu: alertnotify=echo %%s | mail -s &quot;bitswift Alert&quot; admin@foo.
     </message>
     <message>
         <location line="+4"/>
-        <source>Error loading wallet.dat: Wallet requires newer version of bitswift</source>
-        <translation>Eroare la încărcarea wallet.dat: Portofelul necesita o versiune mai noua de bitswift</translation>
+        <source>Error loading wallet.dat: Wallet requires newer version of synergy</source>
+        <translation>Eroare la încărcarea wallet.dat: Portofelul necesita o versiune mai noua de synergy</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Wallet needed to be rewritten: restart bitswift to complete</source>
-        <translation>A fost nevoie de rescrierea portofelului: restartați bitswift pentru a finaliza</translation>
+        <source>Wallet needed to be rewritten: restart synergy to complete</source>
+        <translation>A fost nevoie de rescrierea portofelului: restartați synergy pentru a finaliza</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -3255,8 +3255,8 @@ de exemplu: alertnotify=echo %%s | mail -s &quot;bitswift Alert&quot; admin@foo.
     </message>
     <message>
         <location line="+122"/>
-        <source>Unable to bind to %s on this computer. bitswift is probably already running.</source>
-        <translation>Imposibil de conectat %s pe acest computer. Cel mai probabil bitswift ruleaza</translation>
+        <source>Unable to bind to %s on this computer. synergy is probably already running.</source>
+        <translation>Imposibil de conectat %s pe acest computer. Cel mai probabil synergy ruleaza</translation>
     </message>
     <message>
         <location line="-97"/>
