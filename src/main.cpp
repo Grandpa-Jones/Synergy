@@ -38,9 +38,9 @@ set<pair<COutPoint, unsigned int> > setStakeSeen;
 
 // "standard" scrypt target limit for proof of work, results with 0,000244140625 proof-of-work difficulty
 CBigNum bnProofOfWorkLimit(~uint256(0) >> 16);
-CBigNum bnProofOfStakeLimit(~uint256(0) >> 12);
+CBigNum bnProofOfStakeLimit(~uint256(0) >> 2);
 CBigNum bnProofOfWorkLimitTestNet(~uint256(0) >> 14);
-CBigNum bnProofOfStakeLimitTestNet(~uint256(0) >> 8);
+CBigNum bnProofOfStakeLimitTestNet(~uint256(0) >> 2);
 
 unsigned int nTargetSpacing = 120; // 2 min
 unsigned int nStakeMinAge = 60 * 60 * 24 * 2; // 2 days
