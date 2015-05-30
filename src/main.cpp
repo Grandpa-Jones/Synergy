@@ -38,9 +38,13 @@ set<pair<COutPoint, unsigned int> > setStakeSeen;
 
 // "standard" scrypt target limit for proof of work, results with 0,000244140625 proof-of-work difficulty
 CBigNum bnProofOfWorkLimit(~uint256(0) >> 16);
-CBigNum bnProofOfStakeLimit(~uint256(0) >> 2);
+CBigNum bnProofOfStakeLimit(~uint256(0) >> 12);
 CBigNum bnProofOfWorkLimitTestNet(~uint256(0) >> 14);
-CBigNum bnProofOfStakeLimitTestNet(~uint256(0) >> 2);
+CBigNum bnProofOfStakeLimitTestNet(~uint256(0) >> 8);
+
+// Original PoS target limit was set too low (diff too high) for low coin supply
+static const int64_t nPoSLimitSwitchTime = 1433055600; // Sun, 31 May 2015 07:00:00 GMT
+CBigNum bnProofOfStakeLimit_REVISED(~uint256(0) >> 2);
 
 unsigned int nTargetSpacing = 120; // 2 min
 unsigned int nStakeMinAge = 60 * 60 * 24 * 2; // 2 days
@@ -1270,7 +1274,17 @@ unsigned int ComputeMinWork(unsigned int nBase, int64_t nTime)
 //
 unsigned int ComputeMinStake(unsigned int nBase, int64_t nTime, unsigned int nBlockTime)
 {
-    return ComputeMaxBits(bnProofOfStakeLimit, nBase, nTime);
+
+    if (nTime >= nPoSLimitSwitchTime)
+    {
+         bnProofOfStakeLimit_used = bnProofOfStakeLimit_REVISED;
+    } 
+    else
+    {
+         bnProofOfStakeLimit_used = bnProofOfStakeLimit;
+    }
+
+    return ComputeMaxBits(bnProofOfStakeLimit_used, nBase, nTime);
 }
 
 
@@ -1284,7 +1298,16 @@ const CBlockIndex* GetLastBlockIndex(const CBlockIndex* pindex, bool fProofOfSta
 
 static unsigned int GetNextTargetRequired_(const CBlockIndex* pindexLast, bool fProofOfStake)
 {
-    CBigNum bnTargetLimit = fProofOfStake ? bnProofOfStakeLimit : bnProofOfWorkLimit;
+    if (pindexLast->nTime >= nPoSLimitSwitchTime)
+    {
+         bnProofOfStakeLimit_used = bnProofOfStakeLimit_REVISED;
+    } 
+    else
+    {
+         bnProofOfStakeLimit_used = bnProofOfStakeLimit;
+    }
+
+    CBigNum bnTargetLimit = fProofOfStake ? bnProofOfStakeLimit_used : bnProofOfWorkLimit;
 
     if (pindexLast == NULL)
         return bnTargetLimit.GetCompact(); // genesis block
