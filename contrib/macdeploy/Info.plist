@@ -9,16 +9,16 @@
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleGetInfoString</key>
-        <string>Synergy [SNY] Crypto-Currency 1.0.0.0</string>
+        <string>Synergy [SNY] Crypto-Currency 1.0.3.0</string>
         <key>CFBundleExecutable</key>
-        <string>Synergy Qt</string>
+        <string>Synergy</string>
         <key>CFBundleIdentifier</key>
         <string>com.synergycoin.synergy-qt</string>
         <key>CFBundleShortVersionString</key>
-        <string>1.0.0.0</string>
+        <string>1.0.3.0</string>
         <key>CFBundleSignature</key>
         <string>xSNy</string>
         <key>CFBundleVersion</key>
-        <string>1.0.0.0</string>
+        <string>1.0.3.0</string>
 </dict>
 </plist>
