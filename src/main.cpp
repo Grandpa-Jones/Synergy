@@ -1274,7 +1274,7 @@ unsigned int ComputeMinWork(unsigned int nBase, int64_t nTime)
 //
 unsigned int ComputeMinStake(unsigned int nBase, int64_t nTime, unsigned int nBlockTime)
 {
-
+    CBigNum bnProofOfStakeLimit_used;
     if (nTime >= nPoSLimitSwitchTime)
     {
          bnProofOfStakeLimit_used = bnProofOfStakeLimit_REVISED;
@@ -1298,6 +1298,7 @@ const CBlockIndex* GetLastBlockIndex(const CBlockIndex* pindex, bool fProofOfSta
 
 static unsigned int GetNextTargetRequired_(const CBlockIndex* pindexLast, bool fProofOfStake)
 {
+    CBigNum bnProofOfStakeLimit_used;
     if (pindexLast->nTime >= nPoSLimitSwitchTime)
     {
          bnProofOfStakeLimit_used = bnProofOfStakeLimit_REVISED;
