@@ -30,7 +30,8 @@ static const int DATABASE_VERSION = 70508;
 // network protocol versioning
 //
 
-static const int PROTOCOL_VERSION = 61020;
+// 61030: switches to new PoS Limit 2 on Sun, 31 May 2015 07:00:00 GMT
+static const int PROTOCOL_VERSION = 61030;
 
 // earlier versions not supported as of Feb 2012, and are disconnected
 static const int MIN_PROTO_VERSION = 209;
