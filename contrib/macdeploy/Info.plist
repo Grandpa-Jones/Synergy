@@ -9,7 +9,7 @@
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleGetInfoString</key>
-        <string>Synergy [SNY] Crypto-Currency 1.0.3.0</string>
+        <string>Synergy [SNRG] Crypto-Currency 1.0.3.0</string>
         <key>CFBundleExecutable</key>
         <string>Synergy</string>
         <key>CFBundleIdentifier</key>
@@ -17,7 +17,7 @@
         <key>CFBundleShortVersionString</key>
         <string>1.0.3.0</string>
         <key>CFBundleSignature</key>
-        <string>xSNy</string>
+        <string>SnRG</string>
         <key>CFBundleVersion</key>
         <string>1.0.3.0</string>
 </dict>
