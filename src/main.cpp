@@ -21,7 +21,7 @@ using namespace boost;
 
 unsigned int nLaunchTime = LAUNCH_TIME;
 
-unsigned int nTurbo2_TIME = 1433188800; // Mon, 01 Jun 2015 20:00:00 GMT
+unsigned int nTurbo2_TIME = 1433113200; // Sun, 31 May 2015 23:00:00 GMT
 
 //
 // Global state
