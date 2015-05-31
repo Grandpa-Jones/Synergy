@@ -21,6 +21,8 @@ using namespace boost;
 
 unsigned int nLaunchTime = LAUNCH_TIME;
 
+unsigned int nTurbo2_TIME = 1433188800; // Mon, 01 Jun 2015 20:00:00 GMT
+
 //
 // Global state
 //
@@ -1192,6 +1194,7 @@ int GetTurboStakeMultiplier(CBitcoinAddress address, int64_t txTime, CBlockIndex
     }
   }
   if (fDebug) {
+       printf("GetTurboStakeMultiplier: address %s\n", address.ToString().c_str());
        printf("GetTurboStakeMultiplier: turbo count: %d, block count %d\n", turbo_count, block_count);
   }
 
@@ -1199,9 +1202,16 @@ int GetTurboStakeMultiplier(CBitcoinAddress address, int64_t txTime, CBlockIndex
   if (found_ratio < MAX_TURBO_FRACTION_INV) {
     return MAX_TURBO_MULTIPLIER;
   }
-  else {
-    // return (MAX_TURBO_MULTIPLIER * MAX_TURBO_FRACTION_INV) / found_ratio;
-    return (turbo_count * MAX_TURBO_MULTIPLIER * MAX_TURBO_FRACTION_INV) / block_count;
+
+  int multiplier = (turbo_count * MAX_TURBO_MULTIPLIER * MAX_TURBO_FRACTION_INV) / block_count;
+
+  if ((txTime >= nTurbo2_TIME) && (turbo_count > 0) && (multiplier == 0))
+  {
+     return 1;
+  }
+  else
+  {
+     return multiplier;
   }
 }
   
