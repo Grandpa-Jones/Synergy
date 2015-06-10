@@ -1,14 +1,19 @@
 TEMPLATE = app
-TARGET = synergy-qt
-VERSION = 2.0.0.1
-INCLUDEPATH += src src/json src/qt
-DEFINES += QT_GUI BOOST_THREAD_USE_LIB BOOST_SPIRIT_THREADSAFE
+TARGET = Synergy
+VERSION = 1.0.4.0
+INCLUDEPATH += src src/json src/qt src/tor
+INCLUDEPATH += src/tor/adapter src/tor/common src/tor/ext
+INCLUDEPATH += src/tor/ext/curve25519_donna src/tor/or
+INCLUDEPATH += src/qt/plugins/mrichtexteditor
 QT += core gui network
 CONFIG += no_include_pwd
 CONFIG += thread
 CONFIG += static
 
-win32:QMAKE_LFLAGS *= -Wl,--large-address-aware -static
+win32 {
+    QMAKE_LFLAGS *= -Wl,--large-address-aware -static
+    CONFIG += openssl-linked
+}
 
 QMAKE_CXXFLAGS = -fpermissive
 
@@ -17,6 +22,11 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
 }
 
+///////////////////////////////////////////////////////////////
+//
+// Change these variables in Qt environment preferrably
+//
+///////////////////////////////////////////////////////////////
 BOOST_LIB_SUFFIX=-mgw48-mt-s-1_55
 BOOST_INCLUDE_PATH=C:/deps/boost_1_55_0
 BOOST_LIB_PATH=C:/deps/boost_1_55_0/stage/lib
@@ -29,6 +39,9 @@ MINIUPNPC_LIB_PATH=C:/deps/miniupnpc
 QRENCODE_INCLUDE_PATH=C:/deps/qrencode-3.4.3
 QRENCODE_LIB_PATH=C:/deps/qrencode-3.4.3/.libs
 
+DEFINES += QT_GUI BOOST_THREAD_USE_LIB BOOST_SPIRIT_THREADSAFE \
+           BOOST_THREAD_PROVIDES_GENERIC_SHARED_MUTEX_ON_WIN \
+           __NO_SYSTEM_INCLUDES
 
 # for boost 1.37, add -mt to the boost libraries
 # use: qmake BOOST_LIB_SUFFIX=-mt
@@ -66,7 +79,7 @@ QMAKE_LFLAGS *= -fstack-protector-all --param ssp-buffer-size=1
 win32:QMAKE_LFLAGS *= -Wl,--large-address-aware -static
 win32:QMAKE_LFLAGS += -static-libgcc -static-libstdc++
 
-
+USE_QRCODE=1
 # use: qmake "USE_QRCODE=1"
 # libqrencode (http://fukuchi.org/works/qrencode/index.en.html) must be installed for support
 contains(USE_QRCODE, 1) {
@@ -75,6 +88,8 @@ contains(USE_QRCODE, 1) {
     LIBS += -lqrencode
 }
 
+// do not use upnp with tor, make sure USE_UPNP=-
+USE_UPNP=-
 # use: qmake "USE_UPNP=1" ( enabled by default; default)
 #  or: qmake "USE_UPNP=0" (disabled by default)
 #  or: qmake "USE_UPNP=-" (not supported)
@@ -102,6 +117,7 @@ contains(USE_DBUS, 1) {
 # use: qmake "USE_IPV6=1" ( enabled by default; default)
 #  or: qmake "USE_IPV6=0" (disabled by default)
 #  or: qmake "USE_IPV6=-" (not supported)
+USE_IPV6=0
 contains(USE_IPV6, -) {
     message(Building without IPv6 support)
 } else {
@@ -118,25 +134,6 @@ contains(BITCOIN_NEED_QT_PLUGINS, 1) {
 
 INCLUDEPATH += src/leveldb/include src/leveldb/helpers
 LIBS += $$PWD/src/leveldb/libleveldb.a $$PWD/src/leveldb/libmemenv.a
-SOURCES += src/txdb-leveldb.cpp \
-    src/bloom.cpp \
-    src/hash.cpp \
-    src/aes_helper.c \
-    src/blake.c \
-    src/bmw.c \
-    src/cubehash.c \
-    src/echo.c \
-    src/groestl.c \
-    src/jh.c \
-    src/keccak.c \
-    src/luffa.c \
-    src/shavite.c \
-    src/simd.c \
-    src/skein.c \
-	src/fugue.c \
-	src/hamsi.c \
-	src/shabal.c \
-    src/whirlpool.c
 !win32 {
     # we use QMAKE_CXXFLAGS_RELEASE even without RELEASE=1 because we use RELEASE to indicate linking preferences not -O preferences
     genleveldb.commands = cd $$PWD/src/leveldb && CC=$$QMAKE_CC CXX=$$QMAKE_CXX $(MAKE) OPT=\"$$QMAKE_CXXFLAGS $$QMAKE_CXXFLAGS_RELEASE\" libleveldb.a libmemenv.a
@@ -153,7 +150,7 @@ genleveldb.depends = FORCE
 PRE_TARGETDEPS += $$PWD/src/leveldb/libleveldb.a
 QMAKE_EXTRA_TARGETS += genleveldb
 # Gross ugly hack that depends on qmake internals, unfortunately there is no other way to do it.
-QMAKE_CLEAN += $$PWD/src/leveldb/libleveldb.a; cd $$PWD/src/leveldb ; $(MAKE) clean
+# QMAKE_CLEAN += $$PWD/src/leveldb/libleveldb.a; cd $$PWD/src/leveldb ; $(MAKE) clean
 
 # regenerate src/build.h
 !windows|contains(USE_BUILD_INFO, 1) {
@@ -165,6 +162,21 @@ QMAKE_CLEAN += $$PWD/src/leveldb/libleveldb.a; cd $$PWD/src/leveldb ; $(MAKE) cl
     DEFINES += HAVE_BUILD_INFO
 }
 
+SOURCES += \
+    # src/bloom.cpp \
+    src/hash.cpp \
+    src/aes_helper.c \
+    src/blake.c \
+    src/bmw.c \
+    src/cubehash.c \
+    src/echo.c \
+    src/groestl.c \
+    src/jh.c \
+    src/keccak.c \
+    src/luffa.c \
+    src/shavite.c \
+    src/simd.c \
+    src/skein.c
 contains(USE_O3, 1) {
     message(Building O3 optimization flag)
     QMAKE_CXXFLAGS_RELEASE -= -O2
@@ -212,12 +224,14 @@ HEADERS += src/qt/bitcoingui.h \
     src/pbkdf2.h \
     src/serialize.h \
     src/strlcpy.h \
+    src/smessage.h \
     src/main.h \
     src/miner.h \
     src/net.h \
     src/key.h \
     src/db.h \
     src/txdb.h \
+    src/txdb-leveldb.h \
     src/walletdb.h \
     src/script.h \
     src/stealth.h \
@@ -258,7 +272,6 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/askpassphrasedialog.h \
     src/protocol.h \
     src/qt/notificator.h \
-	src/qt/statisticspage.h \
     src/qt/qtipcserver.h \
     src/allocators.h \
     src/ui_interface.h \
@@ -282,16 +295,12 @@ HEADERS += src/qt/bitcoingui.h \
     src/sph_shavite.h \
     src/sph_simd.h \
     src/sph_skein.h \
-	src/sph_fugue.h \
-	src/sph_hamsi.h \
-	src/sph_shabal.h \
-	src/sph_whirlpool.h \
     src/sph_types.h \
-    src/threadsafety.h \
-    src/txdb-leveldb.h \
-    src/qt/blockbrowser.h
+    src/threadsafety.h
 
-SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
+SOURCES += \
+    src/qt/bitcoin.cpp \
+    src/qt/bitcoingui.cpp \
     src/qt/transactiontablemodel.cpp \
     src/qt/addresstablemodel.cpp \
     src/qt/optionsdialog.cpp \
@@ -303,22 +312,102 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/qt/aboutdialog.cpp \
     src/qt/editaddressdialog.cpp \
     src/qt/bitcoinaddressvalidator.cpp \
+    src/tor/common/address.c \
+    src/tor/or/addressmap.c \
+    src/tor/common/aes.c \
+    src/tor/common/backtrace.c \
+    src/tor/or/buffers.c \
+    src/tor/or/channel.c \
+    src/tor/or/channeltls.c \
+    src/tor/or/circpathbias.c \
+    src/tor/or/circuitbuild.c \
+    src/tor/or/circuitlist.c \
+    src/tor/or/circuitmux.c \
+    src/tor/or/circuitmux_ewma.c \
+    src/tor/or/circuitstats.c \
+    src/tor/or/circuituse.c \
+    src/tor/or/command.c \
+    src/tor/common/tor_compat.c \
+    src/tor/common/compat_libevent.c \
+    src/tor/or/config.c \
+    src/tor/or/config_codedigest.c \
+    src/tor/or/confparse.c \
+    src/tor/or/connection.c \
+    src/tor/or/connection_edge.c \
+    src/tor/or/connection_or.c \
+    src/tor/common/container.c \
+    src/tor/or/control.c \
+    src/tor/or/cpuworker.c \
+    src/tor/common/crypto.c \
+    src/tor/common/crypto_curve25519.c \
+    src/tor/common/crypto_format.c \
+    src/tor/ext/csiphash.c \
+    src/tor/ext/curve25519_donna/curve25519-donna.c \
+    src/tor/common/di_ops.c \
+    src/tor/or/directory.c \
+    src/tor/or/dirserv.c \
+    src/tor/or/dirvote.c \
+    src/tor/or/dns.c \
+    src/tor/or/dnsserv.c \
+    src/tor/or/entrynodes.c \
+    # src/tor/ext/eventdns.c \
+    src/tor/or/ext_orport.c \
+    src/tor/or/fp_pair.c \
+    src/tor/or/geoip.c \
+    src/tor/or/hibernate.c \
+    src/tor/common/log.c \
+    src/tor/common/memarea.c \
+    src/tor/common/mempool.c \
+    src/tor/or/microdesc.c \
+    src/tor/or/networkstatus.c \
+    src/tor/or/nodelist.c \
+    src/tor/or/onion.c \
+    src/tor/or/onion_fast.c \
+    src/tor/or/onion_main.c \
+    src/tor/or/onion_ntor.c \
+    src/tor/or/onion_tap.c \
+    src/tor/or/policies.c \
+    src/tor/adapter/synergy.cpp \
+    src/tor/common/procmon.c \
+    src/tor/or/reasons.c \
+    src/tor/or/relay.c \
+    src/tor/or/rendclient.c \
+    src/tor/or/rendcommon.c \
+    src/tor/or/rendmid.c \
+    src/tor/or/rendservice.c \
+    src/tor/or/rephist.c \
+    src/tor/or/replaycache.c \
+    src/tor/or/router.c \
+    src/tor/or/routerlist.c \
+    src/tor/or/routerparse.c \
+    src/tor/or/routerset.c \
+    src/tor/common/sandbox.c \
+    src/tor/or/statefile.c \
+    src/tor/or/status.c \
+    src/tor/common/tor_util.c \
+    src/tor/common/torgzip.c \
+    src/tor/common/tortls.c \
+    src/tor/or/tor_main.c \
+    src/tor/or/transports.c \
+    src/tor/common/util_codedigest.c \
+    src/tor/common/util_process.c \
     src/alert.cpp \
     src/version.cpp \
     src/sync.cpp \
+    src/smessage.cpp \
     src/util.cpp \
     src/netbase.cpp \
     src/key.cpp \
     src/script.cpp \
     src/main.cpp \
     src/miner.cpp \
-	src/qt/statisticspage.cpp \
     src/init.cpp \
     src/net.cpp \
     src/irc.cpp \
     src/checkpoints.cpp \
     src/addrman.cpp \
     src/db.cpp \
+    src/txdb-leveldb.cpp \
     src/walletdb.cpp \
     src/qt/clientmodel.cpp \
     src/qt/guiutil.cpp \
@@ -360,8 +449,7 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/scrypt-x86_64.S \
     src/scrypt.cpp \
     src/pbkdf2.cpp \
-    src/stealth.cpp \
-    src/qt/blockbrowser.cpp
+    src/stealth.cpp
 
 RESOURCES += \
     src/qt/bitcoin.qrc
@@ -378,9 +466,18 @@ FORMS += \
     src/qt/forms/sendcoinsentry.ui \
     src/qt/forms/askpassphrasedialog.ui \
     src/qt/forms/rpcconsole.ui \
-    src/qt/forms/optionsdialog.ui \
-	src/qt/forms/statisticspage.ui \
-    src/qt/forms/blockbrowser.ui
+    src/qt/forms/optionsdialog.ui
+
+win32 {
+  HEADERS += src/tor/or/ntmain.h
+}
+
+
+win32 {
+  SOURCES += src/tor/or/ntmain.c
+}
+
+
 
 contains(USE_QRCODE, 1) {
 HEADERS += src/qt/qrcodedialog.h
