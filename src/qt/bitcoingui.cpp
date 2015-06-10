@@ -330,7 +330,7 @@ void BitcoinGUI::createActions()
     encryptWalletAction->setCheckable(true);
     backupWalletAction = new QAction(QIcon(":/icons/filesave"), tr("&Backup Wallet..."), this);
     backupWalletAction->setToolTip(tr("Backup wallet to another location"));
-    updateWalletAction = new QAction(QIcon(":/icons/options"), tr("&Update Wallet"), this);
+    updateWalletAction = new QAction(QIcon(":/icons/options"), tr("&Rebuild Wallet"), this);
     updateWalletAction->setToolTip(tr("Purge and re-scan wallet"));
     changePassphraseAction = new QAction(QIcon(":/icons/key"), tr("&Change Passphrase..."), this);
     changePassphraseAction->setToolTip(tr("Change the passphrase used for wallet encryption"));
