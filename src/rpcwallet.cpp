@@ -51,6 +51,10 @@ void WalletTxToJSON(const CWalletTx& wtx, Object& entry)
     entry.push_back(Pair("confirmations", confirms));
     if (wtx.IsCoinBase() || wtx.IsCoinStake())
         entry.push_back(Pair("generated", true));
+    // get the turbo multiplier
+    if (wtx.nTurbo > 0) {
+          entry.push_back(Pair("turbo", (boost::int64_t) wtx.nTurbo));
+    }
     if (confirms > 0)
     {
         entry.push_back(Pair("blockhash", wtx.hashBlock.GetHex()));

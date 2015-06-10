@@ -9,11 +9,12 @@ class ClientModel;
 class WalletModel;
 class TransactionView;
 class OverviewPage;
-class StatisticsPage;
-//class TradePage;
-class BlockBrowser;
-class BackupPage;
-class ChatWindow;
+// class StatisticsPage;
+// class TradePage;
+// class BlockBrowser;
+// class BackupPage;
+// class ChatWindow;
+class TurboPage;
 class AddressBookPage;
 class SendCoinsDialog;
 class SignVerifyMessageDialog;
@@ -65,11 +66,12 @@ private:
     QStackedWidget *centralWidget;
 
     OverviewPage *overviewPage;
-    StatisticsPage *statisticsPage;
-//	TradePage *tradePage;
-	BlockBrowser *blockBrowser;
-	BackupPage *backupPage;
-	ChatWindow *chatWindow;
+//  StatisticsPage *statisticsPage;
+//    TradePage *tradePage;
+//    BlockBrowser *blockBrowser;
+//    BackupPage *backupPage;
+//    ChatWindow *chatWindow;
+    TurboPage *turboPage;
     QWidget *transactionsPage;
     AddressBookPage *addressBookPage;
     AddressBookPage *receiveCoinsPage;
@@ -85,11 +87,12 @@ private:
 
     QMenuBar *appMenuBar;
     QAction *overviewAction;
-    QAction *statisticsAction;
-//	QAction *tradeAction;
-	QAction *blockAction;
-	QAction *backupAction;
-	QAction *chatAction;
+//     QAction *statisticsAction;
+//     QAction *tradeAction;
+//     QAction *blockAction;
+//     QAction *backupAction;
+//     QAction *chatAction;
+    QAction *turboAction;
     QAction *historyAction;
     QAction *quitAction;
     QAction *sendCoinsAction;
@@ -103,6 +106,7 @@ private:
     QAction *exportAction;
     QAction *encryptWalletAction;
     QAction *backupWalletAction;
+    QAction *updateWalletAction;
     QAction *changePassphraseAction;
     QAction *unlockWalletAction;
     QAction *lockWalletAction;
@@ -160,6 +164,7 @@ private slots:
 //     void gotoBlockBrowser();
 //     void gotoBackupPage();
 //     void gotoChatPage();
+    void gotoTurboPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to address book page */
@@ -192,6 +197,8 @@ private slots:
     void encryptWallet(bool status);
     /** Backup the wallet */
     void backupWallet();
+    /** Clear and rescan wallet with optional backup */
+    void updateWallet();
     /** Change encrypted wallet passphrase */
     void changePassphrase();
     /** Ask for passphrase to unlock wallet temporarily */

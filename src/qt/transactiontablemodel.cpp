@@ -438,7 +438,7 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
 
 QString TransactionTableModel::formatTurbo(const TransactionRecord *wtx) const
 {
-   if (wtx->turbo >= 0)
+   if ((wtx->turbo > 0) && (wtx->time <= nTurboEndTime))
    {
         return QString::number(wtx->turbo) + QString("x");
    }
@@ -583,6 +583,8 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
         return rec->type;
     case DateRole:
         return QDateTime::fromTime_t(static_cast<uint>(rec->time));
+    case TimeRole:
+        return rec->time;
     case LongDescriptionRole:
         return priv->describe(rec);
     case AddressRole:

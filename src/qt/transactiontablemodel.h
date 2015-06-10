@@ -36,6 +36,8 @@ public:
         TypeRole = Qt::UserRole,
         /** Date and time this transaction was created */
         DateRole,
+        /** Time stamp as epoch */
+        TimeRole,
         /** Long description (HTML format) */
         LongDescriptionRole,
         /** Address of transaction */

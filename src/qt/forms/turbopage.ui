@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TurboPage</class>
+ <widget class="QWidget" name="TurboPage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>795</width>
+    <height>520</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>920</width>
+    <height>590</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Turbo Stake</string>
+  </property>
+
+
+    <layout class="QHBoxLayout" name="horizontalLayoutTxComment">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="labelTxComment">
+      <property name="text">
+       <string>Synergy Address: </string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeft|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="buddy">
+       <cstring>editAddress</cstring>
+      </property>
+     </widget>
+     </item>
+     <item>
+      <widget class="QValidatedLineEdit" name="editAddress">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="toolTip">
+        <string>Enter a Synergy Address</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+       <widget class="QPushButton" name="startButton">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+            <string>Turbo...</string>
+        </property>
+       </widget>
+     </item>
+
+    </layout>
+ </widget>
+
+ <customwidgets>
+<!--
+  <customwidget>
+   <class>QWebView</class>
+   <extends>QWidget</extends>
+   <header>QtWebKitWidgets/QWebView</header>
+  </customwidget>
+-->
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

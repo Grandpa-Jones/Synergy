@@ -38,7 +38,10 @@ unsigned int nTransactionsUpdated = 0;
 map<uint256, CBlockIndex*> mapBlockIndex;
 set<pair<COutPoint, unsigned int> > setStakeSeen;
 
-// "standard" scrypt target limit for proof of work, results with 0,000244140625 proof-of-work difficulty
+// caches signing addresses map to the block hash (only for turbo period)
+map<uint256, CBitcoinAddress> mapTurboAddress;
+
+// PoW starting diff: 0.00001526
 CBigNum bnProofOfWorkLimit(~uint256(0) >> 16);
 CBigNum bnProofOfStakeLimit(~uint256(0) >> 12);
 CBigNum bnProofOfWorkLimitTestNet(~uint256(0) >> 14);
@@ -55,8 +58,9 @@ unsigned int nModifierInterval = 20 * 60; // time to elapse before new modifier 
 
 int64_t nTurboLookback = 2 * 24 * 60 * 60; // 2 days of blocks
 int64_t nTurboDuration = 30 * 24 * 60 * 60; // TurboStake ends after 30 days
-int64_t nTurboEndTime = 0; // this get's set from block 1 time (genesis + 1)
-                           // hardcoded upon first update
+// this get's set from block 1 time (genesis + 1)
+// hardcoded upon first update - Thu, 25 Jun 2015 06:03:07 GMT
+int64_t nTurboEndTime = 1432620187 + nTurboDuration;
 
 int nCoinbaseMaturity = 120; // 120 blocks (4 hr)
 // Maximum age of a coin (not "coin-age") 8 days
@@ -1102,24 +1106,6 @@ const int DAILY_BLOCKCOUNT =  720;
 //       ...and sorry that you lost that coin-age ;-)
 int GetTurboStakeMultiplier(CBitcoinAddress address, int64_t txTime, CBlockIndex* pindex) {
 
-  // the following 3 tests can be eliminated on first update
-  if (pindexGenesisBlock == NULL) {
-    if (fDebug) {
-         printf("GetTurboStakeMultiplier: No genesis block.\n");
-    }
-    return -1;
-  }
-  if (pindexGenesisBlock->pnext == NULL) {
-    if (fDebug) {
-         printf("GetTurboStakeMultiplier: No block 1.\n");
-    }
-    return -2;
-  }
-  // initialize at top of file when known
-  if (nTurboEndTime == 0) {
-    nTurboEndTime = pindexGenesisBlock->pnext->nTime + nTurboDuration;
-  }
-
   // too late
   if (txTime > nTurboEndTime) {
     return 1;
@@ -1152,39 +1138,47 @@ int GetTurboStakeMultiplier(CBitcoinAddress address, int64_t txTime, CBlockIndex
     }
     block_count++;
     if (pindexPrev->IsProofOfStake()) {
-      CBlock block;  // current block within lookback
-      block.ReadFromDisk(pindexPrev, true);
-      // vtx[1].vout[0] is empty for PoS
-      // set to output of first CTransaction of block
-      CTxOut txout = block.vtx[1].vout[1];
-      CTxDestination sigaddr; // signing address of block if PoS
-      if (ExtractDestination(txout.scriptPubKey, sigaddr)) {
-        if (CBitcoinAddress(sigaddr) == address) {
-          if ((time_last - block.nTime) < allowedSpacing) {
+      CBitcoinAddress blockAddress; // signing address as CBitcoinAddress
+      // use the map cache to save lots of disk access
+      uint256 blockHash = *pindexPrev->phashBlock;
+      map<uint256, CBitcoinAddress>::iterator it = mapTurboAddress.find(blockHash);
+      if (it != mapTurboAddress.end())
+      {
+           // printf("GetTurboStakeMultiplier: found block in cache: %s\n", it->first.ToString().c_str());
+           blockAddress = it->second;
+      }
+      else
+      {
+           CBlock block;  // current block within lookback
+           block.ReadFromDisk(pindexPrev, true);
+           // vtx[1].vout[0] is empty for PoS
+           // set to output of first CTransaction of block
+           CTxOut txout = block.vtx[1].vout[1];
+           CTxDestination sigaddr; // signing address of block as CTxDestination if PoS
+           if (ExtractDestination(txout.scriptPubKey, sigaddr))
+           {
+                blockAddress = CBitcoinAddress(sigaddr);
+                mapTurboAddress[blockHash] = blockAddress;
+           }
+           else
+           {
+                if (fDebug) {
+                     printf("GetTurboStakeMultiplier: Could not extract destination.\n");
+                }
+                return -5;
+           }
+      }
+      if (blockAddress == address) {
+          if ((time_last - pindexPrev->nTime) < allowedSpacing) {
             if (fDebug) {
                   printf("GetTurboStakeMultiplier: Penalized for not honoring target spacing.\n");
             }
             return 0;
           }
           else {
-            // ensure tx is safely in main chain (probably overkill)
-            // CMerkleTx mtx = CMerkleTx(block.vtx[1]);
-            // mtx.SetMerkleBranch(&block);
-            // CBlockIndex* pindexRet;
-            // if (mtx.GetDepthInMainChain(pindexRet) >= MIN_TURBO_DEPTH) {
-            //      // assert(pindexRet == pindexPrev);
-            //      turbo_count++;
-            // }
             turbo_count++;
-            time_last = block.nTime;
+            time_last = pindexPrev->nTime;
           }
-        }
-      }
-      else {
-        if (fDebug) {
-             printf("GetTurboStakeMultiplier: Could not extract destination.\n");
-        }
-        return -5;
       }
     }
     pindexPrev = pindexPrev->pprev;

@@ -1,3 +1,5 @@
+#include "main.h"
+
 #include "overviewpage.h"
 #include "ui_overviewpage.h"
 
@@ -42,6 +44,7 @@ public:
         icon.paint(painter, decorationRect);
 
         QDateTime date = index.data(TransactionTableModel::DateRole).toDateTime();
+        qint64 time = index.data(TransactionTableModel::TimeRole).toLongLong();
         QString address = index.data(Qt::DisplayRole).toString();
         qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();
         qint64 turbo = index.data(TransactionTableModel::TurboRole).toLongLong();
@@ -55,10 +58,10 @@ public:
         }
 
         QString strTurbo;
-        if (turbo < 0) {
-             strTurbo = QString("");
-        } else {
+        if ((turbo > 0) && (time <= nTurboEndTime)) {
              strTurbo = QString("Turbo: ") + QString::number(turbo) + QString("x");
+        } else {
+             strTurbo = QString("");
         }
 
         painter->setPen(COLOR_SYNERGY);

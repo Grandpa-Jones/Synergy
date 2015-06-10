@@ -183,7 +183,7 @@ public:
     bool AddToWalletIfInvolvingMe(const CTransaction& tx, const CBlock* pblock, bool fUpdate = false, bool fFindBlock = false);
     bool EraseFromWallet(uint256 hash);
     void WalletUpdateSpent(const CTransaction& prevout, bool fBlock = false);
-    int ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate = false);
+    int ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate = false, void (*pProgress)(int)=NULL);
     int ScanForWalletTransaction(const uint256& hashTx);
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(bool fForce = false);
@@ -412,6 +412,7 @@ public:
     std::string strFromAccount;
     std::vector<char> vfSpent; // which outputs are already spent
     int64_t nOrderPos;  // position in ordered transaction list
+    int nTurbo; // turbo multiplier (==-1 unset, ==0 N/A, >0 is Turbo tx)
 
     // memory only
     mutable bool fDebitCached;
@@ -464,6 +465,7 @@ public:
         nAvailableCreditCached = 0;
         nChangeCached = 0;
         nOrderPos = -1;
+        nTurbo = -1;
     }
 
     IMPLEMENT_SERIALIZE
@@ -490,6 +492,12 @@ public:
 
             if (nTimeSmart)
                 pthis->mapValue["timesmart"] = strprintf("%u", nTimeSmart);
+
+            // only write if necessary (quick to calculate otherwise)
+            if ((pthis->nTurbo > 0) && (pthis->nTime <= nTurboEndTime))
+            {
+                pthis->mapValue["turbo"] = strprintf("%d", pthis->nTurbo);
+            }
         }
 
         nSerSize += SerReadWrite(s, *(CMerkleTx*)this, nType, nVersion,ser_action);
@@ -514,6 +522,26 @@ public:
             ReadOrderPos(pthis->nOrderPos, pthis->mapValue);
 
             pthis->nTimeSmart = mapValue.count("timesmart") ? (unsigned int)atoi64(pthis->mapValue["timesmart"]) : 0;
+
+            // be careful to fully construct tx befor calculating turbo
+            if (mapValue.count("turbo"))
+            {
+                pthis->nTurbo = (int) atoi64(pthis->mapValue["turbo"]);
+                if (fDebug) {
+                     printf("CWalletTx::ImplementSerialize: read %d turbo for tx %s.\n", pthis->nTurbo, pthis->GetHash().ToString().c_str());
+                }
+            }
+            else
+            {
+                // has the side-effect of setting it's own multiplier
+                if (pthis->GetTurboMultiplier() < 0) {
+                      printf("CWalletTx::ImplementSerialize: error finding multipler: %d\n", pthis->nTurbo);
+                }
+                if (fDebug) {
+                      printf("CWalletTx::ImplementSerialize: got %d turbo for tx %s.\n", pthis->nTurbo, pthis->GetHash().ToString().c_str());
+                }
+            }
+
         }
 
         pthis->mapValue.erase("fromaccount");
@@ -521,6 +549,7 @@ public:
         pthis->mapValue.erase("spent");
         pthis->mapValue.erase("n");
         pthis->mapValue.erase("timesmart");
+        pthis->mapValue.erase("turbo");
     )
 
     // marks certain txout's as spent
@@ -712,6 +741,34 @@ public:
 
         return true;
     }
+
+
+    int GetTurboMultiplier()
+    {
+        if (this->nTurbo == -1) {
+            int turbo = 0;
+            if (this->IsCoinStake())
+            {
+               // Find the block the tx is in
+               CBlockIndex* pindex = NULL;
+               std::map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(this->hashBlock);
+               if (mi != mapBlockIndex.end()) {
+                    pindex = (*mi).second;
+               }
+               // Grab the address
+               if ((pindex != NULL) && (pindex->pprev != NULL)) {
+                    CTxDestination sigaddr;
+                    if (ExtractDestination(this->vout[1].scriptPubKey, sigaddr)) {
+                          turbo = GetTurboStakeMultiplier(CBitcoinAddress(sigaddr), nTime, pindex->pprev);
+                    }
+               }
+
+            }
+            this->nTurbo = turbo;
+        }
+        return this->nTurbo;
+    }
+
 
     bool WriteToDisk();
 
