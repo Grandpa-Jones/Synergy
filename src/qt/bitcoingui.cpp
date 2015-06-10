@@ -1022,7 +1022,7 @@ void BitcoinGUI::updateWallet()
 
     {
       QMessageBox::StandardButton reply;
-      reply = QMessageBox::question(this, "Rebuild", "Rebuilding will takes a lot of time, proceed?",
+      reply = QMessageBox::question(this, "Rebuild", "Rebuilding takes a lot of time, proceed?",
                                     QMessageBox::Yes|QMessageBox::No);
       if (reply == QMessageBox::No) {
         return;
