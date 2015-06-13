@@ -1479,8 +1479,15 @@ Value getmyturboaddresses(const Array& params, bool fHelp)
     return myTurbos;
 }
 
+struct TurbosSorter {
+  bool operator() (Pair lhs, Pair rhs)
+  {
+      return lhs.value_.get_int() < rhs.value_.get_int();
+  }
+} turboSorter;
 
 // [TODO] Badly needed refactoring with getmyturboaddresses
+// [TODO] Probably should go in rpcblockchain
 Value getallturboaddresses(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 0)
@@ -1524,6 +1531,7 @@ Value getallturboaddresses(const Array& params, bool fHelp)
         }
         pindex = pindex->pprev;
     }
+    std::sort (allTurbos.begin(), allTurbos.end(), turboSorter);
     return allTurbos;
 }
 
