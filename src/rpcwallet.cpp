@@ -1480,6 +1480,54 @@ Value getmyturboaddresses(const Array& params, bool fHelp)
 }
 
 
+// [TODO] Badly needed refactoring with getmyturboaddresses
+Value getallturboaddresses(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0)
+    {
+        throw runtime_error(
+            "getallturboaddresses\n"
+            "Return all known addresses that have Turbo Stake");
+    }
+    Object allTurbos;
+
+    CBlockIndex *pindex = GetLastTurboIndex();
+
+    while (pindex->pprev != NULL)
+    {
+        if (pindex->IsProofOfStake())
+        {
+            CBitcoinAddress address;
+            map<uint256, CBitcoinAddress>::iterator it = mapTurboAddress.find(*pindex->phashBlock);
+            if (it != mapTurboAddress.end())
+            {
+                address = it->second;
+                {
+                     string sAddress = address.ToString();
+                     Object::iterator oit = allTurbos.begin();
+                     while (true)
+                     {
+                        if (oit == allTurbos.end())
+                        {
+                             int m = GetTurboStakeMultiplier(address, pindex->nStakeTime, pindex->pprev);
+                             allTurbos.push_back(Pair(sAddress, m));
+                             break;
+                        }
+                        if (oit->name_ == sAddress)
+                        {
+                             break;
+                        }
+                        ++oit;
+                     }
+                }
+            }
+        }
+        pindex = pindex->pprev;
+    }
+    return allTurbos;
+}
+
+
 Value getturbo(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
