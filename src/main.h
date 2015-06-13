@@ -113,6 +113,7 @@ extern unsigned char pchMessageStart[4];
 extern std::map<uint256, CBlock*> mapOrphanBlocks;
 
 extern int64_t nTurboEndTime;
+extern CBlockIndex *pindexLastTurbo;
 
 // Settings
 extern int64_t nTransactionFee;
@@ -125,6 +126,7 @@ extern bool fEnforceCanonical;
 
 // Minimum disk space required - used in CheckDiskSpace()
 static const uint64_t nMinDiskSpace = 52428800;
+
 
 class CReserveKey;
 class CTxDB;
@@ -151,6 +153,7 @@ int64_t GetPoWSubsidy2(int64_t nHeight);
 int64_t GetProofOfWorkReward(int nHeight, int64_t nFees);
 int GetTurboStakeMultiplier(CBitcoinAddress address, int64_t txTime, CBlockIndex* pindex);
 int64_t GetProofOfStakeReward(int64_t nCoinAge, CBitcoinAddress address, int64_t nTime, CBlockIndex* pindex);
+int FillMapTurboAddress();
 unsigned int ComputeMinWork(unsigned int nBase, int64_t nTime);
 unsigned int ComputeMinStake(unsigned int nBase, int64_t nTime, unsigned int nBlockTime);
 int GetNumBlocksOfPeers();

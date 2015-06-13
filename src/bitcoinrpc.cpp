@@ -279,6 +279,8 @@ static const CRPCCommand vRPCCommands[] =
     { "getblockhash",           &getblockhash,           false,  false },
     { "gettransaction",         &gettransaction,         false,  false },
     { "listtransactions",       &listtransactions,       false,  false },
+    { "getturbo",               &getturbo,               false,  false },
+    { "getmyturboaddresses",    &getmyturboaddresses,    false,  false },
     { "listaddressgroupings",   &listaddressgroupings,   false,  false },
     { "signmessage",            &signmessage,            false,  false },
     { "verifymessage",          &verifymessage,          false,  false },
@@ -313,7 +315,7 @@ static const CRPCCommand vRPCCommands[] =
     { "sendtostealthaddress",   &sendtostealthaddress,   false,  false},
     { "clearwallettransactions",&clearwallettransactions,false,  false},
     { "scanforalltxns",         &scanforalltxns,         false,  false},
-    { "scanforstealthtxns",     &scanforstealthtxns,     false,  false}
+    { "scanforstealthtxns",     &scanforstealthtxns,     false,  false},
 };
 
 CRPCTable::CRPCTable()

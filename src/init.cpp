@@ -881,6 +881,14 @@ bool AppInit2()
         }
     }
 
+    int nStatusFMTA = FillMapTurboAddress();
+    if (nStatusFMTA) {
+          printf("Problem filling mapTurboAddress: error %d\n", nStatusFMTA);
+    } else {
+          printf("Filled mapTurboAddress successfully.\n");
+    }
+ 
+
     // ********************************************************* Step 10: load peers
 
     uiInterface.InitMessage(_("Loading addresses..."));

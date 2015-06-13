@@ -62,6 +62,11 @@ int64_t nTurboDuration = 30 * 24 * 60 * 60; // TurboStake ends after 30 days
 // hardcoded upon first update - Thu, 25 Jun 2015 06:03:07 GMT
 int64_t nTurboEndTime = 1432620187 + nTurboDuration;
 
+// set when known
+// int nLastTurboHeight = 0;
+// set when known
+CBlockIndex *pindexLastTurbo = NULL;
+
 int nCoinbaseMaturity = 120; // 120 blocks (4 hr)
 // Maximum age of a coin (not "coin-age") 8 days
 static const CBigNum MAX_COIN_SECONDS = 8 * 24 * 60 * 60;
@@ -1159,6 +1164,10 @@ int GetTurboStakeMultiplier(CBitcoinAddress address, int64_t txTime, CBlockIndex
            {
                 blockAddress = CBitcoinAddress(sigaddr);
                 mapTurboAddress[blockHash] = blockAddress;
+                // if (fDebug) {
+                //      printf("GetTurboStakeMultiplier: mapTurboAddress[%s]=%s\n",
+                //                blockHash.ToString().c_str(), blockAddress.ToString().c_str());
+                // }
            }
            else
            {
@@ -1242,6 +1251,97 @@ int64_t GetProofOfStakeReward(int64_t nCoinAge, CBitcoinAddress address,
 
     return nSubsidy;
 }
+
+// fills mapTurboAddress from highest possible block
+// returns 1 if pindexBest is NULL
+// returns 2 if pindexBest is genesis block
+// returns 3 if can't find a previous turbo block
+// returns 4 if can't get destination from previous turbo block
+int FillMapTurboAddress()
+{
+    CBlockIndex *pindex;
+
+    if (pindexLastTurbo != NULL)
+    {
+         pindex = pindexLastTurbo;
+    }
+    else
+    {
+         pindex = pindexBest;
+    }
+        
+    if (pindex == NULL)
+    {
+         if (fDebug) {
+              printf("FillMapTurboAddress: best block is is null.\n");
+         }
+         return 1;
+    }
+
+    if (pindex->pprev == NULL)
+    {
+         if (fDebug) {
+              printf("FillMapTurboAddress: best block is genesis block.\n");
+         }
+         return 2;
+    }
+
+    // [TODO] refactor (?) find previous turbo block
+    if ((pindex->nTime > nTurboEndTime) || !pindex->IsProofOfStake())
+    {
+         while (pindex->pprev != NULL)
+         {
+            if ((pindex->nTime <= nTurboEndTime) &&  pindex->IsProofOfStake())
+            {
+                  break;
+            }
+            pindex = pindex->pprev;
+         }
+    }
+
+    if (pindex->pprev == NULL)
+    {
+         if (fDebug) {
+              printf("FillMapTurboAddress: unable to find turbo block.\n");
+         }
+         return 3;
+    }
+
+    while (pindex->pprev != NULL)
+    {
+        if (pindex->IsProofOfStake())
+        {
+            map<uint256, CBitcoinAddress>::iterator it = mapTurboAddress.find(*pindex->phashBlock);
+            if (it == mapTurboAddress.end())
+            {
+                // [TODO] refactor this code block (see GetTurboStakeMultiplier)
+                CBitcoinAddress blockAddress;
+                CTxOut txout;
+                {
+                    CBlock block;
+                    block.ReadFromDisk(pindex, true);
+                    txout = block.vtx[1].vout[1];
+                    CTxDestination sigaddr; // signing address of block as CTxDestination if PoS
+                    if (ExtractDestination(txout.scriptPubKey, sigaddr))
+                    {
+                         blockAddress = CBitcoinAddress(sigaddr);
+                    }
+                    else
+                    {
+                         if (fDebug) {
+                               printf("FillMapTurboAddress: Could not extract destination.\n");
+                         }
+                         return 4;
+                    }
+                }
+                mapTurboAddress[*pindex->phashBlock] = blockAddress;
+            }
+        }
+        pindex = pindex->pprev;
+   }
+   return 0;
+}
+
 
 static const int64_t nTargetTimespan = 20 * 60;  // 10 blocks
 //

@@ -10,6 +10,8 @@
 #include "base58.h"
 #include "stealth.h"
 
+#include <boost/lexical_cast.hpp>
+
 using namespace json_spirit;
 using namespace std;
 
@@ -1406,6 +1408,110 @@ Value gettransaction(const Array& params, bool fHelp)
     }
 
     return entry;
+}
+
+
+CBlockIndex* GetLastTurboIndex() {
+    CBlockIndex *pindex;
+    if (pindexLastTurbo == NULL) {
+          pindex = pindexBest;
+    }
+    else {
+          pindex = pindexLastTurbo;
+    }
+
+    if (IsInitialBlockDownload() || (pindex == NULL) || (pindex->pprev == NULL)) {
+          throw JSONRPCError(RPC_INVALID_REQUEST, "Blockchain not ready");
+    }
+
+    if (mapTurboAddress.empty()) {
+          throw JSONRPCError(RPC_INVALID_REQUEST, "Turbo addresses awaiting cache");
+    }
+    return pindex;
+}
+
+
+Value getmyturboaddresses(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0)
+    {
+        throw runtime_error(
+            "getmyturboaddresses\n"
+            "Return all of wallet's own addresses that have Turbo Stake");
+    }
+    Object myTurbos;
+
+    CBlockIndex *pindex = GetLastTurboIndex();
+
+    while (pindex->pprev != NULL)
+    {
+        if (pindex->IsProofOfStake())
+        {
+            CBitcoinAddress address;
+            map<uint256, CBitcoinAddress>::iterator it = mapTurboAddress.find(*pindex->phashBlock);
+            if (it != mapTurboAddress.end())
+            {
+                address = it->second;
+                CTxDestination dest = address.Get();
+                if (IsMine(*pwalletMain, dest))
+                {
+                     string sAddress = address.ToString();
+                     Object::iterator oit = myTurbos.begin();
+                     while (true)
+                     {
+                        if (oit == myTurbos.end())
+                        {
+                             int m = GetTurboStakeMultiplier(address, pindex->nStakeTime, pindex->pprev);
+                             myTurbos.push_back(Pair(sAddress, m));
+                             break;
+                        }
+                        if (oit->name_ == sAddress)
+                        {
+                             break;
+                        }
+                        ++oit;
+                     }
+                }
+            }
+        }
+        pindex = pindex->pprev;
+    }
+    return myTurbos;
+}
+
+
+Value getturbo(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1)
+    {
+        throw runtime_error(
+            "getturbo <address>\n"
+            "Get turbo multipliers for <address>");
+    }
+
+    CBitcoinAddress address(params[0].get_str());
+    if (!address.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid synergy address");
+
+    Array ret;
+    Array heights;
+    Array turbos;
+
+    CBlockIndex *pindex = GetLastTurboIndex();
+
+    while (pindex->pprev != NULL)
+    {
+        map<uint256, CBitcoinAddress>::iterator it = mapTurboAddress.find(*pindex->phashBlock);
+        if ((it != mapTurboAddress.end()) && (it->second == address)) {
+             heights.insert(heights.begin(), pindex->nHeight);
+             turbos.insert(turbos.begin(), GetTurboStakeMultiplier(address, pindex->nStakeTime, pindex->pprev));
+        }
+        pindex = pindex->pprev;
+    }
+
+    ret.push_back(heights);
+    ret.push_back(turbos);
+    return ret;
 }
 
 
