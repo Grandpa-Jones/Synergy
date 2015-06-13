@@ -1482,7 +1482,7 @@ Value getmyturboaddresses(const Array& params, bool fHelp)
 struct TurbosSorter {
   bool operator() (Pair lhs, Pair rhs)
   {
-      return lhs.value_.get_int() < rhs.value_.get_int();
+      return lhs.value_.get_int() > rhs.value_.get_int();
   }
 } turboSorter;
 
