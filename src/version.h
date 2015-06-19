@@ -32,7 +32,7 @@ static const int DATABASE_VERSION = 70508;
 
 // 61030: switches to new PoS Limit 2 on Sun, 31 May 2015 07:00:00 GMT
 // 61040: boot and sync speedups
-static const int PROTOCOL_VERSION = 61050;
+static const int PROTOCOL_VERSION = 61060;
 
 // earlier versions not supported as of Feb 2012, and are disconnected
 static const int MIN_PROTO_VERSION = 209;
