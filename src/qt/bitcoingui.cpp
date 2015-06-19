@@ -489,7 +489,9 @@ void BitcoinGUI::setWalletModel(WalletModel *walletModel)
 //         blockBrowser->setModel(clientModel);
 //         backupPage->setModel(clientModel);
 //         chatWindow->setModel(clientModel);
-        turboPage->setModel(clientModel);
+
+        turboPage->setModel(walletModel->getTurboAddressTableModel());
+
         setEncryptionStatus(walletModel->getEncryptionStatus());
         connect(walletModel, SIGNAL(encryptionStatusChanged(int)), this, SLOT(setEncryptionStatus(int)));
 

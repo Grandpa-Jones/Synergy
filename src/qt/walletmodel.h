@@ -7,6 +7,8 @@
 
 #include "allocators.h" /* for SecureString */
 
+#include "turboaddresstablemodel.h"
+
 class OptionsModel;
 class AddressTableModel;
 class TransactionTableModel;
@@ -64,6 +66,7 @@ public:
 
     OptionsModel *getOptionsModel();
     AddressTableModel *getAddressTableModel();
+    TurboAddressTableModel *getTurboAddressTableModel();
     TransactionTableModel *getTransactionTableModel();
 
     qint64 getBalance() const;
@@ -137,6 +140,7 @@ private:
     OptionsModel *optionsModel;
 
     AddressTableModel *addressTableModel;
+    TurboAddressTableModel *turboAddressTableModel;
     TransactionTableModel *transactionTableModel;
 
     // Cache some values to be able to detect changes
@@ -162,6 +166,9 @@ public slots:
     void updateTransaction(const QString &hash, int status);
     /* New, updated or removed address book entry */
     void updateAddressBook(const QString &address, const QString &label, bool isMine, int status);
+    /* Turbo multiplier list probably changed on new block */
+    void updateTurboAddresses();
+    void updateTurbo();
     /* Current, immature or unconfirmed balance might have changed - emit 'balanceChanged' if so */
     void pollBalanceChanged();
 

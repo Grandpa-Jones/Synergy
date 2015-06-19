@@ -6,6 +6,11 @@
 #include "wallet.h"
 #include "base58.h"
 
+#include "turboaddresstablemodel.h"
+
+#include "qcgaugewidget/qcgaugewidget.h"
+#include "qcustomplot/qcustomplot.h"
+
 #include <QWidget>
 
 #include <QDir>
@@ -20,10 +25,15 @@
 
 
 namespace Ui {
-class TurboPage;
+    class TurboPage;
 }
-class ClientModel;
-class WalletModel;
+class TurboAddressTableModel;
+
+QT_BEGIN_NAMESPACE
+class QTableView;
+class QItemSelection;
+class QSortFilterProxyModel;
+QT_END_NAMESPACE
 
 class TurboPage : public QWidget
 {
@@ -33,20 +43,30 @@ public:
     explicit TurboPage(QWidget *parent = 0);
     ~TurboPage();
     
-    void setModel(ClientModel *model);
+    void setModel(TurboAddressTableModel *model);
     void setModel(WalletModel *walletModel);
     
 public slots:
 
     void updateTurbo();
+    void updateChart();
+    void RowDoubleClicked(QModelIndex idx);
 
 private slots:
+    void selectionChanged();
 
 private:
     Ui::TurboPage *ui;
-    ClientModel *model;
+    TurboAddressTableModel *model;
     WalletModel *walletModel;
-    
+    // QcGaugeWidget *mainGauge;
+    QcNeedleItem *mainNeedle;
+    QcLabelItem *labMultiplier;
+    QcLabelItem *labAccount;
+    // QCustomPlot *plotAddress;
+    QSortFilterProxyModel *proxyModel;
+    void subscribeToCoreSignals();
+    void unsubscribeFromCoreSignals();
 };
 
 #endif // TURBOPAGE_H

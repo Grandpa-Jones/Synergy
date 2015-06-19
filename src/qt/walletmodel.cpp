@@ -2,6 +2,7 @@
 #include "guiconstants.h"
 #include "optionsmodel.h"
 #include "addresstablemodel.h"
+#include "turboaddresstablemodel.h"
 #include "transactiontablemodel.h"
 
 #include "ui_interface.h"
@@ -14,13 +15,14 @@
 
 WalletModel::WalletModel(CWallet *wallet, OptionsModel *optionsModel, QObject *parent) :
     QObject(parent), wallet(wallet), optionsModel(optionsModel), addressTableModel(0),
-    transactionTableModel(0),
+    turboAddressTableModel(0), transactionTableModel(0),
     cachedBalance(0), cachedStake(0), cachedUnconfirmedBalance(0), cachedImmatureBalance(0),
     cachedNumTransactions(0),
     cachedEncryptionStatus(Unencrypted),
     cachedNumBlocks(0)
 {
     addressTableModel = new AddressTableModel(wallet, this);
+    turboAddressTableModel = new TurboAddressTableModel(wallet, this);
     transactionTableModel = new TransactionTableModel(wallet, this);
 
     // This timer will be fired repeatedly to update the balance
@@ -130,10 +132,21 @@ void WalletModel::updateTransaction(const QString &hash, int status)
     }
 }
 
+
 void WalletModel::updateAddressBook(const QString &address, const QString &label, bool isMine, int status)
 {
     if(addressTableModel)
         addressTableModel->updateEntry(address, label, isMine, status);
+}
+
+void WalletModel::updateTurboAddresses()
+{
+    turboAddressTableModel->update();
+}
+
+void WalletModel::updateTurbo()
+{
+    this->updateTurboAddresses();
 }
 
 bool WalletModel::validateAddress(const QString &address)
@@ -413,6 +426,11 @@ AddressTableModel *WalletModel::getAddressTableModel()
     return addressTableModel;
 }
 
+TurboAddressTableModel *WalletModel::getTurboAddressTableModel()
+{
+    return turboAddressTableModel;
+}
+
 TransactionTableModel *WalletModel::getTransactionTableModel()
 {
     return transactionTableModel;
@@ -517,12 +535,21 @@ static void NotifyTransactionChanged(WalletModel *walletmodel, CWallet *wallet, 
                               Q_ARG(int, status));
 }
 
+static void NotifyBlocksChanged(WalletModel *walletmodel)
+{
+    if (!IsInitialBlockDownload()) {
+          walletmodel->updateTurbo();
+    }
+}
+
+
 void WalletModel::subscribeToCoreSignals()
 {
     // Connect signals to wallet
     wallet->NotifyStatusChanged.connect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
     wallet->NotifyAddressBookChanged.connect(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5));
     wallet->NotifyTransactionChanged.connect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
+    uiInterface.NotifyBlocksChanged.connect(boost::bind(NotifyBlocksChanged, this));
 }
 
 void WalletModel::unsubscribeFromCoreSignals()
@@ -531,6 +558,7 @@ void WalletModel::unsubscribeFromCoreSignals()
     wallet->NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
     wallet->NotifyAddressBookChanged.disconnect(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5));
     wallet->NotifyTransactionChanged.disconnect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
+    uiInterface.NotifyBlocksChanged.disconnect(boost::bind(NotifyBlocksChanged, this));
 }
 
 // WalletModel::UnlockContext implementation
