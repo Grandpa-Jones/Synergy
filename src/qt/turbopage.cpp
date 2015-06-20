@@ -74,7 +74,6 @@ TurboPage::TurboPage(QWidget *parent) :
 
 void TurboPage::RowDoubleClicked(QModelIndex idx)
 {
-    // TurboAddressTableEntry *rec = static_cast<TurboAddressTableEntry*>(idx.internalPointer());
 
     int row = idx.row();
     QString address = idx.sibling(row, 1).data().toString();
@@ -87,7 +86,9 @@ void TurboPage::RowDoubleClicked(QModelIndex idx)
 
 void TurboPage::updateTurbo()
 {
-
+    if (IsInitialBlockDownload()) {
+          return;
+    }
     json_spirit::Object myTurbos = getmyturboaddresses(json_spirit::Array(), false).get_obj();
     if (!myTurbos.empty()) {
            json_spirit::Pair pair = myTurbos[0];
@@ -96,23 +97,14 @@ void TurboPage::updateTurbo()
            labAccount->setText(name);
            mainNeedle->setCurrentValue(turbo);
     }
-
-    /*
-    QVector<double> x(101), y(101); // initialize with entries 0..100
-    for (int i=0; i<101; ++i)
-    {
-      x[i] = i/50.0 - 1; // x goes from -1 to 1
-      y[i] = x[i]*x[i]; // let's plot a quadratic function
-    }
-
-    ui->plotAddress->graph(0)->setData(x, y);
-    ui->plotAddress->replot();
-    */
-
 }
 
 void TurboPage::updateChart()
 {
+
+    if (IsInitialBlockDownload()) {
+          return;
+    }
 
     updateTurbo();
 

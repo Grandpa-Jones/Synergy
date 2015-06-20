@@ -22,11 +22,12 @@ public:
     TurboAddressTableModel *parent;
     json_spirit::Object allTurbos;
 
-    TurboAddressTablePriv(CWallet *wallet, TurboAddressTableModel *parent, json_spirit::Object allTurbos):
-        wallet(wallet), parent(parent), allTurbos(allTurbos) {}
+    TurboAddressTablePriv(CWallet *wallet, TurboAddressTableModel *parent):
+        wallet(wallet), parent(parent) {}
 
     void refreshTurboAddressTable()
     {
+        printf("TurboAddressTablePriv::refreshTurboAddressTable: called\n");
         cachedTurboAddressTable.clear();
 
         int rank = 0;
@@ -35,6 +36,7 @@ public:
             ++rank;
             cachedTurboAddressTable.append(TurboAddressTableEntry(rank, QString::fromStdString(it->name_),
                                                                 it->value_.get_int()));
+            printf("TurboAddressTablePriv::refreshTurboAddressTable: rank: %d\n", rank);
         }
 
         // qLowerBound() and qUpperBound() require
@@ -65,9 +67,10 @@ TurboAddressTableModel::TurboAddressTableModel(CWallet *wallet, WalletModel *par
     QAbstractTableModel(parent),walletModel(parent),wallet(wallet),priv(0)
 {
     columns << tr("Rank") << tr("Address") << tr("Turbo");
-    json_spirit::Object allTurbos = getallturboaddresses(json_spirit::Array(), false).get_obj();
-    priv = new TurboAddressTablePriv(wallet, this, allTurbos);
-    priv->refreshTurboAddressTable();
+    // json_spirit::Object allTurbos = getallturboaddresses(json_spirit::Array(), false).get_obj();
+    // json_spirit::Object allTurbos = json_spirit::Object();
+    priv = new TurboAddressTablePriv(wallet, this);
+    // priv->refreshTurboAddressTable();
 }
 
 TurboAddressTableModel::~TurboAddressTableModel()
@@ -186,10 +189,30 @@ int TurboAddressTableModel::lookupAddress(const QString &address) const
     }
 }
 
+void TurboAddressTableModel::emitDataChanged()
+{
+    emit dataChanged(index(0, 0, QModelIndex()), index(0, columns.length()-1, QModelIndex()));
+}
+
+void TurboAddressTableModel::emitLayoutAboutToBeChanged()
+{
+    emit layoutAboutToBeChanged();
+}
+
+void TurboAddressTableModel::emitLayoutChanged()
+{
+    emit layoutChanged();
+}
+
+
 void TurboAddressTableModel::setTurbos(json_spirit::Object allTurbos)
 {
+    printf("TurboAddressTableModel::setTurbos: called\n");
+    emit beginResetModel();
     priv->allTurbos = allTurbos;
     priv->refreshTurboAddressTable();
+    emit endResetModel();
+    // emit DataChanged();
 }
 
 
@@ -201,6 +224,7 @@ void TurboAddressTableModel::update()
 
     if (!IsInitialBlockDownload()) {
           // [TODO] factor getallturboaddresses
+          printf("TurboAddressTableModel::update: called\n");
           json_spirit::Object allTurbos = getallturboaddresses(json_spirit::Array(), false).get_obj();
           this->setTurbos(allTurbos);
     }

@@ -89,6 +89,12 @@ private:
     TurboAddressTablePriv *priv;
     QStringList columns;
 
+    /** Notify listeners that data changed. */
+    void emitDataChanged();
+    void emitLayoutAboutToBeChanged();
+    void emitLayoutChanged();
+
+
 signals:
 
 public slots:
