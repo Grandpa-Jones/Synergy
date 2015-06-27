@@ -27,7 +27,6 @@ public:
 
     void refreshTurboAddressTable()
     {
-        printf("TurboAddressTablePriv::refreshTurboAddressTable: called\n");
         cachedTurboAddressTable.clear();
 
         int rank = 0;
@@ -36,7 +35,6 @@ public:
             ++rank;
             cachedTurboAddressTable.append(TurboAddressTableEntry(rank, QString::fromStdString(it->name_),
                                                                 it->value_.get_int()));
-            printf("TurboAddressTablePriv::refreshTurboAddressTable: rank: %d\n", rank);
         }
 
         // qLowerBound() and qUpperBound() require
@@ -207,7 +205,6 @@ void TurboAddressTableModel::emitLayoutChanged()
 
 void TurboAddressTableModel::setTurbos(json_spirit::Object allTurbos)
 {
-    printf("TurboAddressTableModel::setTurbos: called\n");
     emit beginResetModel();
     priv->allTurbos = allTurbos;
     priv->refreshTurboAddressTable();
@@ -224,7 +221,6 @@ void TurboAddressTableModel::update()
 
     if (!IsInitialBlockDownload()) {
           // [TODO] factor getallturboaddresses
-          printf("TurboAddressTableModel::update: called\n");
           json_spirit::Object allTurbos = getallturboaddresses(json_spirit::Array(), false).get_obj();
           this->setTurbos(allTurbos);
     }

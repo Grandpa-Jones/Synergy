@@ -9,8 +9,11 @@
 #include "init.h"
 #include "base58.h"
 #include "stealth.h"
+#include "txdb.h"
 
 #include <boost/lexical_cast.hpp>
+
+#include <math.h>
 
 using namespace json_spirit;
 using namespace std;
@@ -66,10 +69,6 @@ void WalletTxToJSON(const CWalletTx& wtx, Object& entry)
     entry.push_back(Pair("txid", wtx.GetHash().GetHex()));
     entry.push_back(Pair("time", (boost::int64_t)wtx.GetTxTime()));
     entry.push_back(Pair("timereceived", (boost::int64_t)wtx.nTimeReceived));
-    if (wtx.nVersion > 1) {
-       entry.push_back(Pair("tx-comment", wtx.strTxComment));
-       entry.push_back(Pair("product-id", (boost::int64_t)wtx.nProdTypeID));
-    }
     BOOST_FOREACH(const PAIRTYPE(string,string)& item, wtx.mapValue)
         entry.push_back(Pair(item.first, item.second));
 }
@@ -1534,6 +1533,279 @@ Value getallturboaddresses(const Array& params, bool fHelp)
     std::sort (allTurbos.begin(), allTurbos.end(), turboSorter);
     return allTurbos;
 }
+
+
+Value getturboredemption(const Array& params, bool fHelp)
+{
+    if  (fHelp || params.size() != 0)
+    {
+        throw runtime_error(
+            "getturboredemption\n"
+            "Get turbo guarantee redemption for all turbo addresses");
+    }
+
+    CTxDB txdb("r");
+
+    // this needs to go in a header or something
+    unsigned int nGuaranteeStartTime = 1433397600;
+
+    Object allTurbos = getallturboaddresses(Array(), false).get_obj();
+
+    std::list<CBitcoinAddress> listTurboAddress;
+
+    for (Object::iterator it = allTurbos.begin(); it != allTurbos.end(); ++it)
+    {
+           listTurboAddress.push_back(CBitcoinAddress(it->name_));
+    }
+
+    std::map<CBitcoinAddress, CBlockIndex*> mapCreationBlock;
+    std::map<CBitcoinAddress, int64_t> mapBalance;
+    std::map<CBitcoinAddress, int64_t> mapStartingBalance;
+    std::map<CBitcoinAddress, uint256> mapDisqualified;
+    std::map<CBitcoinAddress, CBlockIndex*> mapStartingBlock;
+    std::map<CBitcoinAddress, int64_t> mapBalanceLastBlock;
+
+    CBlockIndex *pindex = pindexGenesisBlock->pnext;
+
+    while (pindex->nTime <= nGuaranteeStartTime)
+    {
+        CBlock block;
+        block.ReadFromDisk(pindex, true);
+        for (std::vector<CTransaction>::iterator ptx = block.vtx.begin();
+                                                             ptx != block.vtx.end(); ++ptx)
+        {
+             // outputs
+             for (std::vector<CTxOut>::iterator pout = ptx->vout.begin();
+                                                             pout != ptx->vout.end(); ++pout)
+             {
+                  CTxDestination destaddr;
+                  if (!ExtractDestination(pout->scriptPubKey, destaddr))
+                  {
+                        if (fDebug)
+                        {
+                            printf("getturboguarantees: could not extract address for output\n");
+                        }
+                        continue;
+                  }
+                  CBitcoinAddress address = CBitcoinAddress(destaddr);
+                  if (std::find(listTurboAddress.begin(), listTurboAddress.end(), address) ==
+                                                                                 listTurboAddress.end())
+                  {
+                         // address never staked turbo
+                         continue;
+                  }
+                  if ((mapBalanceLastBlock.find(address) != mapBalanceLastBlock.end()) &&
+                      (mapStartingBalance.find(address) == mapStartingBalance.end()) &&
+                      (pindex->nHeight > LAST_POW_BLOCK))
+                  {
+                        mapStartingBalance[address] = mapBalanceLastBlock[address];
+                        mapStartingBlock[address] = pindex->pprev;
+                  }
+                  if (mapBalance.find(address) != mapBalance.end())
+                  {
+                        mapBalance[address] = mapBalance[address] + pout->nValue;
+                  }
+                  else
+                  {
+                        mapBalance[address] = pout->nValue;
+                        mapCreationBlock[address] = pindex;
+                  }
+                  // delay starting balance if receiving
+                  if ((!ptx->IsCoinStake()) &&
+                      (mapStartingBalance.find(address) != mapStartingBalance.end()))
+                  {
+                        mapStartingBalance.erase(address);
+                        mapStartingBlock.erase(address);
+                  }
+
+             }
+
+             // inputs
+             for (std::vector<CTxIn>::iterator pin = ptx->vin.begin();
+                                                             pin != ptx->vin.end(); ++pin)
+             {
+                  CTransaction txPrev;
+                  CTxIndex txindex;
+                  if (!txPrev.ReadFromDisk(txdb, pin->prevout, txindex))
+                  {
+                        if (fDebug)
+                        {
+                            printf("getturboguarantees: could not read txin from disk\n");
+                        }
+                        continue;  // previous transaction not in main chain?
+                  }
+                  CTxDestination destaddr;
+                  if (!ExtractDestination(txPrev.vout[pin->prevout.n].scriptPubKey, destaddr))
+                  {
+                        if (fDebug)
+                        {
+                            printf("getturboguarantees: could not extract address for prev out\n");
+                        }
+                        continue;
+                  }
+                  CBitcoinAddress address = CBitcoinAddress(destaddr);
+                  if (std::find(listTurboAddress.begin(), listTurboAddress.end(), address) ==
+                                                                                 listTurboAddress.end())
+                  {
+                         // address never staked turbo
+                         continue;
+                  }
+                  if (mapBalance.find(address) != mapBalance.end())
+                  {
+                        int64_t nValueIn = txPrev.vout[pin->prevout.n].nValue;
+                        mapBalance[address] = mapBalance[address] - nValueIn;
+                        // delay starting balance if sending
+                        if ((!ptx->IsCoinStake()) &&
+                            (mapStartingBalance.find(address) != mapBalance.end()))
+                        {
+                               mapStartingBalance.erase(address);
+                               mapStartingBlock.erase(address);
+                        }
+                  }
+             }
+        }
+        // update the balances for the previous block
+        for (std::map<CBitcoinAddress, int64_t>::iterator it = mapBalance.begin();
+                                                      it != mapBalance.end(); ++it)
+        {
+             CBitcoinAddress address = it->first;
+             mapBalanceLastBlock[address] = mapBalance[address];
+        }
+        pindex = pindex->pnext;
+    }
+
+    // fill any missing starting balances and starting blocks
+    for (std::map<CBitcoinAddress, int64_t>::iterator it = mapBalance.begin();
+                                                     it != mapBalance.end(); ++it)
+    {
+         CBitcoinAddress address = it->first;
+         if (mapStartingBalance.find(address) == mapStartingBalance.end())
+         {
+              mapStartingBalance[address] = mapBalance[address];
+              // pindex->pprev is the index for the guarantee start block
+              // which is the last block before or exactly at the guarantee start time
+              mapStartingBlock[address] = pindex->pprev;
+         }
+    }
+
+    // test to make sure turbo hasn't ended yet (maybe not synced, etc)
+    while ((pindex->pnext != NULL) && (pindex->nTime <= nTurboEndTime))
+    {
+        CBlock block;
+        block.ReadFromDisk(pindex, true);
+        // disqualify senders
+        for (std::vector<CTransaction>::iterator ptx = block.vtx.begin();
+                                                             ptx != block.vtx.end(); ++ptx)
+        {
+             // sends will not be subtracted for purposes of the guarantee
+             for (std::vector<CTxIn>::iterator pin = ptx->vin.begin();
+                                                             pin != ptx->vin.end(); ++pin)
+             {
+                  CTransaction txPrev;
+                  CTxIndex txindex;
+                  if (!txPrev.ReadFromDisk(txdb, pin->prevout, txindex))
+                  {
+                        if (fDebug)
+                        {
+                            printf("getturboguarantees: could not read txin from disk\n");
+                        }
+                        continue;  // previous transaction not in main chain?
+                  }
+                  CTxDestination destaddr;
+                  if (!ExtractDestination(txPrev.vout[pin->prevout.n].scriptPubKey, destaddr))
+                  {
+                        if (fDebug)
+                        {
+                            printf("getturboguarantees: could not extract address for prev out\n");
+                        }
+                        continue;
+                  }
+                  CBitcoinAddress address = CBitcoinAddress(destaddr);
+                  if ((mapDisqualified.find(address) == mapDisqualified.end()) &&
+                      (mapStartingBalance.find(address) != mapStartingBalance.end()))
+                  {
+                         if (!ptx->IsCoinStake())
+                         {
+                               if (fDebug)
+                               {
+                                     printf("getturboaddress: %s disqualified at tx %s\n",
+                                                                   address.ToString().c_str(),
+                                                                   ptx->GetHash().ToString().c_str());
+                               }
+                               mapDisqualified[address] = ptx->GetHash();
+                         }
+                  }
+             }
+        }
+        CBitcoinAddress address = mapTurboAddress[*pindex->phashBlock];
+        // keep track of disqualified addresses
+        mapBalance[address] += pindex->nMint;
+        pindex = pindex->pnext;
+    }
+
+    Object ret;
+
+    for (std::map<CBitcoinAddress, int64_t>::iterator it = mapStartingBalance.begin();
+                                                   it != mapStartingBalance.end(); ++it)
+    {
+         CBitcoinAddress address = it->first;
+         Object objAddr;
+         if (mapDisqualified.find(address) != mapDisqualified.end())
+         {
+             objAddr.push_back(Pair("disqualifying txid", mapDisqualified[address].ToString().c_str()));
+         }
+         objAddr.push_back(Pair("created block", mapCreationBlock[address]->phashBlock->ToString().c_str()));
+         objAddr.push_back(Pair("starting block", mapStartingBlock[address]->phashBlock->ToString().c_str()));
+         objAddr.push_back(Pair("starting balance", ValueFromAmount(mapStartingBalance[address])));
+         objAddr.push_back(Pair("ending balance", ValueFromAmount(mapBalance[address])));
+         objAddr.push_back(Pair("starting supply", ValueFromAmount(mapStartingBlock[address]->nMoneySupply)));
+
+         // redundant, but makes keys for returned object consistently SNRG addresses
+         objAddr.push_back(Pair("ending supply", ValueFromAmount(pindex->nMoneySupply)));
+         objAddr.push_back(Pair("ending block", pindex->phashBlock->ToString().c_str()));
+
+         int64_t parity = (int64_t) round (((long double) pindex->nMoneySupply /
+                                            (long double) mapStartingBlock[address]->nMoneySupply) *
+                                            mapStartingBalance[address]);
+         int64_t redemption = parity - mapBalance[address];
+         if (redemption < 0)
+         {
+              redemption = 0;
+         }
+         objAddr.push_back(Pair("parity balance", ValueFromAmount(parity)));
+         objAddr.push_back(Pair("redemption", ValueFromAmount(redemption)));
+
+         ret.push_back(Pair(address.ToString().c_str(), objAddr));
+    }
+
+    return ret;
+}
+
+Value getfirstturboblock(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0)
+    {
+        throw runtime_error(
+            "getfirstturboblock\n"
+            "Get the block hash of the first turbo stake");
+    }
+
+    CBlockIndex *pindex = pindexGenesisBlock;
+
+    while (pindex->pnext != NULL)
+    {
+        // the first turbo stake is the first PoS block
+        if (pindex->IsProofOfStake())
+        {
+           return pindex->GetBlockHash().ToString();
+        }
+        pindex = pindex->pnext;
+    }
+
+    throw runtime_error(
+            "Blockchain not syncronized.");
+}
+
 
 
 Value getturbo(const Array& params, bool fHelp)

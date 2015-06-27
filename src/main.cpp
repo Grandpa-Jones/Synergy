@@ -62,6 +62,9 @@ int64_t nTurboDuration = 30 * 24 * 60 * 60; // TurboStake ends after 30 days
 // hardcoded upon first update - Thu, 25 Jun 2015 06:03:07 GMT
 int64_t nTurboEndTime = 1432620187 + nTurboDuration;
 
+// block time of first stake (about 2 days 10 min after block 1 found)
+int64_t nTurboStartTime = 1432793442;
+
 // set when known
 // int nLastTurboHeight = 0;
 // set when known

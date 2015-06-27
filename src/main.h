@@ -112,6 +112,7 @@ extern std::set<CWallet*> setpwalletRegistered;
 extern unsigned char pchMessageStart[4];
 extern std::map<uint256, CBlock*> mapOrphanBlocks;
 
+extern int64_t nTurboStartTime;
 extern int64_t nTurboEndTime;
 extern CBlockIndex *pindexLastTurbo;
 

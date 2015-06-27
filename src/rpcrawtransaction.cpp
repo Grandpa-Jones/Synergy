@@ -46,10 +46,16 @@ void ScriptPubKeyToJSON(const CScript& scriptPubKey, Object& out, bool fIncludeH
 
 void TxToJSON(const CTransaction& tx, const uint256 hashBlock, Object& entry)
 {
+    CTxDB txdb("r");
+
     entry.push_back(Pair("txid", tx.GetHash().GetHex()));
     entry.push_back(Pair("version", tx.nVersion));
     entry.push_back(Pair("time", (boost::int64_t)tx.nTime));
     entry.push_back(Pair("locktime", (boost::int64_t)tx.nLockTime));
+    if (tx.nVersion > 1) {
+       entry.push_back(Pair("tx-comment", tx.strTxComment));
+       entry.push_back(Pair("product-id", (boost::int64_t)tx.nProdTypeID));
+    }
     Array vin;
     BOOST_FOREACH(const CTxIn& txin, tx.vin)
     {
@@ -66,6 +72,41 @@ void TxToJSON(const CTransaction& tx, const uint256 hashBlock, Object& entry)
             in.push_back(Pair("scriptSig", o));
         }
         in.push_back(Pair("sequence", (boost::int64_t)txin.nSequence));
+
+
+        // [TODO] Refactor this! See getturboredemption.
+        CTransaction txPrev;
+        CTxIndex txindex;
+        if (!txPrev.ReadFromDisk(txdb, txin.prevout, txindex))
+        {
+              if (fDebug)
+              {
+                  printf("TxToJSON: could not read txin from disk\n");
+              }
+              continue;  // previous transaction not in main chain?
+        }
+        CTxOut prevtxout = txPrev.vout[txin.prevout.n];
+
+        int nRequired;
+        txnouttype type;
+        vector<CTxDestination> addresses;
+        if (ExtractDestinations(prevtxout.scriptPubKey, type, addresses, nRequired))
+        {
+            in.push_back(Pair("value", ValueFromAmount(prevtxout.nValue)));
+        }
+        else
+        {
+            in.push_back(Pair("type", GetTxnOutputType(TX_NONSTANDARD)));
+        }
+
+        Array a;
+        BOOST_FOREACH(const CTxDestination& addr, addresses)
+        {
+            a.push_back(CBitcoinAddress(addr).ToString());
+        }
+
+        in.push_back(Pair("addresses", a));
+
         vin.push_back(in);
     }
     entry.push_back(Pair("vin", vin));
