@@ -1430,6 +1430,100 @@ CBlockIndex* GetLastTurboIndex() {
 }
 
 
+// [TODO] Need to make sure this works for multisigs
+Value getaddressbalancebyblock(const Array& params, bool fHelp)
+{
+    if  (fHelp || params.size() != 2)
+    {
+        throw runtime_error(
+            "getaddressbalancebyblock <address> <height>\n"
+            "Get per block balance of <address> through block <height>.");
+    }
+
+    CBitcoinAddress address(params[0].get_str());
+    if (!address.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid synergy address");
+
+    int height = params[1].get_int();
+   
+    CTxDB txdb("r");
+
+    CBlockIndex *pindex = pindexGenesisBlock->pnext;
+
+    Array heights, balances, ret;
+
+    int64_t balance = 0;
+    int64_t balance_last = 0;
+    while ((pindex->pnext != NULL) && (pindex->nHeight <= height))
+    {
+        CBlock block;
+        block.ReadFromDisk(pindex, true);
+        for (std::vector<CTransaction>::iterator ptx = block.vtx.begin();
+                                                             ptx != block.vtx.end(); ++ptx)
+        {
+             // outputs
+             for (std::vector<CTxOut>::iterator pout = ptx->vout.begin();
+                                                             pout != ptx->vout.end(); ++pout)
+             {
+                  CTxDestination destaddr;
+                  if (!ExtractDestination(pout->scriptPubKey, destaddr))
+                  {
+                        if (fDebug)
+                        {
+                            printf("getaddressbalancebyblock: could not extract address for output\n");
+                        }
+                        continue;
+                  }
+                  CBitcoinAddress txaddr = CBitcoinAddress(destaddr);
+                  if (address == txaddr)
+                  {
+                       balance += pout->nValue;
+                  }
+             }
+             // inputs
+             for (std::vector<CTxIn>::iterator pin = ptx->vin.begin();
+                                                             pin != ptx->vin.end(); ++pin)
+             {
+                  CTransaction txPrev;
+                  CTxIndex txindex;
+                  if (!txPrev.ReadFromDisk(txdb, pin->prevout, txindex))
+                  {
+                        if (fDebug)
+                        {
+                            printf("getaddressbalancebyblock: could not read txin from disk\n");
+                        }
+                        continue;  // previous transaction not in main chain?
+                  }
+                  CTxDestination destaddr;
+                  if (!ExtractDestination(txPrev.vout[pin->prevout.n].scriptPubKey, destaddr))
+                  {
+                        if (fDebug)
+                        {
+                            printf("getturboguarantees: could not extract address for prev out\n");
+                        }
+                        continue;
+                  }
+                  CBitcoinAddress txaddr = CBitcoinAddress(destaddr);
+                  if (address == txaddr)
+                  {
+                       balance -= txPrev.vout[pin->prevout.n].nValue;
+                  }
+             }
+        }
+        if (balance != balance_last)
+        {
+           heights.push_back(pindex->nHeight);
+           balances.push_back(ValueFromAmount(balance));
+           balance_last = balance;
+        }
+        pindex = pindex->pnext;
+    }
+    ret.push_back(heights);
+    ret.push_back(balances);
+    return ret;
+}
+
+
 Value getmyturboaddresses(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 0)

@@ -235,90 +235,91 @@ Value stop(const Array& params, bool fHelp)
 
 
 static const CRPCCommand vRPCCommands[] =
-{ //  name                      function                 safemd  unlocked
-  //  ------------------------  -----------------------  ------  --------
-    { "help",                   &help,                   true,   true },
-    { "stop",                   &stop,                   true,   true },
-    { "getbestblockhash",       &getbestblockhash,       true,   false },
-    { "getblockcount",          &getblockcount,          true,   false },
-    { "getconnectioncount",     &getconnectioncount,     true,   false },
-    { "getpeerinfo",            &getpeerinfo,            true,   false },
-    { "getdifficulty",          &getdifficulty,          true,   false },
-    { "getinfo",                &getinfo,                true,   false },
-    { "getsubsidy",             &getsubsidy,             true,   false },
-    { "getmininginfo",          &getmininginfo,          true,   false },
-    { "getstakinginfo",         &getstakinginfo,         true,   false },
-    { "getnewaddress",          &getnewaddress,          true,   false },
-    { "getnewpubkey",           &getnewpubkey,           true,   false },
-    { "getaccountaddress",      &getaccountaddress,      true,   false },
-    { "setaccount",             &setaccount,             true,   false },
-    { "getaccount",             &getaccount,             false,  false },
-    { "getaddressesbyaccount",  &getaddressesbyaccount,  true,   false },
-    { "sendtoaddress",          &sendtoaddress,          false,  false },
-    { "getreceivedbyaddress",   &getreceivedbyaddress,   false,  false },
-    { "getreceivedbyaccount",   &getreceivedbyaccount,   false,  false },
-    { "listreceivedbyaddress",  &listreceivedbyaddress,  false,  false },
-    { "listreceivedbyaccount",  &listreceivedbyaccount,  false,  false },
-    { "backupwallet",           &backupwallet,           true,   false },
-    { "keypoolrefill",          &keypoolrefill,          true,   false },
-    { "walletpassphrase",       &walletpassphrase,       true,   false },
-    { "walletpassphrasechange", &walletpassphrasechange, false,  false },
-    { "walletlock",             &walletlock,             true,   false },
-    { "encryptwallet",          &encryptwallet,          false,  false },
-    { "validateaddress",        &validateaddress,        true,   false },
-    { "validatepubkey",         &validatepubkey,         true,   false },
-    { "getbalance",             &getbalance,             false,  false },
-    { "move",                   &movecmd,                false,  false },
-    { "sendfrom",               &sendfrom,               false,  false },
-    { "sendmany",               &sendmany,               false,  false },
-    { "addmultisigaddress",     &addmultisigaddress,     false,  false },
-    { "addredeemscript",        &addredeemscript,        false,  false },
-    { "getrawmempool",          &getrawmempool,          true,   false },
-    { "getblock",               &getblock,               false,  false },
-    { "getblockbynumber",       &getblockbynumber,       false,  false },
-    { "getblockhash",           &getblockhash,           false,  false },
-    { "gettransaction",         &gettransaction,         false,  false },
-    { "listtransactions",       &listtransactions,       false,  false },
-    { "getfirstturboblock",     &getfirstturboblock,     false,  false },
-    { "getturbo",               &getturbo,               false,  false },
-    { "getmyturboaddresses",    &getmyturboaddresses,    false,  false },
-    { "getallturboaddresses",   &getallturboaddresses,   false,  false },
-    { "getturboredemption",     &getturboredemption,     false,  false },
-    { "listaddressgroupings",   &listaddressgroupings,   false,  false },
-    { "signmessage",            &signmessage,            false,  false },
-    { "verifymessage",          &verifymessage,          false,  false },
-    { "getwork",                &getwork,                true,   false },
-    { "getworkex",              &getworkex,              true,   false },
-    { "listaccounts",           &listaccounts,           false,  false },
-    { "settxfee",               &settxfee,               false,  false },
-    { "getblocktemplate",       &getblocktemplate,       true,   false },
-    { "submitblock",            &submitblock,            false,  false },
-    { "listsinceblock",         &listsinceblock,         false,  false },
-    { "dumpprivkey",            &dumpprivkey,            false,  false },
-    { "dumpwallet",             &dumpwallet,             true,   false },
-    { "importwallet",           &importwallet,           false,  false },
-    { "importprivkey",          &importprivkey,          false,  false },
-    { "listunspent",            &listunspent,            false,  false },
-    { "getrawtransaction",      &getrawtransaction,      false,  false },
-    { "createrawtransaction",   &createrawtransaction,   false,  false },
-    { "decoderawtransaction",   &decoderawtransaction,   false,  false },
-    { "decodescript",           &decodescript,           false,  false },
-    { "signrawtransaction",     &signrawtransaction,     false,  false },
-    { "sendrawtransaction",     &sendrawtransaction,     false,  false },
-    { "getcheckpoint",          &getcheckpoint,          true,   false },
-    { "reservebalance",         &reservebalance,         false,  true},
-    { "checkwallet",            &checkwallet,            false,  true},
-    { "repairwallet",           &repairwallet,           false,  true},
-    { "resendtx",               &resendtx,               false,  true},
-    { "makekeypair",            &makekeypair,            false,  true},
-    { "sendalert",              &sendalert,              false,  false},
-    { "getnewstealthaddress",   &getnewstealthaddress,   false,  false},
-    { "liststealthaddresses",   &liststealthaddresses,   false,  false},
-    { "importstealthaddress",   &importstealthaddress,   false,  false},
-    { "sendtostealthaddress",   &sendtostealthaddress,   false,  false},
-    { "clearwallettransactions",&clearwallettransactions,false,  false},
-    { "scanforalltxns",         &scanforalltxns,         false,  false},
-    { "scanforstealthtxns",     &scanforstealthtxns,     false,  false}
+{ //  name                         function                 safemd  unlocked
+  //  ------------------------     -----------------------  ------  --------
+    { "help",                      &help,                      true,   true },
+    { "stop",                      &stop,                      true,   true },
+    { "getbestblockhash",          &getbestblockhash,          true,   false },
+    { "getblockcount",             &getblockcount,             true,   false },
+    { "getconnectioncount",        &getconnectioncount,        true,   false },
+    { "getpeerinfo",               &getpeerinfo,               true,   false },
+    { "getdifficulty",             &getdifficulty,             true,   false },
+    { "getinfo",                   &getinfo,                   true,   false },
+    { "getsubsidy",                &getsubsidy,                true,   false },
+    { "getmininginfo",             &getmininginfo,             true,   false },
+    { "getstakinginfo",            &getstakinginfo,            true,   false },
+    { "getnewaddress",             &getnewaddress,             true,   false },
+    { "getnewpubkey",              &getnewpubkey,              true,   false },
+    { "getaccountaddress",         &getaccountaddress,         true,   false },
+    { "setaccount",                &setaccount,                true,   false },
+    { "getaccount",                &getaccount,                false,  false },
+    { "getaddressesbyaccount",     &getaddressesbyaccount,     true,   false },
+    { "sendtoaddress",             &sendtoaddress,             false,  false },
+    { "getreceivedbyaddress",      &getreceivedbyaddress,      false,  false },
+    { "getreceivedbyaccount",      &getreceivedbyaccount,      false,  false },
+    { "listreceivedbyaddress",     &listreceivedbyaddress,     false,  false },
+    { "listreceivedbyaccount",     &listreceivedbyaccount,     false,  false },
+    { "backupwallet",              &backupwallet,              true,   false },
+    { "keypoolrefill",             &keypoolrefill,             true,   false },
+    { "walletpassphrase",          &walletpassphrase,          true,   false },
+    { "walletpassphrasechange",    &walletpassphrasechange,    false,  false },
+    { "walletlock",                &walletlock,                true,   false },
+    { "encryptwallet",             &encryptwallet,             false,  false },
+    { "validateaddress",           &validateaddress,           true,   false },
+    { "validatepubkey",            &validatepubkey,            true,   false },
+    { "getbalance",                &getbalance,                false,  false },
+    { "move",                      &movecmd,                   false,  false },
+    { "sendfrom",                  &sendfrom,                  false,  false },
+    { "sendmany",                  &sendmany,                  false,  false },
+    { "addmultisigaddress",        &addmultisigaddress,        false,  false },
+    { "addredeemscript",           &addredeemscript,           false,  false },
+    { "getrawmempool",             &getrawmempool,             true,   false },
+    { "getblock",                  &getblock,                  false,  false },
+    { "getblockbynumber",          &getblockbynumber,          false,  false },
+    { "getblockhash",              &getblockhash,              false,  false },
+    { "gettransaction",            &gettransaction,            false,  false },
+    { "listtransactions",          &listtransactions,          false,  false },
+    { "getaddressbalancebyblock",  &getaddressbalancebyblock,  false,  false },
+    { "getfirstturboblock",        &getfirstturboblock,        false,  false },
+    { "getturbo",                  &getturbo,                  false,  false },
+    { "getmyturboaddresses",       &getmyturboaddresses,       false,  false },
+    { "getallturboaddresses",      &getallturboaddresses,      false,  false },
+    { "getturboredemption",        &getturboredemption,        false,  false },
+    { "listaddressgroupings",      &listaddressgroupings,      false,  false },
+    { "signmessage",               &signmessage,               false,  false },
+    { "verifymessage",             &verifymessage,             false,  false },
+    { "getwork",                   &getwork,                   true,   false },
+    { "getworkex",                 &getworkex,                 true,   false },
+    { "listaccounts",              &listaccounts,              false,  false },
+    { "settxfee",                  &settxfee,                  false,  false },
+    { "getblocktemplate",          &getblocktemplate,          true,   false },
+    { "submitblock",               &submitblock,               false,  false },
+    { "listsinceblock",            &listsinceblock,            false,  false },
+    { "dumpprivkey",               &dumpprivkey,               false,  false },
+    { "dumpwallet",                &dumpwallet,                true,   false },
+    { "importwallet",              &importwallet,              false,  false },
+    { "importprivkey",             &importprivkey,             false,  false },
+    { "listunspent",               &listunspent,               false,  false },
+    { "getrawtransaction",         &getrawtransaction,         false,  false },
+    { "createrawtransaction",      &createrawtransaction,      false,  false },
+    { "decoderawtransaction",      &decoderawtransaction,      false,  false },
+    { "decodescript",              &decodescript,              false,  false },
+    { "signrawtransaction",        &signrawtransaction,        false,  false },
+    { "sendrawtransaction",        &sendrawtransaction,        false,  false },
+    { "getcheckpoint",             &getcheckpoint,             true,   false },
+    { "reservebalance",            &reservebalance,            false,  true},
+    { "checkwallet",               &checkwallet,               false,  true},
+    { "repairwallet",              &repairwallet,              false,  true},
+    { "resendtx",                  &resendtx,                  false,  true},
+    { "makekeypair",               &makekeypair,               false,  true},
+    { "sendalert",                 &sendalert,                 false,  false},
+    { "getnewstealthaddress",      &getnewstealthaddress,      false,  false},
+    { "liststealthaddresses",      &liststealthaddresses,      false,  false},
+    { "importstealthaddress",      &importstealthaddress,      false,  false},
+    { "sendtostealthaddress",      &sendtostealthaddress,      false,  false},
+    { "clearwallettransactions",   &clearwallettransactions,   false,  false},
+    { "scanforalltxns",            &scanforalltxns,            false,  false},
+    { "scanforstealthtxns",        &scanforstealthtxns,        false,  false}
 };
 
 CRPCTable::CRPCTable()
@@ -1199,56 +1200,57 @@ Array RPCConvertValues(const std::string &strMethod, const std::vector<std::stri
     //
     // Special case non-string parameter types
     //
-    if (strMethod == "stop"                   && n > 0) ConvertTo<bool>(params[0]);
-    if (strMethod == "sendtoaddress"          && n > 1) ConvertTo<double>(params[1]);
-    if (strMethod == "settxfee"               && n > 0) ConvertTo<double>(params[0]);
-    if (strMethod == "getreceivedbyaddress"   && n > 1) ConvertTo<boost::int64_t>(params[1]);
-    if (strMethod == "getreceivedbyaccount"   && n > 1) ConvertTo<boost::int64_t>(params[1]);
-    if (strMethod == "listreceivedbyaddress"  && n > 0) ConvertTo<boost::int64_t>(params[0]);
-    if (strMethod == "listreceivedbyaddress"  && n > 1) ConvertTo<bool>(params[1]);
-    if (strMethod == "listreceivedbyaccount"  && n > 0) ConvertTo<boost::int64_t>(params[0]);
-    if (strMethod == "listreceivedbyaccount"  && n > 1) ConvertTo<bool>(params[1]);
-    if (strMethod == "getbalance"             && n > 1) ConvertTo<boost::int64_t>(params[1]);
-    if (strMethod == "getblock"               && n > 1) ConvertTo<bool>(params[1]);
-    if (strMethod == "getblockbynumber"       && n > 0) ConvertTo<boost::int64_t>(params[0]);
-    if (strMethod == "getblockbynumber"       && n > 1) ConvertTo<bool>(params[1]);
-    if (strMethod == "getblockhash"           && n > 0) ConvertTo<boost::int64_t>(params[0]);
-    if (strMethod == "move"                   && n > 2) ConvertTo<double>(params[2]);
-    if (strMethod == "move"                   && n > 3) ConvertTo<boost::int64_t>(params[3]);
-    if (strMethod == "sendfrom"               && n > 2) ConvertTo<double>(params[2]);
-    if (strMethod == "sendfrom"               && n > 3) ConvertTo<boost::int64_t>(params[3]);
-    if (strMethod == "listtransactions"       && n > 1) ConvertTo<boost::int64_t>(params[1]);
-    if (strMethod == "listtransactions"       && n > 2) ConvertTo<boost::int64_t>(params[2]);
-    if (strMethod == "listaccounts"           && n > 0) ConvertTo<boost::int64_t>(params[0]);
-    if (strMethod == "walletpassphrase"       && n > 1) ConvertTo<boost::int64_t>(params[1]);
-    if (strMethod == "walletpassphrase"       && n > 2) ConvertTo<bool>(params[2]);
-    if (strMethod == "getsubsidy"             && n > 0) ConvertTo<boost::int64_t>(params[0]);
-    if (strMethod == "getsubsidy"             && n > 1) ConvertTo<boost::int64_t>(params[1]);
-    if (strMethod == "getblocktemplate"       && n > 0) ConvertTo<Object>(params[0]);
-    if (strMethod == "listsinceblock"         && n > 1) ConvertTo<boost::int64_t>(params[1]);
+    if (strMethod == "stop"                         && n > 0) ConvertTo<bool>(params[0]);
+    if (strMethod == "sendtoaddress"                && n > 1) ConvertTo<double>(params[1]);
+    if (strMethod == "settxfee"                     && n > 0) ConvertTo<double>(params[0]);
+    if (strMethod == "getreceivedbyaddress"         && n > 1) ConvertTo<boost::int64_t>(params[1]);
+    if (strMethod == "getreceivedbyaccount"         && n > 1) ConvertTo<boost::int64_t>(params[1]);
+    if (strMethod == "listreceivedbyaddress"        && n > 0) ConvertTo<boost::int64_t>(params[0]);
+    if (strMethod == "listreceivedbyaddress"        && n > 1) ConvertTo<bool>(params[1]);
+    if (strMethod == "listreceivedbyaccount"        && n > 0) ConvertTo<boost::int64_t>(params[0]);
+    if (strMethod == "listreceivedbyaccount"        && n > 1) ConvertTo<bool>(params[1]);
+    if (strMethod == "getbalance"                   && n > 1) ConvertTo<boost::int64_t>(params[1]);
+    if (strMethod == "getblock"                     && n > 1) ConvertTo<bool>(params[1]);
+    if (strMethod == "getblockbynumber"             && n > 0) ConvertTo<boost::int64_t>(params[0]);
+    if (strMethod == "getblockbynumber"             && n > 1) ConvertTo<bool>(params[1]);
+    if (strMethod == "getblockhash"                 && n > 0) ConvertTo<boost::int64_t>(params[0]);
+    if (strMethod == "move"                         && n > 2) ConvertTo<double>(params[2]);
+    if (strMethod == "move"                         && n > 3) ConvertTo<boost::int64_t>(params[3]);
+    if (strMethod == "sendfrom"                     && n > 2) ConvertTo<double>(params[2]);
+    if (strMethod == "sendfrom"                     && n > 3) ConvertTo<boost::int64_t>(params[3]);
+    if (strMethod == "listtransactions"             && n > 1) ConvertTo<boost::int64_t>(params[1]);
+    if (strMethod == "listtransactions"             && n > 2) ConvertTo<boost::int64_t>(params[2]);
+    if (strMethod == "getaddressbalancebyblock,"    && n > 1) ConvertTo<boost::int64_t>(params[1]);
+    if (strMethod == "listaccounts"                 && n > 0) ConvertTo<boost::int64_t>(params[0]);
+    if (strMethod == "walletpassphrase"             && n > 1) ConvertTo<boost::int64_t>(params[1]);
+    if (strMethod == "walletpassphrase"             && n > 2) ConvertTo<bool>(params[2]);
+    if (strMethod == "getsubsidy"                   && n > 0) ConvertTo<boost::int64_t>(params[0]);
+    if (strMethod == "getsubsidy"                   && n > 1) ConvertTo<boost::int64_t>(params[1]);
+    if (strMethod == "getblocktemplate"             && n > 0) ConvertTo<Object>(params[0]);
+    if (strMethod == "listsinceblock"               && n > 1) ConvertTo<boost::int64_t>(params[1]);
 
-    if (strMethod == "sendalert"              && n > 2) ConvertTo<boost::int64_t>(params[2]);
-    if (strMethod == "sendalert"              && n > 3) ConvertTo<boost::int64_t>(params[3]);
-    if (strMethod == "sendalert"              && n > 4) ConvertTo<boost::int64_t>(params[4]);
-    if (strMethod == "sendalert"              && n > 5) ConvertTo<boost::int64_t>(params[5]);
-    if (strMethod == "sendalert"              && n > 6) ConvertTo<boost::int64_t>(params[6]);
+    if (strMethod == "sendalert"                    && n > 2) ConvertTo<boost::int64_t>(params[2]);
+    if (strMethod == "sendalert"                    && n > 3) ConvertTo<boost::int64_t>(params[3]);
+    if (strMethod == "sendalert"                    && n > 4) ConvertTo<boost::int64_t>(params[4]);
+    if (strMethod == "sendalert"                    && n > 5) ConvertTo<boost::int64_t>(params[5]);
+    if (strMethod == "sendalert"                    && n > 6) ConvertTo<boost::int64_t>(params[6]);
 
-    if (strMethod == "sendmany"               && n > 1) ConvertTo<Object>(params[1]);
-    if (strMethod == "sendmany"               && n > 2) ConvertTo<boost::int64_t>(params[2]);
-    if (strMethod == "reservebalance"         && n > 0) ConvertTo<bool>(params[0]);
-    if (strMethod == "reservebalance"         && n > 1) ConvertTo<double>(params[1]);
-    if (strMethod == "addmultisigaddress"     && n > 0) ConvertTo<boost::int64_t>(params[0]);
-    if (strMethod == "addmultisigaddress"     && n > 1) ConvertTo<Array>(params[1]);
-    if (strMethod == "listunspent"            && n > 0) ConvertTo<boost::int64_t>(params[0]);
-    if (strMethod == "listunspent"            && n > 1) ConvertTo<boost::int64_t>(params[1]);
-    if (strMethod == "listunspent"            && n > 2) ConvertTo<Array>(params[2]);
-    if (strMethod == "getrawtransaction"      && n > 1) ConvertTo<boost::int64_t>(params[1]);
-    if (strMethod == "createrawtransaction"   && n > 0) ConvertTo<Array>(params[0]);
-    if (strMethod == "createrawtransaction"   && n > 1) ConvertTo<Object>(params[1]);
-    if (strMethod == "signrawtransaction"     && n > 1) ConvertTo<Array>(params[1], true);
-    if (strMethod == "signrawtransaction"     && n > 2) ConvertTo<Array>(params[2], true);
-    if (strMethod == "keypoolrefill"          && n > 0) ConvertTo<boost::int64_t>(params[0]);
-    if (strMethod == "sendtostealthaddress"   && n > 1) ConvertTo<double>(params[1]);
+    if (strMethod == "sendmany"                     && n > 1) ConvertTo<Object>(params[1]);
+    if (strMethod == "sendmany"                     && n > 2) ConvertTo<boost::int64_t>(params[2]);
+    if (strMethod == "reservebalance"               && n > 0) ConvertTo<bool>(params[0]);
+    if (strMethod == "reservebalance"               && n > 1) ConvertTo<double>(params[1]);
+    if (strMethod == "addmultisigaddress"           && n > 0) ConvertTo<boost::int64_t>(params[0]);
+    if (strMethod == "addmultisigaddress"           && n > 1) ConvertTo<Array>(params[1]);
+    if (strMethod == "listunspent"                  && n > 0) ConvertTo<boost::int64_t>(params[0]);
+    if (strMethod == "listunspent"                  && n > 1) ConvertTo<boost::int64_t>(params[1]);
+    if (strMethod == "listunspent"                  && n > 2) ConvertTo<Array>(params[2]);
+    if (strMethod == "getrawtransaction"            && n > 1) ConvertTo<boost::int64_t>(params[1]);
+    if (strMethod == "createrawtransaction"         && n > 0) ConvertTo<Array>(params[0]);
+    if (strMethod == "createrawtransaction"         && n > 1) ConvertTo<Object>(params[1]);
+    if (strMethod == "signrawtransaction"           && n > 1) ConvertTo<Array>(params[1], true);
+    if (strMethod == "signrawtransaction"           && n > 2) ConvertTo<Array>(params[2], true);
+    if (strMethod == "keypoolrefill"                && n > 0) ConvertTo<boost::int64_t>(params[0]);
+    if (strMethod == "sendtostealthaddress"         && n > 1) ConvertTo<double>(params[1]);
 
     return params;
 }
