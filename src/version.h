@@ -32,8 +32,9 @@ static const int DATABASE_VERSION = 70508;
 
 // 61030: switches to new PoS Limit 2 on Sun, 31 May 2015 07:00:00 GMT
 // 61040: boot and sync speedups
-// 70001: decoupling protocol and client versions
-static const int PROTOCOL_VERSION = 61070;
+// 62001: decoupling protocol and client versions
+//        new fixed staking reward of 1 SNRG
+static const int PROTOCOL_VERSION = 62001;
 
 // earlier versions not supported as of Feb 2012, and are disconnected
 static const int MIN_PROTO_VERSION = 209;

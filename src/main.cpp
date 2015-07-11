@@ -51,6 +51,13 @@ CBigNum bnProofOfStakeLimitTestNet(~uint256(0) >> 8);
 static const int64_t nPoSLimitSwitchTime = 1433055600; // Sun, 31 May 2015 07:00:00 GMT
 CBigNum bnProofOfStakeLimit_REVISED(~uint256(0) >> 2);
 
+// When do rewards switch to flat reward
+static const int64_t nPoSFixedRewardTime = 1437804000;
+// How much money does there need to be to switch to true inflation rate
+static const int64_t nPoSTrueInflationSupply = 2600000 * COIN; // 2,600,000 SNRG (~8 yr)
+static const int nPoSTrueInflationShift = 24; // 1.5664% true interest rate
+                                              //     log_2((1/0.015664) * 365 * 720)
+
 unsigned int nTargetSpacing = 120; // 2 min
 unsigned int nStakeMinAge = 60 * 60 * 24 * 2; // 2 days
 unsigned int nStakeMaxAge = 60 * 60 * 24 * 6 ; // 6 days
@@ -1231,7 +1238,20 @@ int64_t GetProofOfStakeReward(int64_t nCoinAge, CBitcoinAddress address,
 
     nRewardCoinYear = MAX_MINT_PROOF_OF_STAKE;
 
-    int64_t nSubsidy = (nCoinAge / COIN) * (nRewardCoinYear / 365);
+    int64_t nSubsidy;
+
+    if (pindexPrev->nTime < nPoSFixedRewardTime)
+    {
+          nSubsidy = (nCoinAge / COIN) * (nRewardCoinYear / 365);
+    }
+    else if (pindexPrev->nMoneySupply < nPoSTrueInflationSupply)
+    {
+          nSubsidy = 1 * COIN;
+    }
+    else
+    {
+          nSubsidy = pindexPrev->nMoneySupply >> nPoSTrueInflationShift;
+    }
 
     int nMultiplier = GetTurboStakeMultiplier(address, nTime, pindexPrev);
 
@@ -2354,7 +2374,7 @@ bool CBlock::AddToBlockIndex(unsigned int nFile, unsigned int nBlockPos, const u
     pindexNew->SetStakeModifier(nStakeModifier, fGeneratedStakeModifier);
     pindexNew->nStakeModifierChecksum = GetStakeModifierChecksum(pindexNew);
     if (!CheckStakeModifierCheckpoints(pindexNew->nHeight, pindexNew->nStakeModifierChecksum))
-        return error("AddToBlockIndex() : Rejected by stake modifier checkpoint height=%d, modifier=0x%08"PRIx64, pindexNew->nHeight, pindexNew->nStakeModifierChecksum);
+        return error("AddToBlockIndex() : Rejected by stake modifier checkpoint height=%d, modifier=0x%08"PRIx32, pindexNew->nHeight, pindexNew->nStakeModifierChecksum);
 
     // Add to mapBlockIndex
     map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.insert(make_pair(hash, pindexNew)).first;
