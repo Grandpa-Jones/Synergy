@@ -491,8 +491,8 @@ void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
         // Fee
         int64_t nFee = nTransactionFee * (1 + (int64_t)nBytes / 1000);
         
-        // Min Fee
-        int64_t nMinFee = txDummy.GetMinFee(1, GMF_SEND, nBytes);
+        // Min Fee: estimate as if block is full -- CTxMemPool::accept is a hard taskmaster (bug)
+        int64_t nMinFee = txDummy.GetMinFee(1000, GMF_SEND, nBytes);
         
         nPayFee = max(nFee, nMinFee);
         

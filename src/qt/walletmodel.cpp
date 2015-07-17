@@ -372,8 +372,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(const QString &txcomment, co
             wtx.mapValue[key] = it->second;
         };
 
-
-
+        // in some cases the fee required is less than the minimum fee
         if(!fCreated)
         {
             if((total + nFeeRequired) > nBalance) // FIXME: could cause collisions in the future
