@@ -1376,10 +1376,6 @@ unsigned int ComputeMaxBits(CBigNum bnTargetLimit, unsigned int nBase, int64_t n
     CBigNum bnResult;
     bnResult.SetCompact(nBase);
     bnResult *= 2;
-    if (fDebug && nTime > 0)
-    {
-       printf("ComputeMaxBits(): nTime <= 0 !\n");
-    }
     while (nTime > 0 && bnResult < bnTargetLimit)
     {
         // Maximum 200% adjustment per 96 min
