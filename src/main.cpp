@@ -1378,10 +1378,9 @@ unsigned int ComputeMaxBits(CBigNum bnTargetLimit, unsigned int nBase, int64_t n
     bnResult *= 2;
     while (nTime > 0 && bnResult < bnTargetLimit)
     {
-        // Maximum 200% adjustment per day/15...
+        // Maximum 200% adjustment per 4 min
         bnResult *= 2;
-        // nTime -= 96 * 60;
-        nTime -= 24 * 60;  // 24 min
+        nTime -= 4 * 60;  // 4 min
     }
     if (bnResult > bnTargetLimit)
         bnResult = bnTargetLimit;
