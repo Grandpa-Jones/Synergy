@@ -34,7 +34,11 @@ static const int DATABASE_VERSION = 70508;
 // 61040: boot and sync speedups
 // 62001: decoupling protocol and client versions
 //        new fixed staking reward of 1 SNRG
-static const int PROTOCOL_VERSION = 62001;
+//        clients: 1.1.0.0
+// 62002: new ComputeMinStake for very high network difficulties
+//        permissive bootstrap validation
+//        clients: 1.1.1.0
+static const int PROTOCOL_VERSION = 62002;
 
 // earlier versions not supported as of Feb 2012, and are disconnected
 static const int MIN_PROTO_VERSION = 209;

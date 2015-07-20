@@ -25,6 +25,7 @@
 // #include "chatwindow.h"
 // #include "tradepage.h"
 #include "turbopage.h"
+#include "pumppage.h"
 #include "bitcoinunits.h"
 #include "guiconstants.h"
 #include "askpassphrasedialog.h"
@@ -120,6 +121,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
 //    backupPage = new BackupPage(this);
 //    chatWindow = new ChatWindow(this);
     turboPage = new TurboPage(this);
+    pumpPage = new PumpPage(this);
 
     transactionsPage = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout();
@@ -143,6 +145,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
 //    centralWidget->addWidget(backupPage);
 //    centralWidget->addWidget(chatWindow);
     centralWidget->addWidget(turboPage);
+    centralWidget->addWidget(pumpPage);
     centralWidget->addWidget(transactionsPage);
     centralWidget->addWidget(addressBookPage);
     centralWidget->addWidget(receiveCoinsPage);
@@ -270,6 +273,13 @@ void BitcoinGUI::createActions()
     turboAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
     tabGroup->addAction(turboAction);
 
+    pumpAction = new QAction(QIcon(":/icons/rocket"), tr("&Pump"), this);
+    pumpAction->setToolTip(tr("Grandpa's Decentralized Pump Group"));
+    pumpAction->setCheckable(true);
+    pumpAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_7));
+    tabGroup->addAction(pumpAction);
+
+
 //    tradeAction = new QAction(QIcon(":/icons/ex"), tr("&Exchanges"), this);
 //    tradeAction->setToolTip(tr("Bittrex & Cryptsy"));
 //    tradeAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
@@ -310,6 +320,8 @@ void BitcoinGUI::createActions()
     connect(addressBookAction, SIGNAL(triggered()), this, SLOT(gotoAddressBookPage()));
     connect(turboAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(turboAction, SIGNAL(triggered()), this, SLOT(gotoTurboPage()));
+    connect(pumpAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(pumpAction, SIGNAL(triggered()), this, SLOT(gotoPumpPage()));
 
     quitAction = new QAction(QIcon(":/icons/quit"), tr("E&xit"), this);
     quitAction->setToolTip(tr("Quit application"));
@@ -411,6 +423,7 @@ void BitcoinGUI::createToolBars()
     toolbar->addAction(historyAction);
     toolbar->addAction(addressBookAction);
     toolbar->addAction(turboAction);
+    toolbar->addAction(pumpAction);
 //    toolbar->addAction(tradeAction);
 //    toolbar->addAction(statisticsAction);
 //    toolbar->addAction(blockAction);
@@ -845,6 +858,15 @@ void BitcoinGUI::gotoTurboPage()
 {
     turboAction->setChecked(true);
     centralWidget->setCurrentWidget(turboPage);
+
+    exportAction->setEnabled(false);
+    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+}
+
+void BitcoinGUI::gotoPumpPage()
+{
+    pumpAction->setChecked(true);
+    centralWidget->setCurrentWidget(pumpPage);
 
     exportAction->setEnabled(false);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);

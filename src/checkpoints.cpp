@@ -26,6 +26,7 @@ namespace Checkpoints
         boost::assign::map_list_of
         (           0, hashGenesisBlock )
         (       32750, uint256("0xd8e33a97d49289a039833e7e5885cc1ca4787aa912137f62bc24a3ca08515056"))
+        (       39000, uint256("0x097e3ef51348ca5b21262acf6f2b1b460d823587f68554958a45a0bece25c277"))
     ;
 
     // TestNet has no checkpoints
@@ -65,8 +66,10 @@ namespace Checkpoints
     }
 
     // ppcoin: synchronized checkpoint (centrally broadcasted)
-    uint256 hashSyncCheckpoint = 0;
-    uint256 hashPendingCheckpoint = 0;
+    uint256 hashSyncCheckpoint =
+        uint256("0x097e3ef51348ca5b21262acf6f2b1b460d823587f68554958a45a0bece25c277");
+    uint256 hashPendingCheckpoint =
+        uint256("0x097e3ef51348ca5b21262acf6f2b1b460d823587f68554958a45a0bece25c277");
     CSyncCheckpoint checkpointMessage;
     CSyncCheckpoint checkpointMessagePending;
     uint256 hashInvalidCheckpoint = 0;

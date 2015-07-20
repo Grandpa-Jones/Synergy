@@ -15,6 +15,7 @@ class OverviewPage;
 // class BackupPage;
 // class ChatWindow;
 class TurboPage;
+class PumpPage;
 class AddressBookPage;
 class SendCoinsDialog;
 class SignVerifyMessageDialog;
@@ -72,6 +73,7 @@ private:
 //    BackupPage *backupPage;
 //    ChatWindow *chatWindow;
     TurboPage *turboPage;
+    PumpPage *pumpPage;
     QWidget *transactionsPage;
     AddressBookPage *addressBookPage;
     AddressBookPage *receiveCoinsPage;
@@ -93,6 +95,7 @@ private:
 //     QAction *backupAction;
 //     QAction *chatAction;
     QAction *turboAction;
+    QAction *pumpAction;
     QAction *historyAction;
     QAction *quitAction;
     QAction *sendCoinsAction;
@@ -165,6 +168,7 @@ private slots:
 //     void gotoBackupPage();
 //     void gotoChatPage();
     void gotoTurboPage();
+    void gotoPumpPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to address book page */
