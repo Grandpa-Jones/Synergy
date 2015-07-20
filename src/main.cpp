@@ -1376,11 +1376,15 @@ unsigned int ComputeMaxBits(CBigNum bnTargetLimit, unsigned int nBase, int64_t n
     CBigNum bnResult;
     bnResult.SetCompact(nBase);
     bnResult *= 2;
+    if (fDebug && nTime > 0)
+    {
+       printf("ComputeMaxBits(): nTime <= 0 !\n");
+    }
     while (nTime > 0 && bnResult < bnTargetLimit)
     {
-        // Maximum 200% adjustment per 4 min
+        // Maximum 200% adjustment per 96 min
         bnResult *= 2;
-        nTime -= 4 * 60;  // 4 min
+        nTime -= 96 * 60;
     }
     if (bnResult > bnTargetLimit)
         bnResult = bnTargetLimit;
@@ -1403,7 +1407,7 @@ unsigned int ComputeMinWork(unsigned int nBase, int64_t nTime)
 unsigned int ComputeMinStake(unsigned int nBase, int64_t nTime, unsigned int nBlockTime)
 {
     CBigNum bnProofOfStakeLimit_used;
-    if (nTime >= nPoSLimitSwitchTime)
+    if (nBlockTime >= nPoSLimitSwitchTime)
     {
          bnProofOfStakeLimit_used = bnProofOfStakeLimit_REVISED;
     } 
