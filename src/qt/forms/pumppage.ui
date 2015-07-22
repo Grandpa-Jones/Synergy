@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
-    <height>400</height>
+    <width>936</width>
+    <height>607</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,6 +19,25 @@
    </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_1">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_17"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_banner">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>155</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
      <item>
       <spacer name="verticalSpacer_3">
        <property name="orientation">
@@ -33,23 +52,71 @@
       </spacer>
      </item>
      <item>
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_8"/>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizLayout_1">
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
            <item>
             <widget class="QLabel" name="labelOngoing">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>42</height>
+              </size>
+             </property>
              <property name="font">
               <font>
-               <pointsize>16</pointsize>
+               <pointsize>24</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="text">
               <string>Ongoing Pump</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizLayout_1">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="minimumSize">
+              <size>
+               <width>90</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Starting Date:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEditWeekOfOngoing">
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>[date]</string>
              </property>
             </widget>
            </item>
@@ -67,15 +134,37 @@
             </spacer>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEditWeekOfOngoing">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Pick/Exchange:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEditPickOngoing">
+             <property name="minimumSize">
+              <size>
+               <width>170</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
-               <width>100</width>
+               <width>170</width>
                <height>16777215</height>
               </size>
              </property>
+             <property name="autoFillBackground">
+              <bool>true</bool>
+             </property>
              <property name="text">
-              <string>Week Of</string>
+              <string>[ticker]/[exchange]</string>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -84,50 +173,94 @@
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_13"/>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_14">
-         <item>
-          <widget class="QLineEdit" name="lineEditPickOngoing">
-           <property name="maximumSize">
-            <size>
-             <width>200</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="autoFillBackground">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Pick</string>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
         <layout class="QHBoxLayout" name="horizLayout_2">
          <item>
-          <widget class="QLineEdit" name="lineEditBalanceOngoing">
-           <property name="maximumSize">
+          <widget class="QLabel" name="label_4">
+           <property name="minimumSize">
             <size>
-             <width>150</width>
-             <height>16777215</height>
+             <width>90</width>
+             <height>0</height>
             </size>
            </property>
            <property name="text">
-            <string>Balance</string>
+            <string>Address:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QLineEdit" name="lineEditAddressOngoing">
+           <property name="minimumSize">
+            <size>
+             <width>442</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>442</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Courier</family>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
            <property name="text">
-            <string>Address</string>
+            <string>[SNRG Address]</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Minimum Balance:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEditBalanceOngoing">
+           <property name="minimumSize">
+            <size>
+             <width>130</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>130</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>[amount]</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>SNRG</string>
            </property>
           </widget>
          </item>
@@ -149,18 +282,88 @@
       </spacer>
      </item>
      <item>
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_7">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>75</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <layout class="QHBoxLayout" name="horizontalLayout_16">
          <item>
           <widget class="QLabel" name="labelNext">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>42</height>
+            </size>
+           </property>
            <property name="font">
             <font>
-             <pointsize>16</pointsize>
+             <pointsize>24</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
             </font>
            </property>
            <property name="text">
             <string>Next Pump</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QLabel" name="label_5">
+           <property name="minimumSize">
+            <size>
+             <width>115</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Starting Date:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEditWeekOfNext">
+           <property name="minimumSize">
+            <size>
+             <width>150</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>150</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>[date]</string>
            </property>
           </widget>
          </item>
@@ -178,15 +381,40 @@
           </spacer>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEditWeekOfNext">
+          <widget class="QPushButton" name="pushButton">
+           <property name="minimumSize">
+            <size>
+             <width>122</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
-             <width>100</width>
+             <width>118</width>
              <height>16777215</height>
             </size>
            </property>
            <property name="text">
-            <string>Week Of</string>
+            <string>Find Addresses...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnAutofill">
+           <property name="minimumSize">
+            <size>
+             <width>122</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>118</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Autofill</string>
            </property>
           </widget>
          </item>
@@ -194,6 +422,31 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="minimumSize">
+            <size>
+             <width>115</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>115</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="text">
+            <string>Starting Balance:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QLineEdit" name="lineEditBalanceNext">
            <property name="minimumSize">
@@ -209,36 +462,19 @@
             </size>
            </property>
            <property name="text">
-            <string>Balance</string>
+            <string>[amount]</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEditAddressNext">
-           <property name="minimumSize">
-            <size>
-             <width>500</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>500</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Courier</family>
-            </font>
-           </property>
+          <widget class="QLabel" name="label_11">
            <property name="text">
-            <string>Address</string>
+            <string>SNRG</string>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_4">
+          <spacer name="horizontalSpacer_8">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -251,15 +487,43 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
-           <property name="maximumSize">
+          <widget class="QLabel" name="label_7">
+           <property name="minimumSize">
             <size>
-             <width>118</width>
-             <height>16777215</height>
+             <width>70</width>
+             <height>0</height>
             </size>
            </property>
            <property name="text">
-            <string>Find Addresses...</string>
+            <string>Address:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEditAddressNext">
+           <property name="minimumSize">
+            <size>
+             <width>442</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>320</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Courier</family>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>[SNRG Address]</string>
            </property>
           </widget>
          </item>
@@ -267,6 +531,22 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLabel" name="label_8">
+           <property name="minimumSize">
+            <size>
+             <width>115</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Entry Fee:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QLineEdit" name="lineEditAmount">
            <property name="minimumSize">
@@ -282,7 +562,43 @@
             </size>
            </property>
            <property name="text">
-            <string>Amount</string>
+            <string>[amount]</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>SNRG</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_9">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_9">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Statment:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
@@ -290,12 +606,51 @@
           <widget class="QLineEdit" name="lineEditNarration">
            <property name="minimumSize">
             <size>
-             <width>400</width>
+             <width>442</width>
              <height>0</height>
             </size>
            </property>
+           <property name="maximumSize">
+            <size>
+             <width>445</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="text">
-            <string>Narration</string>
+            <string>GDPG [date]</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>30</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_11">
+         <item>
+          <widget class="QLabel" name="labelStealthAddress">
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Stealth Address</string>
            </property>
           </widget>
          </item>
@@ -313,29 +668,21 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="btnAutofill">
-           <property name="text">
-            <string>Autofill</string>
+          <widget class="QPushButton" name="btnSetStealthAddress">
+           <property name="minimumSize">
+            <size>
+             <width>122</width>
+             <height>0</height>
+            </size>
            </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_11">
-         <item>
-          <widget class="QLabel" name="labelStealthAddress">
-           <property name="font">
-            <font>
-             <pointsize>11</pointsize>
-            </font>
+           <property name="maximumSize">
+            <size>
+             <width>118</width>
+             <height>16777215</height>
+            </size>
            </property>
            <property name="text">
-            <string>Stealth Address</string>
+            <string>Set...</string>
            </property>
           </widget>
          </item>
@@ -345,26 +692,102 @@
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QLineEdit" name="lineEditStealthAddress">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>Courier</family>
+             <pointsize>10</pointsize>
             </font>
            </property>
            <property name="text">
-            <string>Address</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btnSetStealthAddress">
-           <property name="text">
-            <string>Set...</string>
+            <string>[SNRG Stealth Address]</string>
            </property>
           </widget>
          </item>
         </layout>
        </item>
+       <item>
+        <spacer name="verticalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>30</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_2">
+           <property name="text">
+            <string>Enter Pump (Send)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
       </layout>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="Line" name="line_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
      </item>
      <item>
       <spacer name="verticalSpacer_2">
@@ -374,7 +797,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>40</height>
+         <height>80</height>
         </size>
        </property>
       </spacer>

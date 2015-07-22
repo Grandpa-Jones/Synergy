@@ -27,6 +27,9 @@ PumpPage::PumpPage(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QPixmap banner_pix(":images/pump_banner");
+    ui->label_banner->setPixmap(banner_pix);
+
     subscribeToCoreSignals();
     
 }
