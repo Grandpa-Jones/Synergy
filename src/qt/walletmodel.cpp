@@ -985,7 +985,7 @@ bool WalletModel::GetAddressBalancesInInterval(std::string &sAddress,
              if (this->wallet->mapWallet.count(iit->prevout.hash))
              {
                    CWalletTx tmpwtx = this->wallet->mapWallet[iit->prevout.hash];
-                   if (tmpwtx.vout.size > iit->prevout.n)
+                   if (tmpwtx.vout.size() > iit->prevout.n)
                    {
                        inout = tmpwtx.vout[iit->prevout.n];
                    }
@@ -1004,13 +1004,13 @@ bool WalletModel::GetAddressBalancesInInterval(std::string &sAddress,
                    if (GetTransaction(iit->prevout.hash, tmptx, hashBlock))
                    {
 
-                       if (tmptx.vout.size > iit->prevout.n)
+                       if (tmptx.vout.size() > iit->prevout.n)
                        {
                            inout = tmptx.vout[iit->prevout.n];
                        }
                        else
                        {
-                           printf("GetAddressBalancesInInterval(): prevout not %din wallet transaction %s\n",
+                           printf("GetAddressBalancesInInterval(): prevout %d not in C transaction %s\n",
                                                   iit->prevout.n, iit->prevout.hash.ToString().c_str());
                            continue;
                        }
