@@ -22,6 +22,9 @@ extern unsigned int nStakeMaxAge;
 unsigned int nStakeSplitAge = 2 * 24 * 60 * 60;
 int64_t nStakeCombineThreshold = 100 * COIN;
 
+// prevents certain gui process that watch new blocks
+bool fRescanLock = false;
+
 //////////////////////////////////////////////////////////////////////////////
 //
 // mapWallet
@@ -940,6 +943,8 @@ bool CWalletTx::WriteToDisk()
 // exist in the wallet will be updated.
 int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate, void (*pProgress)(int))
 {
+
+    fRescanLock = true;
     int ret = 0;
 
     CBlockIndex* pindex = pindexStart;
@@ -967,6 +972,7 @@ int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate, v
             pindex = pindex->pnext;
         }
     }
+    fRescanLock = false;
     return ret;
 }
 
@@ -981,6 +987,7 @@ int CWallet::ScanForWalletTransaction(const uint256& hashTx)
 
 void CWallet::ReacceptWalletTransactions()
 {
+    fRescanLock = true;
     CTxDB txdb("r");
     bool fRepeat = true;
     while (fRepeat)
@@ -1036,6 +1043,7 @@ void CWallet::ReacceptWalletTransactions()
                 fRepeat = true;  // Found missing transactions: re-do re-accept.
         }
     }
+    fRescanLock = false;
 }
 
 void CWalletTx::RelayWalletTransaction(CTxDB& txdb)
@@ -1229,6 +1237,39 @@ void CWallet::AvailableCoinsMinConf(vector<COutput>& vCoins, int nConf) const
         }
     }
 }
+
+// populate vCoins with vector of coins that have been spent
+void CWallet::SpentCoins(vector<COutput>& vCoins) const
+{
+    vCoins.clear();
+    {
+        LOCK2(cs_main, cs_wallet);
+        for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++  it)
+        {
+            const CWalletTx* pcoin = &(*it).second;
+
+            if (pcoin->IsCoinBase())
+                continue;
+
+            if(pcoin->IsCoinStake())
+                continue;
+
+            if (!pcoin->IsFinal())
+                continue;
+
+            if (!pcoin->IsTrusted())
+                continue;
+
+            if (!pcoin->IsFromMe())
+                continue;
+
+            for (unsigned int i = 0; i < pcoin->vout.size(); i++) {
+                  vCoins.push_back(COutput(pcoin, i, pcoin->GetDepthInMainChain()));
+            }
+        }
+    }
+}
+
 
 static void ApproximateBestSubset(vector<pair<int64_t, pair<const CWalletTx*,unsigned int> > >vValue, int64_t nTotalLower, int64_t nTargetValue,
                                   vector<char>& vfBest, int64_t& nBest, int iterations = 1000)
@@ -2227,7 +2268,7 @@ bool CWallet::FindStealthTransactions(const CTransaction& tx, mapValue_t& mapNar
         {
             nOutputId++;
 
-            printf("The nOutputID is: %d\n", nOutputId);
+            // printf("The nOutputID is: %d\n", nOutputId);
 
             if (&txoutB == &txout)
                 continue;

@@ -38,7 +38,9 @@ static const int DATABASE_VERSION = 70508;
 // 62002: fix very bad typo in ComputeMinStake
 //        permissive bootstrap validation
 //        clients: 1.1.1.0
-static const int PROTOCOL_VERSION = 62002;
+// 62200: added pumpinfo alert system
+//        clients: 1.2.0.0
+static const int PROTOCOL_VERSION = 62200;
 
 // earlier versions not supported as of Feb 2012, and are disconnected
 static const int MIN_PROTO_VERSION = 209;

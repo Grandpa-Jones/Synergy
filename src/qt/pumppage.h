@@ -1,10 +1,11 @@
 #ifndef PUMPPAGE_H
 #define PUMPPAGE_H
 
-#include "clientmodel.h"
+#include "walletmodel.h"
 #include "main.h"
 #include "wallet.h"
 #include "base58.h"
+#include "bitcoingui.h"
 
 #include <QWidget>
 
@@ -29,6 +30,7 @@ class QItemSelection;
 class QSortFilterProxyModel;
 QT_END_NAMESPACE
 
+
 class PumpPage : public QWidget
 {
     Q_OBJECT
@@ -37,20 +39,30 @@ public:
     explicit PumpPage(QWidget *parent = 0);
     ~PumpPage();
     
-    // void setModel(TurboAddressTableModel *model);
-    // void setModel(WalletModel *walletModel);
-    
+    PumpInfo pumpInfo;
+
+    void setModel(WalletModel *model);
+
+    void updatePumpInfo(const QString &qsCurrent, const QString &qsNext);
+
+ 
 public slots:
 
-    void updatePump();
-    void updateChart();
+    void updateCurrentPump();
+    void clear();
+    void reject();
+    void accept();
 
 private slots:
     // void selectionChanged();
+    void findAddress();
+    void selectStealthAddress();
+    void joinPump();
 
 private:
     Ui::PumpPage *ui;
-    // WalletModel *walletModel;
+    WalletModel *model;
+    std::string sPumpAddress, sPumpStealthAddress;
     void subscribeToCoreSignals();
     void unsubscribeFromCoreSignals();
 };

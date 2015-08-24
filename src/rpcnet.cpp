@@ -74,17 +74,23 @@ Value getpeerinfo(const Array& params, bool fHelp)
 // ThreadRPCServer: holds cs_main and acquiring cs_vSend in alert.RelayTo()/PushMessage()/BeginMessage()
 Value sendalert(const Array& params, bool fHelp)
 {
-    if (fHelp || params.size() < 6)
+    if (fHelp || (params.size() < 6 || params.size() > 8))
         throw runtime_error(
-            "sendalert <message> <privatekey> <minver> <maxver> <priority> <id> [cancelupto]\n"
+            "sendalert <message> <privatekey> <minver> <maxver> <priority> <id> [type=1] [cancelupto]\n"
             "<message> is the alert text message\n"
             "<privatekey> is hex string of alert master private key\n"
             "<minver> is the minimum applicable internal client version\n"
             "<maxver> is the maximum applicable internal client version\n"
             "<priority> is integer priority number\n"
             "<id> is the alert id\n"
+            "[type] is the alert type (classic=1, pumpinfo=2)\n"
             "[cancelupto] cancels all alert id's up to this number\n"
             "Returns true or false.");
+
+    if (fDebug)
+    {
+       printf("sendalert(): message: %s\n", params[0].get_str().c_str());
+    }
 
     CAlert alert;
     CKey key;
@@ -94,8 +100,21 @@ Value sendalert(const Array& params, bool fHelp)
     alert.nMaxVer = params[3].get_int();
     alert.nPriority = params[4].get_int();
     alert.nID = params[5].get_int();
+
     if (params.size() > 6)
-        alert.nCancel = params[6].get_int();
+    {
+        alert.nAlertType = params[6].get_int();
+    }
+    else
+    {
+        alert.nAlertType = (int) ALERT_CLASSIC;
+    }
+
+    if (params.size() > 7)
+    {
+        alert.nCancel = params[7].get_int();
+    }
+
     alert.nVersion = PROTOCOL_VERSION;
     alert.nRelayUntil = GetAdjustedTime() + 365*24*60*60;
     alert.nExpiration = GetAdjustedTime() + 365*24*60*60;
@@ -105,7 +124,10 @@ Value sendalert(const Array& params, bool fHelp)
     alert.vchMsg = vector<unsigned char>(sMsg.begin(), sMsg.end());
 
     vector<unsigned char> vchPrivKey = ParseHex(params[1].get_str());
-    key.SetPrivKey(CPrivKey(vchPrivKey.begin(), vchPrivKey.end())); // if key is not correct openssl may crash
+
+    // if key is not correct openssl may crash
+    key.SetPrivKey(CPrivKey(vchPrivKey.begin(), vchPrivKey.end()));
+
     if (!key.Sign(Hash(alert.vchMsg.begin(), alert.vchMsg.end()), alert.vchSig))
         throw runtime_error(
             "Unable to sign alert, check private key?\n");  
@@ -119,6 +141,7 @@ Value sendalert(const Array& params, bool fHelp)
             alert.RelayTo(pnode);
     }
 
+
     Object result;
     result.push_back(Pair("strStatusBar", alert.strStatusBar));
     result.push_back(Pair("nVersion", alert.nVersion));
@@ -126,6 +149,7 @@ Value sendalert(const Array& params, bool fHelp)
     result.push_back(Pair("nMaxVer", alert.nMaxVer));
     result.push_back(Pair("nPriority", alert.nPriority));
     result.push_back(Pair("nID", alert.nID));
+    result.push_back(Pair("nAlertType", alert.nAlertType));
     if (alert.nCancel > 0)
         result.push_back(Pair("nCancel", alert.nCancel));
     return result;

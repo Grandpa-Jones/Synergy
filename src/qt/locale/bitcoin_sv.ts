@@ -630,7 +630,7 @@ Denna produkten innehåller mjukvara utvecklad av OpenSSL Project för användni
     </message>
     <message>
         <location line="+59"/>
-        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SNRG, which rewards all users of the Synergy network as a result of your usage. Do you want to pay this fee?</source>
+        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 , which rewards all users of the Synergy network as a result of your usage. Do you want to pay this fee?</source>
         <translation>Denna transaktion är över gränsen. Du kan ändå skicka den med en %1 avgift, som går till noderna som processerar din transaktion och hjälper till med att upprätthålla nätverket. Vill du betala denna avgift?</translation>
     </message>
     <message>

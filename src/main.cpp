@@ -53,12 +53,19 @@ CBigNum bnProofOfStakeLimit_REVISED(~uint256(0) >> 2);
 
 // When do rewards switch to flat reward
 static const int64_t nPoSFixedRewardTime = 1437804000;
+// when do flat rewards switch to big reward
+static const int64_t nPoSBigRewardTime = 1442210400;  // Mon, 14 Sep 2015 06:00:00 GMT
 // How much money does there need to be to switch to true inflation rate
-static const int64_t nPoSTrueInflationSupply = 2600000 * COIN; // 2,600,000 SNRG (~8 yr)
+static const int64_t nPoSTrueInflationSupply = 9060000 * COIN; // 9,060,000 SNRG (~8 yr)
 static const int nPoSTrueInflationShift = 24; // 1.5664% true interest rate
                                               //     log_2((1/0.015664) * 365 * 720)
 
 unsigned int nTargetSpacing = 120; // 2 min
+// new target spacing with longer blocks
+unsigned int nTargetSpacing2 = 300; // 5 min
+// When does new spacing start?
+int64_t nSpacing2Time = 1442210400;  // Mon, 14 Sep 2015 06:00:00 GMT
+
 unsigned int nStakeMinAge = 60 * 60 * 24 * 2; // 2 days
 unsigned int nStakeMaxAge = 60 * 60 * 24 * 6 ; // 6 days
 unsigned int nModifierInterval = 20 * 60; // time to elapse before new modifier is computed
@@ -1120,12 +1127,25 @@ const int DAILY_BLOCKCOUNT =  720;
 // returns 0 if block does not honor target spacing
 //    -> 0 rewards, but thanks for securing the net,
 //       ...and sorry that you lost that coin-age ;-)
+// pindex is really pindexPrev (start looking back at previous block)
 int GetTurboStakeMultiplier(CBitcoinAddress address, int64_t txTime, CBlockIndex* pindex) {
 
   // too late
   if (txTime > nTurboEndTime) {
     return 1;
   }
+
+  // not really needed because of when turbo ended, but including for consistency
+  unsigned int nTargetSpacing_used;
+  if (pindex->nTime < nSpacing2Time)
+  {
+        nTargetSpacing_used = nTargetSpacing;
+  }
+  else
+  {
+        nTargetSpacing_used = nTargetSpacing2;
+  }
+
 
   // pindex is genesis block
   if (pindex->pprev == NULL) {
@@ -1137,7 +1157,7 @@ int GetTurboStakeMultiplier(CBitcoinAddress address, int64_t txTime, CBlockIndex
 
 
   // 2 second grace period
-  unsigned int allowedSpacing = nTargetSpacing - 2;
+  unsigned int allowedSpacing = nTargetSpacing_used - 2;
 
   int turbo_count = 1;
   int block_count = 1;  // include current block
@@ -1245,9 +1265,13 @@ int64_t GetProofOfStakeReward(int64_t nCoinAge, CBitcoinAddress address,
     {
           nSubsidy = (nCoinAge / COIN) * (nRewardCoinYear / 365);
     }
-    else if (pindexPrev->nMoneySupply < nPoSTrueInflationSupply)
+    else if (pindexPrev->nTime < nPoSBigRewardTime)
     {
           nSubsidy = 1 * COIN;
+    }
+    else if (pindexPrev->nMoneySupply < nPoSTrueInflationSupply)
+    {
+          nSubsidy = 10 * COIN;
     }
     else
     {
@@ -1426,6 +1450,17 @@ const CBlockIndex* GetLastBlockIndex(const CBlockIndex* pindex, bool fProofOfSta
 
 static unsigned int GetNextTargetRequired_(const CBlockIndex* pindexLast, bool fProofOfStake)
 {
+
+    unsigned int nTargetSpacing_used;
+    if (pindexLast->nTime < nSpacing2Time)
+    {
+          nTargetSpacing_used = nTargetSpacing;
+    }
+    else
+    {
+          nTargetSpacing_used = nTargetSpacing2;
+    }
+
     CBigNum bnProofOfStakeLimit_used;
     if (pindexLast->nTime >= nPoSLimitSwitchTime)
     {
@@ -1450,15 +1485,15 @@ static unsigned int GetNextTargetRequired_(const CBlockIndex* pindexLast, bool f
 
     int64_t nActualSpacing = pindexPrev->GetBlockTime() - pindexPrevPrev->GetBlockTime();
     if (nActualSpacing < 0)
-        nActualSpacing = nTargetSpacing;
+        nActualSpacing = nTargetSpacing_used;
 
     // ppcoin: target change every block
     // ppcoin: retarget with exponential moving toward target spacing
     CBigNum bnNew;
     bnNew.SetCompact(pindexPrev->nBits);
-    int64_t nInterval = nTargetTimespan / nTargetSpacing;
-    bnNew *= ((nInterval - 1) * nTargetSpacing + nActualSpacing + nActualSpacing);
-    bnNew /= ((nInterval + 1) * nTargetSpacing);
+    int64_t nInterval = nTargetTimespan / nTargetSpacing_used;
+    bnNew *= ((nInterval - 1) * nTargetSpacing_used + nActualSpacing + nActualSpacing);
+    bnNew /= ((nInterval + 1) * nTargetSpacing_used);
 
     if (bnNew <= 0 || bnNew > bnTargetLimit)
         bnNew = bnTargetLimit;
@@ -1506,7 +1541,7 @@ bool IsInitialBlockDownload()
         nLastUpdate = GetTime();
     }
     return (GetTime() - nLastUpdate < 10 &&
-            pindexBest->GetBlockTime() < GetTime() - 8 * 60 * 60);
+            pindexBest->GetBlockTime() < GetTime() - 20 * 60);
 }
 
 void static InvalidChainFound(CBlockIndex* pindexNew)
@@ -3840,13 +3875,25 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         }
     }
 
-
-    else if (strCommand == "alert")
+    // pumpinfo co-opts classic alerts because they do everything needed and more
+    else if (strCommand == "alert" || strCommand == "pumpinfo")
     {
         CAlert alert;
         vRecv >> alert;
 
+        // will not be necessary after ALERT2_TIME
+        if (strCommand == "alert")
+        {
+             alert.nAlertType = (int) ALERT_CLASSIC;
+        }
+        else if (strCommand == "pumpinfo")
+        {
+             alert.nAlertType = (int) ALERT_PUMP;
+        }
+     
+
         uint256 alertHash = alert.GetHash();
+        // okay to share setKnown because all hashes will be unique
         if (pfrom->setKnown.count(alertHash) == 0)
         {
             if (alert.ProcessAlert())
@@ -3870,7 +3917,6 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
             }
         }
     }
-
 
     else
     {

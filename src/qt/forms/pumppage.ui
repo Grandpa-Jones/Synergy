@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>936</width>
-    <height>607</height>
+    <height>629</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -115,8 +115,17 @@
                <height>16777215</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start date of current pump&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
-              <string>[date]</string>
+              <string/>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Ongoing Pump Start</string>
              </property>
             </widget>
            </item>
@@ -147,24 +156,24 @@
             <widget class="QLineEdit" name="lineEditPickOngoing">
              <property name="minimumSize">
               <size>
-               <width>170</width>
+               <width>174</width>
                <height>0</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>170</width>
+               <width>174</width>
                <height>16777215</height>
               </size>
              </property>
-             <property name="autoFillBackground">
-              <bool>true</bool>
-             </property>
              <property name="text">
-              <string>[ticker]/[exchange]</string>
+              <string/>
              </property>
              <property name="readOnly">
               <bool>true</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Ticker / Exchange</string>
              </property>
             </widget>
            </item>
@@ -194,13 +203,13 @@
           <widget class="QLineEdit" name="lineEditAddressOngoing">
            <property name="minimumSize">
             <size>
-             <width>442</width>
+             <width>320</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>442</width>
+             <width>320</width>
              <height>16777215</height>
             </size>
            </property>
@@ -211,7 +220,13 @@
             </font>
            </property>
            <property name="text">
-            <string>[SNRG Address]</string>
+            <string/>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="placeholderText">
+            <string>Registration Address</string>
            </property>
           </widget>
          </item>
@@ -239,28 +254,18 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEditBalanceOngoing">
+          <widget class="BitcoinAmountField" name="btcamtBalanceOngoing" native="true">
            <property name="minimumSize">
             <size>
-             <width>130</width>
+             <width>250</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>130</width>
+             <width>250</width>
              <height>16777215</height>
             </size>
-           </property>
-           <property name="text">
-            <string>[amount]</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_12">
-           <property name="text">
-            <string>SNRG</string>
            </property>
           </widget>
          </item>
@@ -363,7 +368,13 @@
             </size>
            </property>
            <property name="text">
-            <string>[date]</string>
+            <string/>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="placeholderText">
+            <string>Next Pump Start</string>
            </property>
           </widget>
          </item>
@@ -381,7 +392,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="btnFindAddresses">
            <property name="minimumSize">
             <size>
              <width>122</width>
@@ -395,26 +406,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Find Addresses...</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btnAutofill">
-           <property name="minimumSize">
-            <size>
-             <width>122</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>118</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Autofill</string>
+            <string>Find Addres...</string>
            </property>
           </widget>
          </item>
@@ -448,28 +440,18 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEditBalanceNext">
+          <widget class="BitcoinAmountField" name="btcamtBalanceNext" native="true">
            <property name="minimumSize">
             <size>
-             <width>150</width>
+             <width>250</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>150</width>
+             <width>250</width>
              <height>16777215</height>
             </size>
-           </property>
-           <property name="text">
-            <string>[amount]</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_11">
-           <property name="text">
-            <string>SNRG</string>
            </property>
           </widget>
          </item>
@@ -506,7 +488,7 @@
           <widget class="QLineEdit" name="lineEditAddressNext">
            <property name="minimumSize">
             <size>
-             <width>442</width>
+             <width>320</width>
              <height>0</height>
             </size>
            </property>
@@ -523,7 +505,13 @@
             </font>
            </property>
            <property name="text">
-            <string>[SNRG Address]</string>
+            <string/>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="placeholderText">
+            <string>Registration Address</string>
            </property>
           </widget>
          </item>
@@ -548,28 +536,18 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEditAmount">
+          <widget class="BitcoinAmountField" name="btcamtAmount" native="true">
            <property name="minimumSize">
             <size>
-             <width>150</width>
+             <width>250</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>150</width>
+             <width>250</width>
              <height>16777215</height>
             </size>
-           </property>
-           <property name="text">
-            <string>[amount]</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_10">
-           <property name="text">
-            <string>SNRG</string>
            </property>
           </widget>
          </item>
@@ -590,12 +568,12 @@
           <widget class="QLabel" name="label_9">
            <property name="minimumSize">
             <size>
-             <width>70</width>
+             <width>80</width>
              <height>0</height>
             </size>
            </property>
            <property name="text">
-            <string>Statment:</string>
+            <string>Required Balance:</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -603,21 +581,18 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEditNarration">
+          <widget class="BitcoinAmountField" name="btcamtRequired" native="true">
            <property name="minimumSize">
             <size>
-             <width>442</width>
+             <width>250</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>445</width>
+             <width>250</width>
              <height>16777215</height>
             </size>
-           </property>
-           <property name="text">
-            <string>GDPG [date]</string>
            </property>
           </widget>
          </item>
@@ -711,7 +686,13 @@
             </font>
            </property>
            <property name="text">
-            <string>[SNRG Stealth Address]</string>
+            <string/>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="placeholderText">
+            <string>Synergy Stealth Address for Encrypted Pick</string>
            </property>
           </widget>
          </item>
@@ -746,9 +727,9 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="btnJoinPump">
            <property name="text">
-            <string>Enter Pump (Send)</string>
+            <string>Join Pump (Send)</string>
            </property>
           </widget>
          </item>
@@ -806,6 +787,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BitcoinAmountField</class>
+   <extends>QWidget</extends>
+   <header>bitcoinamountfield.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

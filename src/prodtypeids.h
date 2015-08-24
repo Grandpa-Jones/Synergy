@@ -11,7 +11,9 @@ enum PROD_TYPE {
         // SNRG-2: BANS:BCT; decentralized blacklist
         SNRG_BANS_BCT,
         // SNRG-3: VOTE; voting
-        SNRG_VOTE
+        SNRG_VOTE,
+        // SNRG-4: PUMP; grandpas pump group
+        SNRG_PUMP
 };
 
 #endif

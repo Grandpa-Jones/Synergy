@@ -2778,9 +2778,12 @@ Value scanforalltxns(const Array& params, bool fHelp)
     {
         LOCK2(cs_main, pwalletMain->cs_wallet);
 
+        printf("scanforalltxns(): 1. marking dirty\n");
         pwalletMain->MarkDirty();
 
+        printf("scanforalltxns(): 2. scanning for wallet transactions\n");
         pwalletMain->ScanForWalletTransactions(pindex, true);
+        printf("scanforalltxns(): 3. reaccepting wallet transactions\n");
         pwalletMain->ReacceptWalletTransactions();
     }
 

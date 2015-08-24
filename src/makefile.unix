@@ -16,7 +16,8 @@ INCLUDEPATHS= \
  -I"/usr/include" \
  -I"$(INC_LINUX)" \
  -I"$(CURDIR)/leveldb/include" \
- -I"$(CURDIR)/leveldb/helpers"
+ -I"$(CURDIR)/leveldb/helpers" \
+ -I"$(CURDIR)/json"
 CFLAGS += $(INCLUDEPATHS)
 USE_UPNP:=-
 USE_IPV6:=-
@@ -123,7 +124,9 @@ xCXXFLAGS=-O2 $(EXT_OPTIONS) -pthread -Wall -Wextra -Wno-ignored-qualifiers -Wfo
 xLDFLAGS=$(LDHARDENING) $(LDFLAGS)
 
 OBJS= \
-    obj/stealth.o \
+    obj/json_spirit_reader.o \
+    obj/json_spirit_value.o \
+    obj/json_spirit_writer.o \
     obj/groestl.o \
     obj/blake.o \
     obj/bmw.o \
@@ -271,6 +274,13 @@ DEFS += -DHAVE_BUILD_INFO
 
 
 obj/%.o: %.cpp
+	$(CXX) -c $(xCXXFLAGS) -MMD -MF $(@:%.o=%.d) -o $@ $<
+	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
+	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+	      -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
+	  rm -f $(@:%.o=%.d)
+
+obj/%.o: json/%.cpp
 	$(CXX) -c $(xCXXFLAGS) -MMD -MF $(@:%.o=%.d) -o $@ $<
 	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \

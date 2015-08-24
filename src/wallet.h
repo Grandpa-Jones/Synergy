@@ -137,6 +137,7 @@ public:
 
     void AvailableCoinsMinConf(std::vector<COutput>& vCoins, int nConf) const;
     void AvailableCoins(std::vector<COutput>& vCoins, bool fOnlyConfirmed=true, const CCoinControl *coinControl=NULL) const;
+    void SpentCoins(std::vector<COutput>& vCoins) const;
     bool SelectCoinsMinConf(int64_t nTargetValue, unsigned int nSpendTime, int nConfMine, int nConfTheirs, std::vector<COutput> vCoins, std::set<std::pair<const CWalletTx*,unsigned int> >& setCoinsRet, int64_t& nValueRet) const;
     // keystore implementation
     // Generate a new key
@@ -696,14 +697,22 @@ public:
     {
         // Quick answer in most cases
         if (!IsFinal())
+        {
             return false;
+        }
         int nDepth = GetDepthInMainChain();
         if (nDepth >= 1)
+        {
             return true;
+        }
         if (nDepth < 0)
+        {
             return false;
+        }
         if (fConfChange || !IsFromMe()) // using wtx's cached debit
+        {
             return false;
+        }
 
         // If no confirmations but it's from us, we can still
         // consider it confirmed if all dependencies are confirmed
@@ -716,14 +725,20 @@ public:
             const CMerkleTx* ptx = vWorkQueue[i];
 
             if (!ptx->IsFinal())
+            {
                 return false;
+            }
             int nPDepth = ptx->GetDepthInMainChain();
             if (nPDepth >= 1)
                 continue;
             if (nPDepth < 0)
+            {
                 return false;
+            }
             if (!pwallet->IsFromMe(*ptx))
+            {
                 return false;
+            }
 
             if (mapPrev.empty())
             {
@@ -734,7 +749,9 @@ public:
             BOOST_FOREACH(const CTxIn& txin, ptx->vin)
             {
                 if (!mapPrev.count(txin.prevout.hash))
+                {
                     return false;
+                }
                 vWorkQueue.push_back(mapPrev[txin.prevout.hash]);
             }
         }
@@ -785,8 +802,6 @@ public:
 };
 
 
-
-
 class COutput
 {
 public:
@@ -809,8 +824,6 @@ public:
         printf("%s\n", ToString().c_str());
     }
 };
-
-
 
 
 /** Private key that includes an expiration date in case it never gets used. */

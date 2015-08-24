@@ -630,7 +630,7 @@ Eric Young (eay@cryptsoft.com) y el software UPnP escrito por Thomas Bernard.</t
     </message>
     <message>
         <location line="+59"/>
-        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SNRG, which rewards all users of the Synergy network as a result of your usage. Do you want to pay this fee?</source>
+        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 , which rewards all users of the Synergy network as a result of your usage. Do you want to pay this fee?</source>
         <translation type="unfinished"/>
     </message>
     <message>

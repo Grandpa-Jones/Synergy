@@ -8,6 +8,7 @@
 #include "allocators.h" /* for SecureString */
 
 #include "turboaddresstablemodel.h"
+#include "wallet.h"
 
 class OptionsModel;
 class AddressTableModel;
@@ -23,6 +24,41 @@ class CCoinControl;
 QT_BEGIN_NAMESPACE
 class QTimer;
 QT_END_NAMESPACE
+
+
+struct StructCOutValueSorter
+{
+      bool operator() (COutput a, COutput b)
+      {
+           return (a.tx->vout[a.i].nValue < b.tx->vout[b.i].nValue);
+      }
+};
+
+
+struct StructCOutTimeRevSorter
+{
+      bool operator() (COutput a, COutput b)
+      {
+           return (a.tx->nTime > b.tx->nTime);
+      }
+};
+
+struct StructPairpCWTxTimeSorter
+{
+     bool operator() (std::pair<uint256, CWalletTx*> a, std::pair<uint256, CWalletTx*> b)
+     {
+          return  (a.second->nTime < b.second->nTime);
+     }
+};
+
+struct StructPairpCWTxTimeRevSorter
+{
+     bool operator() (std::pair<uint256, CWalletTx*> a, std::pair<uint256, CWalletTx*> b)
+     {
+          return  (a.second->nTime > b.second->nTime);
+     }
+};
+
 
 class SendCoinsRecipient
 {
@@ -127,6 +163,18 @@ public:
     bool getPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const;
     void getOutputs(const std::vector<COutPoint>& vOutpoints, std::vector<COutput>& vOutputs);
     void listCoins(std::map<QString, std::vector<COutput> >& mapCoins) const;
+    void listAddresses(std::map<QString, int64_t>& mapAddrs) const;
+    void groupAddresses(std::map<QString, std::vector<COutput> >& mapCoins) const;
+    bool listCoinsFromAddress(QString &qsAddr, int64_t lookback, std::vector<COutput>& vOut) const;
+    void spentCoinsToAddress(std::vector<COutput>& vCoins, QString& qsAddr) const;
+    bool findStealthTransactions(const CTransaction& tx, mapValue_t& mapNarr);
+    bool getFirstPrevoutForTx(const CWalletTx &wtx, COutput &inOut);
+    bool getBlocksInInterval(int64_t start, int64_t end,
+                             std::pair<CBlockIndex*,CBlockIndex*> &blocks);
+    bool GetAddressBalancesInInterval(std::string &sAddress,
+                                      int64_t start, int64_t end,
+                                      std::vector<std::pair<uint256, int64_t> > &balancesRet,
+                                      int64_t &minBalanceRet, int64_t &maxBalanceRet);
     bool isLockedCoin(uint256 hash, unsigned int n) const;
     void lockCoin(COutPoint& output);
     void unlockCoin(COutPoint& output);

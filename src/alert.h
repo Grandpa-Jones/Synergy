@@ -12,6 +12,21 @@
 #include "uint256.h"
 #include "util.h"
 
+// version 2 of CUnsignedAlert has new member nAlertType
+// this allows providing real-time information for arbitrary services
+// Sat, 15 Aug 2015 06:00:00 GMT
+static const int ALERT2_TIME = 1439618400;
+
+
+enum ALERT_TYPE {
+        ALERT_NONE=0,
+        // classic alerts, to upgrade, etc.
+        ALERT_CLASSIC,
+        // pump info
+        ALERT_PUMP
+};
+
+
 class CNode;
 
 /** Alerts are for notifying old versions if they become too obsolete and
@@ -23,6 +38,8 @@ class CNode;
 class CUnsignedAlert
 {
 public:
+    static const int CURRENT_VERSION = 2;
+    static const int PREVIOUS_VERSION = 1;
     int nVersion;
     int64_t nRelayUntil;      // when newer nodes stop relaying to newer nodes
     int64_t nExpiration;
@@ -33,6 +50,7 @@ public:
     int nMaxVer;            // highest version inclusive
     std::set<std::string> setSubVer;  // empty matches all
     int nPriority;
+    int nAlertType;
 
     // Actions
     std::string strComment;
@@ -56,6 +74,11 @@ public:
         READWRITE(strComment);
         READWRITE(strStatusBar);
         READWRITE(strReserved);
+
+        if (nVersion == CUnsignedAlert::CURRENT_VERSION)
+        {
+              READWRITE(nAlertType);
+        }
     )
 
     void SetNull();

@@ -13,6 +13,8 @@
 #include <QSet>
 #include <QTimer>
 
+extern bool fRescanLock;
+
 WalletModel::WalletModel(CWallet *wallet, OptionsModel *optionsModel, QObject *parent) :
     QObject(parent), wallet(wallet), optionsModel(optionsModel), addressTableModel(0),
     turboAddressTableModel(0), transactionTableModel(0),
@@ -118,6 +120,11 @@ void WalletModel::checkBalanceChanged()
 
 void WalletModel::updateTransaction(const QString &hash, int status)
 {
+
+    if (fRescanLock) {
+          return;
+    }
+
     if(transactionTableModel)
         transactionTableModel->updateTransaction(hash, status);
 
@@ -536,7 +543,7 @@ static void NotifyTransactionChanged(WalletModel *walletmodel, CWallet *wallet, 
 
 static void NotifyBlocksChanged(WalletModel *walletmodel)
 {
-    if (!IsInitialBlockDownload()) {
+    if (!IsInitialBlockDownload() && !fRescanLock) {
           walletmodel->updateTurbo();
     }
 }
@@ -656,6 +663,390 @@ void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins) 
         mapCoins[CBitcoinAddress(address).ToString().c_str()].push_back(out);
     }
 }
+
+// Available + LockedCoins assigned to each address
+void WalletModel::listAddresses(std::map<QString, int64_t>& mapAddrs) const
+{
+    std::map<QString, std::vector<COutput> > mapCoins;
+    // not perfectly efficient, but it should do
+    this->listCoins(mapCoins);
+
+    std::map<QString, std::vector<COutput> >::iterator it;
+    for(it = mapCoins.begin(); it != mapCoins.end(); ++it)
+    {
+       BOOST_FOREACH(const COutput &out, it->second)
+       {
+           COutput cout = out;
+           CTxDestination destAddr;
+           if(!ExtractDestination(cout.tx->vout[cout.i].scriptPubKey, destAddr))
+           {
+              // should never fail because it just succeeded
+              continue;
+           }
+           // need to get address because they may be change
+           QString qAddr(CBitcoinAddress(destAddr).ToString().c_str());
+           std::map<QString, int64_t>::iterator qit;
+           qit = mapAddrs.find(qAddr);
+           if (qit == mapAddrs.end())
+           {
+               mapAddrs[qAddr] = cout.tx->vout[cout.i].nValue;
+           }
+           else
+           {
+               qit->second += cout.tx->vout[cout.i].nValue;
+           }
+       }
+    }
+}
+
+// [TODO] refactor with listCoins 
+// group coins by address, don't group change addresses with predecessor
+void WalletModel::groupAddresses(std::map<QString, std::vector<COutput> >& mapCoins) const
+{
+    std::vector<COutput> vCoins;
+    wallet->AvailableCoins(vCoins);
+
+    LOCK2(cs_main, wallet->cs_wallet); // ListLockedCoins, mapWallet
+    std::vector<COutPoint> vLockedCoins;
+
+    // add locked coins (seems like it never does anything???)
+    BOOST_FOREACH(const COutPoint& outpoint, vLockedCoins)
+    {
+        if (!wallet->mapWallet.count(outpoint.hash)) continue;
+        int nDepth = wallet->mapWallet[outpoint.hash].GetDepthInMainChain();
+        if (nDepth < 0) continue;
+        COutput out(&wallet->mapWallet[outpoint.hash], outpoint.n, nDepth);
+        vCoins.push_back(out);
+    }
+
+    BOOST_FOREACH(const COutput& out, vCoins)
+    {
+        CTxDestination address;
+        if(!ExtractDestination(out.tx->vout[out.i].scriptPubKey, address)) continue;
+        mapCoins[CBitcoinAddress(address).ToString().c_str()].push_back(out);
+    }
+}
+
+// find all coins sent to the address addr
+void WalletModel::spentCoinsToAddress(std::vector<COutput>& vCoins, QString& qsAddr) const
+{
+    std::string sAddr = qsAddr.toStdString();
+
+    std::vector<COutput> vcns;
+    this->wallet->SpentCoins(vcns);
+
+    vCoins.clear();
+    std::vector<COutput>::const_iterator it;
+    for (it = vcns.begin(); it != vcns.end(); ++it)
+    {
+        CTxDestination destaddr;
+        if (!ExtractDestination(it->tx->vout[it->i].scriptPubKey, destaddr)) continue;
+        if (sAddr == CBitcoinAddress(destaddr).ToString())
+        {
+              vCoins.push_back(COutput(it->tx, it->i, it->nDepth));
+        }
+    }
+}
+
+
+// these will be in reverse chronological order
+bool WalletModel::listCoinsFromAddress(QString &qsAddr, int64_t lookback, std::vector<COutput>& vOut) const
+{
+    std::string sAddr = qsAddr.toStdString();
+    std::map<QString, std::vector<COutput> > mapCoins;
+    this->groupAddresses(mapCoins);
+    StructCOutTimeRevSorter coutTimeRevSorter;
+    std::map<QString, std::vector<COutput> >::iterator it;
+    for (it = mapCoins.begin(); it != mapCoins.end(); ++it)
+    {
+        std::sort(it->second.begin(), it->second.end(), coutTimeRevSorter);
+        std::vector<COutput>::const_iterator oit;
+        for (oit = it->second.begin(); oit != it->second.end(); ++oit)
+        {
+            if (oit->tx->nTime < lookback)
+            {
+                   break;
+            }
+            std::vector<CTxIn> vin = oit->tx->vin;
+            std::vector<CTxIn>::const_iterator iit;
+            bool fFoundMatchingInput = false;
+            for (iit = vin.begin(); iit != vin.end(); ++iit)
+            {
+                 // wallet tx with the previous output
+                 CWalletTx *pcoin = &(wallet->mapWallet[iit->prevout.hash]);
+                 if (!pcoin->IsTrusted())
+                 {
+                      continue;
+                 }
+                 int nDepth = pcoin->GetDepthInMainChain();
+                 int nReq;
+                 txnouttype txType;
+                 std::vector<CTxDestination> vDest;
+
+                 CScript scrpt = pcoin->vout[iit->prevout.n].scriptPubKey;
+
+                 if (ExtractDestinations(pcoin->vout[iit->prevout.n].scriptPubKey, txType, vDest, nReq))
+                 {
+                      BOOST_FOREACH(const CTxDestination& sigaddr, vDest)
+                      {
+                            if (sAddr == CBitcoinAddress(sigaddr).ToString())
+                            {
+                                    // vOut.push_back(COutput(pcoin, iit->prevout.n, nDepth));
+                                    fFoundMatchingInput = true;
+                                    break; // at least one prevout dest matched, no need to continue
+                            }
+                      }
+                 }
+                 else
+                 {
+                      if (fDebug) {
+                           printf("listCoinsFromAddress(): Could not extract from destination.\n");
+                      }
+                      continue;
+                 }
+                 if (fFoundMatchingInput)
+                 {
+                       break;  // at least one prevout matched no need to continue
+                 }
+            }
+            if (fFoundMatchingInput)
+            {
+                    vOut.push_back(*oit);
+            }
+        }
+    }
+    return (vOut.size() > 0);
+}
+
+bool WalletModel::findStealthTransactions(const CTransaction& tx, mapValue_t& mapNarr)
+{
+    return this->wallet->FindStealthTransactions(tx, mapNarr);
+}
+
+// returns false if vin is empty, prevout tx isn't in wallet or is not trusted
+bool WalletModel::getFirstPrevoutForTx(const CWalletTx &wtx, COutput &inOut)
+{
+    if (wtx.vin.empty())
+    {
+         printf("getFirstPrevOutForTx(): tx has no inputs\n");
+         return false;
+    }
+    COutPoint inPt = wtx.vin[0].prevout;
+    std::map<uint256, CWalletTx>::const_iterator it = this->wallet->mapWallet.find(inPt.hash);
+    if (it == this->wallet->mapWallet.end())
+    {
+         printf("getFirstPrevOutForTx(): tx not in wallet\n");
+         return false;
+    }
+    if (!it->second.IsTrusted())
+    {
+         return false;
+    }
+    inOut.tx = &it->second;
+    inOut.i = inPt.n;
+    inOut.nDepth = it->second.GetDepthInMainChain();
+    return true;
+}
+
+bool WalletModel::getBlocksInInterval(int64_t start, int64_t end,
+                                      std::pair<CBlockIndex*,CBlockIndex*> &blocks)
+{
+    if (start > end)
+    {
+          int64_t tmp;
+          tmp = start;
+          start = end;
+          end = tmp;
+    }
+
+    if ((start == end) || (end < pindexGenesisBlock->nTime) || (start > pindexBest->nTime))
+    {
+          printf("getBlocksInInterval(): no overlap\n");
+          return false;
+    }
+
+    bool fStartFound = false;
+    bool fEndFound = false;
+
+    if (start < pindexGenesisBlock->nTime)
+    {
+          blocks.first = pindexGenesisBlock;
+          fStartFound = true;
+    }
+
+    if (end > pindexBest->nTime)
+    {
+          blocks.second = pindexBest;
+          fEndFound = true;
+    }
+
+
+    if (!(fStartFound && fEndFound))
+    {
+          // work our way backwards
+          CBlockIndex* pindex = pindexBest;
+          while (pindex->pprev != NULL)
+          {
+               if (!fEndFound && (pindex->nTime <= end))
+               {
+                      blocks.second = pindex;
+                      fEndFound = true;
+               }
+               if (!fStartFound && (pindex->pprev->nTime < start))
+               {
+                      fStartFound = true;
+                      blocks.first = pindex;
+                      break;
+               }
+               pindex = pindex->pprev;
+          }
+    }
+
+    // this should never test true
+    if (!(fStartFound && fEndFound))
+    {
+          printf("getBlocksInInterval(): blocks not found\n");
+          return false;
+    }
+ 
+    return true;
+}
+
+
+bool WalletModel::GetAddressBalancesInInterval(std::string &sAddress,
+                                               int64_t start, int64_t end,
+                                               std::vector<std::pair<uint256, int64_t> > &balancesRet,
+                                               int64_t &minBalanceRet, int64_t &maxBalanceRet)
+{
+    if (start == end)
+    {
+          printf("GetAddressBalancesInInterval(): 0 length interval\n");
+          return false;
+    }
+    if (start > end)
+    {
+          int64_t tmp;
+          tmp = start;
+          start = end;
+          end = tmp;
+    }
+    if ((start > pindexBest->nTime) || (end < pindexGenesisBlock->nTime))
+    {
+          printf("GetAddressBalancesInInterval(): no overlap\n");
+          return false;
+    }
+
+    std::vector<std::pair<uint256, CWalletTx*> > vpWTx;
+    for (std::map<uint256, CWalletTx>::iterator it = this->wallet->mapWallet.begin();
+                                                it != this->wallet->mapWallet.end(); ++it)
+    {
+           if(it->second.IsTrusted() && (it->second.nTime <= end))
+           {
+                 CWalletTx *pcoin = &(*it).second;
+                 vpWTx.push_back(std::make_pair(it->first, pcoin));
+           }
+    }
+
+    StructPairpCWTxTimeSorter pairpCWTxTimeSorter;
+    std::sort(vpWTx.begin(), vpWTx.end(), pairpCWTxTimeSorter);
+
+    // minimum balance during interval
+    minBalanceRet = 0;
+    maxBalanceRet = 0;
+
+    // running balance
+    int64_t balance = 0;
+    // turns true when in interval, better than starting min balance at -1
+    bool fHitInterval = false;
+    std::vector<std::pair<uint256, CWalletTx*> >::iterator it;
+    for (it = vpWTx.begin(); it != vpWTx.end(); ++it)
+    {
+         CWalletTx *pcoin = it->second;
+         int64_t outtx = 0;
+         int64_t intx = 0;
+         std::vector<CTxOut>::const_iterator oit;
+         for (oit = pcoin->vout.begin(); oit != pcoin->vout.end(); ++oit)
+         {
+             CTxDestination destaddr;
+             if (!ExtractDestination(oit->scriptPubKey, destaddr))
+             {
+                  continue;
+             }
+             if (sAddress != CBitcoinAddress(destaddr).ToString())
+             {
+                  continue;
+             }
+             outtx += oit->nValue;
+         }
+         std::vector<CTxIn>::const_iterator iit;
+         for (iit = pcoin->vin.begin(); iit != pcoin->vin.end(); ++iit)
+         {
+             CTxOut inout;
+             if (this->wallet->mapWallet.count(iit->prevout.hash))
+             {
+                   CWalletTx tmpwtx = this->wallet->mapWallet[iit->prevout.hash];
+                   inout = tmpwtx.vout[iit->prevout.n];
+             }
+             else
+             {
+                   CTransaction tmptx;
+                   uint256 hashBlock = 0;
+                   if (GetTransaction(iit->prevout.hash, tmptx, hashBlock))
+                   {
+                          inout = tmptx.vout[iit->prevout.n];
+                   }
+                   else
+                   {
+                          if (iit->prevout.hash != 0)
+                          {
+                              printf("GetAddressBalancesInInterval(): no info for tx %s\n",
+                                                          iit->prevout.hash.ToString().c_str());
+                          }
+                          continue;
+                   }
+             }
+             CTxDestination destaddr; 
+             if (!ExtractDestination(inout.scriptPubKey, destaddr))
+             { 
+                  continue;
+             }
+             if (sAddress != CBitcoinAddress(destaddr).ToString())
+             {
+                  continue;
+             }
+             intx += inout.nValue;
+         }
+         if ((intx != 0) || (outtx != 0))
+         {
+               int64_t time = pcoin->nTime;
+               balance = balance + outtx - intx;
+               balancesRet.push_back(std::make_pair(time, balance));
+               if ((pcoin->nTime >= start) && (pcoin->nTime <= end))
+               {
+                     if (fHitInterval)
+                     {
+                           if (balance < minBalanceRet)
+                           {
+                                  minBalanceRet = balance;
+                           }
+                           if (balance > maxBalanceRet)
+                           {
+                                  maxBalanceRet = balance;
+                           }
+                     }
+                     else  // entered interval
+                     {
+                           minBalanceRet = balance;
+                           maxBalanceRet = balance;
+                           fHitInterval = true;
+                     }
+               }
+         }
+    }
+    return true;
+
+}
+
 
 bool WalletModel::isLockedCoin(uint256 hash, unsigned int n) const
 {

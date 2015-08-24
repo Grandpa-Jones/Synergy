@@ -42,7 +42,15 @@ static const char* pszTestKey =
 
 void CUnsignedAlert::SetNull()
 {
-    nVersion = 1;
+    if (GetAdjustedTime() >= ALERT2_TIME)
+    {
+         nVersion = CUnsignedAlert::PREVIOUS_VERSION;
+    }
+    else
+    {
+         nVersion = CUnsignedAlert::CURRENT_VERSION;
+    }
+
     nRelayUntil = 0;
     nExpiration = 0;
     nID = 0;
@@ -52,6 +60,16 @@ void CUnsignedAlert::SetNull()
     nMaxVer = 0;
     setSubVer.clear();
     nPriority = 0;
+
+    // previous versions do not relay nAlertType, so set it here
+    if (nVersion == CUnsignedAlert::PREVIOUS_VERSION)
+    {
+          nAlertType = (int) ALERT_CLASSIC;
+    }
+    else
+    {
+          nAlertType = (int) ALERT_NONE;
+    }
 
     strComment.clear();
     strStatusBar.clear();
@@ -80,6 +98,7 @@ std::string CUnsignedAlert::ToString() const
         "    nPriority    = %d\n"
         "    strComment   = \"%s\"\n"
         "    strStatusBar = \"%s\"\n"
+        "    nAlertType   = \"%d\"\n"
         ")\n",
         nVersion,
         nRelayUntil,
@@ -92,7 +111,8 @@ std::string CUnsignedAlert::ToString() const
         strSetSubVer.c_str(),
         nPriority,
         strComment.c_str(),
-        strStatusBar.c_str());
+        strStatusBar.c_str(),
+        nAlertType);
 }
 
 void CUnsignedAlert::print() const
@@ -126,7 +146,9 @@ bool CAlert::Cancels(const CAlert& alert) const
 {
     if (!IsInEffect())
         return false; // this was a no-op before 31403
-    return (alert.nID <= nCancel || setCancel.count(alert.nID));
+    // alerts must be of same type for one to cancel the other
+    return ((alert.nID <= nCancel || setCancel.count(alert.nID)) &&
+                                              (alert.nAlertType == this->nAlertType));
 }
 
 bool CAlert::AppliesTo(int nVersion, std::string strSubVerIn) const
@@ -153,7 +175,14 @@ bool CAlert::RelayTo(CNode* pnode) const
             AppliesToMe() ||
             GetAdjustedTime() < nRelayUntil)
         {
-            pnode->PushMessage("alert", *this);
+            if (this->nAlertType == (int) ALERT_CLASSIC)
+            {
+                pnode->PushMessage("alert", *this);
+            }
+            else if (this->nAlertType == (int) ALERT_PUMP)
+            {
+                pnode->PushMessage("pumpinfo", *this);
+            }
             return true;
         }
     }
@@ -223,14 +252,33 @@ bool CAlert::ProcessAlert(bool fThread)
             const CAlert& alert = (*mi).second;
             if (Cancels(alert))
             {
-                printf("cancelling alert %d\n", alert.nID);
-                uiInterface.NotifyAlertChanged((*mi).first, CT_DELETED);
+                printf("cancelling alert %d of type %d\n", alert.nID, alert.nAlertType);
+
+                if (this->nAlertType == (int) ALERT_CLASSIC)
+                {
+                      uiInterface.NotifyAlertChanged((*mi).first, CT_DELETED);
+                }
+                else if (this->nAlertType == (int) ALERT_PUMP)
+                {
+                      uiInterface.NotifyPumpInfoChanged((*mi).first, CT_DELETED);
+                }
+
                 mapAlerts.erase(mi++);
             }
+            // [TODO] this could be refactored with Cancels above
             else if (!alert.IsInEffect())
             {
-                printf("expiring alert %d\n", alert.nID);
-                uiInterface.NotifyAlertChanged((*mi).first, CT_DELETED);
+                printf("expiring alert %d of type %d\n", alert.nID, alert.nAlertType);
+
+                if (this->nAlertType == (int) ALERT_CLASSIC)
+                {
+                      uiInterface.NotifyAlertChanged((*mi).first, CT_DELETED);
+                }
+                else if (this->nAlertType == (int) ALERT_PUMP)
+                {
+                      uiInterface.NotifyPumpInfoChanged((*mi).first, CT_DELETED);
+                }
+
                 mapAlerts.erase(mi++);
             }
             else
@@ -243,7 +291,7 @@ bool CAlert::ProcessAlert(bool fThread)
             const CAlert& alert = item.second;
             if (alert.Cancels(*this))
             {
-                printf("alert already cancelled by %d\n", alert.nID);
+                printf("alert already cancelled by %d of type %d\n", alert.nID, alert.nAlertType);
                 return false;
             }
         }
@@ -253,8 +301,18 @@ bool CAlert::ProcessAlert(bool fThread)
         // Notify UI and -alertnotify if it applies to me
         if(AppliesToMe())
         {
-            uiInterface.NotifyAlertChanged(GetHash(), CT_NEW);
-            std::string strCmd = GetArg("-alertnotify", "");
+            std::string strCmd = "";
+            if (this->nAlertType == (int) ALERT_CLASSIC)
+            {
+                  uiInterface.NotifyAlertChanged(GetHash(), CT_NEW);
+                  strCmd = GetArg("-alertnotify", "");
+            }
+            else if (this->nAlertType == (int) ALERT_PUMP)
+            {
+                  uiInterface.NotifyPumpInfoChanged(GetHash(), CT_NEW);
+                  strCmd = GetArg("-pumpnotify", "");
+            }
+            // [TODO] Pump notify
             if (!strCmd.empty())
             {
                 // Alert text should be plain ascii coming from a trusted source, but to
@@ -281,6 +339,6 @@ bool CAlert::ProcessAlert(bool fThread)
         }
     }
 
-    printf("accepted alert %d, AppliesToMe()=%d\n", nID, AppliesToMe());
+    printf("accepted alert %d of type %d, AppliesToMe()=%d\n", nID, this->nAlertType, AppliesToMe());
     return true;
 }

@@ -34,10 +34,13 @@
 #include "rpcconsole.h"
 #include "wallet.h"
 #include "bitcoinrpc.h"
+#include "json_spirit.h"
 
 #ifdef Q_OS_MAC
 #include "macdockiconhandler.h"
 #endif
+
+#include <string>
 
 #include <QApplication>
 #include <QMainWindow>
@@ -69,11 +72,85 @@
 #include <QProgressDialog>
 
 #include <iostream>
+// #include <fstream>
+
+// #include "json_spirit.h"
 
 extern CWallet* pwalletMain;
 extern int64_t nLastCoinStakeSearchInterval;
 extern unsigned int nTargetSpacing;
+extern unsigned int nTargetSpacing2;
+extern int64_t nSpacing2Time;
+
 double GetPoSKernelPS();
+
+// pump info is packed as json like this
+//       - current pump date        (int64)  [index 0]
+//       - next pump date           (int64)  [index 1]
+//       - current pump addr        (str)    [index 2]
+//       - current pump addr label  (str)    [index 3]
+//       - next pump addr           (str)    [index 4]
+//       - next pump addr label     (str)    [index 5]
+//       - pump fee                 (int64)  [index 6]
+//       - minimum balance          (int64)  [index 7]
+// example:
+//    [   1441087200,  1442296800,
+//        "SVCo4vec368NSATobTAe164tAb9KgaR5Wz",  "Grandpa's Pump Test 1",
+//        "STTG547MFDcSB36miRyX6c8SwXSVzY9jsz",  "Grandpa's Pump Test 2",
+//        100000000,  10000000000]
+// fee & min balance are in units of 1e-8 SNRG (syntoshi)
+bool UnpackPumpInfo(const QString &message, PumpInfo &info)
+{
+    json_spirit::Value value;
+    std::string sMessage = message.toUtf8().constData();
+    // std::ifstream is(message.toUtf8().constData());
+    if (json_spirit::read(sMessage, value))
+    {
+        if (value.type() != json_spirit::array_type)
+        {
+           if (fDebug)
+           {
+                printf("UnpackPumpInfo(): wrong type for dates, addr, fee, balance\n");
+           }
+           return false;
+        }
+        json_spirit::Array ary = value.get_array();
+        if ((ary.size() != 8) || (ary[0].type() != json_spirit::int_type) ||
+                                 (ary[1].type() != json_spirit::int_type) ||
+                                 (ary[2].type() != json_spirit::str_type) ||
+                                 (ary[3].type() != json_spirit::str_type) ||
+                                 (ary[4].type() != json_spirit::str_type) ||
+                                 (ary[5].type() != json_spirit::str_type) ||
+                                 (ary[6].type() != json_spirit::int_type) ||
+                                 (ary[7].type() != json_spirit::int_type))
+        {
+           if (fDebug)
+           {
+                printf("UnpackPumpInfo(): malformed dates, addr, fee, balance\n");
+           }
+           return false;
+        }
+        info.isSet = true;
+        info.currDate = (int64_t) ary[0].get_int64();
+        info.nextDate = (int64_t) ary[1].get_int64();
+        info.currAddr = QString(ary[2].get_str().c_str());
+        info.currLabel = QString(ary[3].get_str().c_str());
+        info.nextAddr = QString(ary[4].get_str().c_str());
+        info.nextLabel = QString(ary[5].get_str().c_str());
+        info.fee = (int64_t) ary[6].get_int64();
+        info.minBalance = (int64_t) ary[7].get_int64();
+    }
+    else
+    {
+        if (fDebug)
+        {
+              printf("UnpackPumpInfo(): could not parse dates, addr, fee, balance as json\n");
+        }
+        return false;
+    }
+    return true;
+}
+   
 
 BitcoinGUI::BitcoinGUI(QWidget *parent):
     QMainWindow(parent),
@@ -474,6 +551,9 @@ void BitcoinGUI::setClientModel(ClientModel *clientModel)
         // Report errors from network/worker thread
         connect(clientModel, SIGNAL(error(QString,QString,bool)), this, SLOT(error(QString,QString,bool)));
 
+        connect(clientModel, SIGNAL(pumpinfo(QString,QString,bool)), this, SLOT(pumpinfo(QString,QString,bool)));
+        connect(clientModel, SIGNAL(numTransactionsChanged(int)), this, SLOT(numTransactionsChanged(int)));
+
         rpcConsole->setClientModel(clientModel);
         addressBookPage->setOptionsModel(clientModel->getOptionsModel());
         receiveCoinsPage->setOptionsModel(clientModel->getOptionsModel());
@@ -504,6 +584,8 @@ void BitcoinGUI::setWalletModel(WalletModel *walletModel)
 //         chatWindow->setModel(clientModel);
 
         turboPage->setModel(walletModel->getTurboAddressTableModel());
+
+        pumpPage->setModel(this->walletModel);
 
         setEncryptionStatus(walletModel->getEncryptionStatus());
         connect(walletModel, SIGNAL(encryptionStatusChanged(int)), this, SLOT(setEncryptionStatus(int)));
@@ -712,6 +794,43 @@ void BitcoinGUI::error(const QString &title, const QString &message, bool modal)
     }
 }
 
+void BitcoinGUI::pumpinfo(const QString &title, const QString &message, bool modal)
+{
+
+        PumpInfo *p_info = &this->pumpPage->pumpInfo;
+        if (UnpackPumpInfo(message, this->pumpPage->pumpInfo))
+        {
+            QString qsCurrent, qsNext, qsFee, qsMinBal;
+            qsCurrent = GUIUtil::dateStr(p_info->currDate);
+            qsNext = GUIUtil::dateStr(p_info->nextDate);
+            qsFee = BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, p_info->fee);
+            qsMinBal = BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, p_info->minBalance);
+
+            QString info = QString("Current pump: ") + qsCurrent + QString("\n") +
+                           QString("Next pump: ") + qsNext + QString("\n") +
+                           QString("Fee: ") + qsFee + QString("\n") +
+                           QString("Min Balance: ") + qsMinBal + QString("\n");
+            // Report errors from network/worker thread
+            if(modal)
+            {
+                QMessageBox::information(this, title, info, QMessageBox::Ok, QMessageBox::Ok);
+            } else {
+                notificator->notify(Notificator::Critical, title, info);
+            }
+            this->pumpPage->updatePumpInfo(qsCurrent, qsNext);
+        }
+        else if (fDebug)
+        {
+                  printf ("BitcoinGui::pumpinfo(): malformed info string\n");
+        }
+
+}
+
+void BitcoinGUI::numTransactionsChanged(int newNumTransactions)
+{
+       this->pumpPage->updateCurrentPump();
+}
+
 void BitcoinGUI::changeEvent(QEvent *e)
 {
     QMainWindow::changeEvent(e);
@@ -750,7 +869,7 @@ void BitcoinGUI::askFee(qint64 nFeeRequired, bool *payFee)
 {
     QString strMessage =
         tr("This transaction requires a fee based on the services it uses. You may send it "
-           "for a fee of %2 SNRG, which rewards all users of the Synergy network as a result "
+           "for a fee of %2, which rewards all users of the Synergy network as a result "
            "of your usage. Do you want to pay this fee?").arg(
                 BitcoinUnits::formatWithUnit(BitcoinUnits::BTC, nFeeRequired));
     QMessageBox::StandardButton retval = QMessageBox::question(
@@ -791,6 +910,7 @@ void BitcoinGUI::incomingTransaction(const QModelIndex & parent, int start, int 
                               .arg(BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), amount, true))
                               .arg(type)
                               .arg(address), icon);
+        this->pumpPage->updateCurrentPump();
     }
 }
 
@@ -1157,7 +1277,18 @@ void BitcoinGUI::updateStakingIcon()
     if (nLastCoinStakeSearchInterval && nWeight)
     {
         uint64_t nNetworkWeight = GetPoSKernelPS();
-        unsigned nEstimateTime = nTargetSpacing * nNetworkWeight / nWeight;
+
+        unsigned int nTargetSpacing_used;
+        if (GetTime() < nSpacing2Time)
+        {
+              nTargetSpacing_used = nTargetSpacing;
+        }
+        else
+        {
+              nTargetSpacing_used = nTargetSpacing2;
+        }
+
+        unsigned nEstimateTime = nTargetSpacing_used * nNetworkWeight / nWeight;
 
         QString text;
         if (nEstimateTime < 60)

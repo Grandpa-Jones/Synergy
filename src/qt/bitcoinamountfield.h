@@ -31,6 +31,10 @@ public:
     /** Make field empty and ready for new input. */
     void clear();
 
+    /** Accessor funcitons for enabled property.*/
+    void setReadOnly(bool ro);
+    bool isReadOnly();
+
     /** Qt messes up the tab chain by default in some cases (issue https://bugreports.qt-project.org/browse/QTBUG-10907),
         in these cases we have to set it up manually.
     */

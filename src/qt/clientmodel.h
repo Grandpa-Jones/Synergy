@@ -62,10 +62,13 @@ signals:
     //! Asynchronous error notification
     void error(const QString &title, const QString &message, bool modal);
 
+    void pumpinfo(const QString &title, const QString &message, bool modal);
+
 public slots:
     void updateTimer();
     void updateNumConnections(int numConnections);
     void updateAlert(const QString &hash, int status);
+    void updatePumpInfo(const QString &hash, int status);
 };
 
 #endif // CLIENTMODEL_H

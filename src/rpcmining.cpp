@@ -15,6 +15,8 @@ using namespace json_spirit;
 using namespace std;
 
 extern unsigned int nTargetSpacing;
+extern unsigned int nTargetSpacing2;
+extern int64_t nSpacing2Time;
 
 Value getsubsidy(const Array& params, bool fHelp)
 {
@@ -104,12 +106,23 @@ Value getstakinginfo(const Array& params, bool fHelp)
             "getstakinginfo\n"
             "Returns an object containing staking-related information.");
 
+
+    unsigned int nTargetSpacing_used;
+    if (GetTime() < nSpacing2Time)
+    {
+          nTargetSpacing_used = nTargetSpacing;
+    }
+    else
+    {
+          nTargetSpacing_used = nTargetSpacing2;
+    }
+
     uint64_t nMinWeight = 0, nMaxWeight = 0, nWeight = 0;
     pwalletMain->GetStakeWeight(*pwalletMain, nMinWeight, nMaxWeight, nWeight);
 
     uint64_t nNetworkWeight = GetPoSKernelPS();
     bool staking = nLastCoinStakeSearchInterval && nWeight;
-    int nExpectedTime = staking ? (nTargetSpacing * nNetworkWeight / nWeight) : -1;
+    int nExpectedTime = staking ? (nTargetSpacing_used * nNetworkWeight / nWeight) : -1;
 
     Object obj;
 

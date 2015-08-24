@@ -627,7 +627,7 @@ Ta proizvod vključuje softver razvit s strani projekta OpenSSL za uporabo v Ope
     </message>
     <message>
         <location line="+59"/>
-        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SNRG, which rewards all users of the Synergy network as a result of your usage. Do you want to pay this fee?</source>
+        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 , which rewards all users of the Synergy network as a result of your usage. Do you want to pay this fee?</source>
         <translation>Ta transakcija je prekoračila limit. Še vedno jo lahko pošljete za plačilo %1 transakcije, ki je plačano vsem delom omrežja kot deležnina in pomaga zagotavljati njegovo varnost. Ali želite plačati provizijo?</translation>
     </message>
     <message>

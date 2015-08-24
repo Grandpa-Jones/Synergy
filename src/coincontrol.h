@@ -48,6 +48,11 @@ public:
     {
         vOutpoints.assign(setSelected.begin(), setSelected.end());
     }
+
+    int GetSize()
+    {
+          return setSelected.size();
+    }
         
 private:
     std::set<COutPoint> setSelected;

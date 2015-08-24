@@ -629,7 +629,7 @@ Produktet indeholder software, som er udviklet af OpenSSL Project til brug i Ope
     </message>
     <message>
         <location line="+59"/>
-        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 SNRG, which rewards all users of the Synergy network as a result of your usage. Do you want to pay this fee?</source>
+        <source>This transaction requires a fee based on the services it uses. You may send it for a fee of %1 , which rewards all users of the Synergy network as a result of your usage. Do you want to pay this fee?</source>
         <translation>Denne transaktion er over grænsen størrelse. Du kan stadig sende det for et gebyr på %1, der går til de noder, der behandler din transaktion og hjælper med at støtte netværket. Ønsker du at betale gebyret?</translation>
     </message>
     <message>

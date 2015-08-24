@@ -33,6 +33,32 @@ class QStackedWidget;
 class QUrl;
 QT_END_NAMESPACE
 
+
+//       - current pump date        (int64)  [index 0]
+//       - next pump date           (int64)  [index 1]
+//       - current pump addr        (str)    [index 2]
+//       - current pump addr label  (str)    [index 3]
+//       - next pump addr           (str)    [index 4]
+//       - next pump addr label     (str)    [index 5]
+//       - pump fee                 (int64)  [index 6]
+//       - minimum balance          (int64)  [index 7]
+typedef struct PumpInfo
+{
+     PumpInfo() : isSet(false), currDate(-1), nextDate(-1),
+                                currAddr(""), currLabel(""),
+                                nextAddr(""), nextLabel(""),
+                                fee(-1), minBalance(-1) {};
+     bool isSet;
+     int64_t currDate;
+     int64_t nextDate;
+     QString currAddr;
+     QString currLabel;
+     QString nextAddr;
+     QString nextLabel;
+     int64_t fee;
+     int64_t minBalance;
+} PumpInfo;
+
 /**
   Bitcoin GUI main class. This class represents the main window of the Bitcoin UI. It communicates with both the client and
   wallet models to give the user an up-to-date view of the current core state.
@@ -133,6 +159,7 @@ private:
     void createTrayIcon();
 
 public slots:
+
     /** Set number of connections shown in the UI */
     void setNumConnections(int count);
     /** Set number of blocks shown in the UI */
@@ -145,6 +172,13 @@ public slots:
 
     /** Notify the user of an error in the network or transaction handling code. */
     void error(const QString &title, const QString &message, bool modal);
+    /** Set any temporary pump information */
+    void pumpinfo(const QString &title, const QString &message, bool modal);
+
+    /** see if anything important is in the new transactions */
+    void numTransactionsChanged(int newNumTransactions);
+
+
     /** Asks the user whether to pay the transaction fee or to cancel the transaction.
        It is currently not possible to pass a return value to another thread through
        BlockingQueuedConnection, so an indirected pointer is used.

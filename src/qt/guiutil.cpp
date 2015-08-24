@@ -56,6 +56,17 @@ QString dateTimeStr(qint64 nTime)
     return dateTimeStr(QDateTime::fromTime_t((qint32)nTime));
 }
 
+QString dateStr(const QDateTime &date)
+{
+    return date.date().toString(Qt::SystemLocaleShortDate);
+}
+
+QString dateStr(qint64 nTime)
+{
+    return dateStr(QDateTime::fromTime_t((qint32)nTime));
+}
+
+
 QFont bitcoinAddressFont()
 {
     QFont font("Monospace");

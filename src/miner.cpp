@@ -10,6 +10,8 @@
 
 // from main.cpp
 extern unsigned int nTargetSpacing;
+extern unsigned int nTargetSpacing2;
+extern int64_t nSpacing2Time;
 
 extern unsigned int nLaunchTime;
 
@@ -585,7 +587,18 @@ void StakeMiner(CWallet *pwallet)
             SetThreadPriority(THREAD_PRIORITY_NORMAL);
             CheckStake(pblock.get(), *pwallet);
             SetThreadPriority(THREAD_PRIORITY_LOWEST);
-            MilliSleep(nTargetSpacing * 1000);
+
+            unsigned int nTargetSpacing_used;
+            if (pblock->nTime < nSpacing2Time)
+            {
+                  nTargetSpacing_used = nTargetSpacing;
+            }
+            else
+            {
+                  nTargetSpacing_used = nTargetSpacing2;
+            }
+
+            MilliSleep(nTargetSpacing_used * 1000);
         }
         else
         {

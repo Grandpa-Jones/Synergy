@@ -36,6 +36,7 @@ BitcoinAmountField::BitcoinAmountField(QWidget *parent):
 
     setFocusPolicy(Qt::TabFocus);
     setFocusProxy(amount);
+    amount->setFocusPolicy(Qt::StrongFocus);
 
     // If one if the widgets changes, the combined content changes as well
     connect(amount, SIGNAL(valueChanged(QString)), this, SIGNAL(textChanged()));
@@ -106,7 +107,38 @@ bool BitcoinAmountField::eventFilter(QObject *object, QEvent *event)
             return true;
         }
     }
+    else if (event->type() == QEvent::Wheel && qobject_cast<QAbstractSpinBox*>(object))
+    {
+        if(qobject_cast<QAbstractSpinBox*>(object)->focusPolicy() == Qt::WheelFocus)
+        {
+            event->accept();
+            return false;
+        }
+        else
+        {
+            event->ignore();
+            return true;
+        }
+    }
     return QWidget::eventFilter(object, event);
+}
+
+void BitcoinAmountField::setReadOnly(bool ro)
+{
+        amount->setReadOnly(ro);
+        if (ro)
+        {
+                amount->setButtonSymbols(QAbstractSpinBox::NoButtons);
+        }
+        else
+        {
+                amount->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
+        }
+}
+
+bool BitcoinAmountField::isReadOnly()
+{
+        return amount->isReadOnly();
 }
 
 QWidget *BitcoinAmountField::setupTabChain(QWidget *prev)
