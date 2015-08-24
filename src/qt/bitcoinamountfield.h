@@ -31,7 +31,7 @@ public:
     /** Make field empty and ready for new input. */
     void clear();
 
-    /** Accessor funcitons for enabled property.*/
+    /** Accessor funcitons for readonly property.*/
     void setReadOnly(bool ro);
     bool isReadOnly();
 

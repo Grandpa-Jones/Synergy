@@ -3174,7 +3174,7 @@ bool LoadExternalBlockFile(FILE* fileIn)
 extern map<uint256, CAlert> mapAlerts;
 extern CCriticalSection cs_mapAlerts;
 
-string GetWarnings(string strFor)
+string GetWarnings(string strFor, int nAlertType)
 {
     int nPriority = 0;
     string strStatusBar;
@@ -3203,7 +3203,7 @@ string GetWarnings(string strFor)
         BOOST_FOREACH(PAIRTYPE(const uint256, CAlert)& item, mapAlerts)
         {
             const CAlert& alert = item.second;
-            if (alert.AppliesToMe() && alert.nPriority > nPriority)
+            if (alert.AppliesToMe() && (alert.nPriority > nPriority) && (alert.nAlertType == nAlertType))
             {
                 nPriority = alert.nPriority;
                 strStatusBar = alert.strStatusBar;
