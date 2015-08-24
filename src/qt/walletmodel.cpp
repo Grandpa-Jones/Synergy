@@ -985,7 +985,17 @@ bool WalletModel::GetAddressBalancesInInterval(std::string &sAddress,
              if (this->wallet->mapWallet.count(iit->prevout.hash))
              {
                    CWalletTx tmpwtx = this->wallet->mapWallet[iit->prevout.hash];
-                   inout = tmpwtx.vout[iit->prevout.n];
+                   if (tmpwtx.vout.size > iit->prevout.n)
+                   {
+                       inout = tmpwtx.vout[iit->prevout.n];
+                   }
+                   else
+                   {
+                       printf("GetAddressBalancesInInterval(): prevout %d not in wallet transaction %s\n",
+                                                  iit->prevout.n, iit->prevout.hash.ToString().c_str());
+                       continue;
+                   }
+
              }
              else
              {
@@ -993,16 +1003,27 @@ bool WalletModel::GetAddressBalancesInInterval(std::string &sAddress,
                    uint256 hashBlock = 0;
                    if (GetTransaction(iit->prevout.hash, tmptx, hashBlock))
                    {
-                          inout = tmptx.vout[iit->prevout.n];
+
+                       if (tmptx.vout.size > iit->prevout.n)
+                       {
+                           inout = tmptx.vout[iit->prevout.n];
+                       }
+                       else
+                       {
+                           printf("GetAddressBalancesInInterval(): prevout not %din wallet transaction %s\n",
+                                                  iit->prevout.n, iit->prevout.hash.ToString().c_str());
+                           continue;
+                       }
+
                    }
                    else
                    {
-                          if (iit->prevout.hash != 0)
-                          {
-                              printf("GetAddressBalancesInInterval(): no info for tx %s\n",
-                                                          iit->prevout.hash.ToString().c_str());
-                          }
-                          continue;
+                      if (iit->prevout.hash != 0)
+                      {
+                          printf("GetAddressBalancesInInterval(): no info for tx %s\n",
+                                                      iit->prevout.hash.ToString().c_str());
+                      }
+                      continue;
                    }
              }
              CTxDestination destaddr; 
