@@ -761,7 +761,7 @@ bool WalletModel::listCoinsFromAddress(QString &qsAddr, int64_t lookback, std::v
     {
         if (fDebug)
         {
-               printf("listCoinsFromAddress(): adress group %s\n", it->second.toStdString().c_str());
+               printf("listCoinsFromAddress(): adress group %s\n", it->first.toStdString().c_str());
         }
         std::sort(it->second.begin(), it->second.end(), coutTimeRevSorter);
         std::vector<COutput>::const_iterator oit;
