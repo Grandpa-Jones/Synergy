@@ -102,7 +102,7 @@ void PumpPage::updateCurrentPump()
     for (it = vCoins.begin(); it != vCoins.end(); ++it)
     {
         if (fDebug) {
-           printf("updateCurrentPump(): txid: %s\n", it->tx->GetHash().GetHex().c_str());
+           printf("updateCurrentPump(): reg txid: %s\n", it->tx->GetHash().GetHex().c_str());
         }
         std::string strJson = it->tx->strTxComment;
         json_spirit::Value value;

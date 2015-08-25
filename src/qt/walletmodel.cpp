@@ -759,6 +759,10 @@ bool WalletModel::listCoinsFromAddress(QString &qsAddr, int64_t lookback, std::v
     std::map<QString, std::vector<COutput> >::iterator it;
     for (it = mapCoins.begin(); it != mapCoins.end(); ++it)
     {
+        if (fDebug)
+        {
+               printf("listCoinsFromAddress(): adress group %s\n", it->second.toStdString().c_str());
+        }
         std::sort(it->second.begin(), it->second.end(), coutTimeRevSorter);
         std::vector<COutput>::const_iterator oit;
         for (oit = it->second.begin(); oit != it->second.end(); ++oit)
@@ -766,6 +770,10 @@ bool WalletModel::listCoinsFromAddress(QString &qsAddr, int64_t lookback, std::v
             if (oit->tx->nTime < lookback)
             {
                    break;
+            }
+            if (fDebug)
+            {
+                   printf("listCoinsFromAddress(): txid %s\n", oit->tx->GetHash().ToString().c_str());
             }
             std::vector<CTxIn> vin = oit->tx->vin;
             std::vector<CTxIn>::const_iterator iit;
@@ -776,14 +784,17 @@ bool WalletModel::listCoinsFromAddress(QString &qsAddr, int64_t lookback, std::v
                  CWalletTx *pcoin = &(wallet->mapWallet[iit->prevout.hash]);
                  if (!pcoin->IsTrusted())
                  {
+                      if (fDebug)
+                      {
+                            printf("listCoinsFromAddress(): prevout %s has untrusted input\n",
+                                         pcoin->GetHash().ToString().c_str());
+                      }
                       continue;
                  }
                  int nDepth = pcoin->GetDepthInMainChain();
                  int nReq;
                  txnouttype txType;
                  std::vector<CTxDestination> vDest;
-
-                 CScript scrpt = pcoin->vout[iit->prevout.n].scriptPubKey;
 
                  if (ExtractDestinations(pcoin->vout[iit->prevout.n].scriptPubKey, txType, vDest, nReq))
                  {
@@ -993,9 +1004,24 @@ bool WalletModel::GetAddressBalancesInInterval(std::string &sAddress,
                    {
                        printf("GetAddressBalancesInInterval(): prevout %d not in wallet transaction %s\n",
                                                   iit->prevout.n, iit->prevout.hash.ToString().c_str());
-                       continue;
-                   }
+                       // try to read from block index
+                       CTransaction tmptx;
+                       uint256 hashBlock = 0;
+                       if (GetTransaction(iit->prevout.hash, tmptx, hashBlock))
+                       {
 
+                           if (tmptx.vout.size() > iit->prevout.n)
+                           {
+                               inout = tmptx.vout[iit->prevout.n];
+                           }
+                           else
+                           {
+                               printf("GetAddressBalancesInInterval(): prevout %d also not in C transaction %s\n",
+                                                      iit->prevout.n, iit->prevout.hash.ToString().c_str());
+                               continue;
+                           }
+                       }
+                   }
              }
              else
              {
