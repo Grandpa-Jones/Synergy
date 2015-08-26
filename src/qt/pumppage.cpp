@@ -222,9 +222,7 @@ void PumpPage::updateCurrentPump()
     {
            return;
     }
-
-    // extract the narration from the pump pick
-    // assume most recent is the best info
+    std::sort(vOutFrom.begin(), vOutFrom.end(), coutTimeRevSorter);
     CTransaction pickTx = *vOutFrom[0].tx;
     if (fDebug) {
         printf("updateCurrentPump(): pick txid: %s\n", pickTx.GetHash().ToString().c_str());

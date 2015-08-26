@@ -755,7 +755,6 @@ bool WalletModel::listCoinsFromAddress(QString &qsAddr, int64_t lookback, std::v
     std::string sAddr = qsAddr.toStdString();
     std::map<QString, std::vector<COutput> > mapCoins;
     this->groupAddresses(mapCoins);
-    StructCOutTimeRevSorter coutTimeRevSorter;
     std::map<QString, std::vector<COutput> >::iterator it;
     for (it = mapCoins.begin(); it != mapCoins.end(); ++it)
     {
@@ -763,13 +762,16 @@ bool WalletModel::listCoinsFromAddress(QString &qsAddr, int64_t lookback, std::v
         {
                printf("listCoinsFromAddress(): adress group %s\n", it->first.toStdString().c_str());
         }
-        std::sort(it->second.begin(), it->second.end(), coutTimeRevSorter);
         std::vector<COutput>::const_iterator oit;
         for (oit = it->second.begin(); oit != it->second.end(); ++oit)
         {
             if (oit->tx->nTime < lookback)
             {
                    break;
+            }
+            if (oit->tx->IsCoinBase() || oit->tx->IsCoinStake())
+            {
+                   continue;
             }
             if (fDebug)
             {
@@ -800,6 +802,11 @@ bool WalletModel::listCoinsFromAddress(QString &qsAddr, int64_t lookback, std::v
                  {
                       BOOST_FOREACH(const CTxDestination& sigaddr, vDest)
                       {
+                            if (fDebug)
+                            {
+                                    printf("listCoinsFromAddress(): checking\n   my %s =\n       %s\n",
+                                               sAddr.c_str(), CBitcoinAddress(sigaddr).ToString().c_str());
+                            }
                             if (sAddr == CBitcoinAddress(sigaddr).ToString())
                             {
                                     // vOut.push_back(COutput(pcoin, iit->prevout.n, nDepth));
@@ -822,6 +829,10 @@ bool WalletModel::listCoinsFromAddress(QString &qsAddr, int64_t lookback, std::v
             }
             if (fFoundMatchingInput)
             {
+                    if (fDebug) {
+                          printf("listCoinsFromAddress(): adding tx %s.\n",
+                                        oit->tx->GetHash().ToString().c_str());
+                    }
                     vOut.push_back(*oit);
             }
         }
@@ -831,7 +842,23 @@ bool WalletModel::listCoinsFromAddress(QString &qsAddr, int64_t lookback, std::v
 
 bool WalletModel::findStealthTransactions(const CTransaction& tx, mapValue_t& mapNarr)
 {
-    return this->wallet->FindStealthTransactions(tx, mapNarr);
+    CWalletTx wtx;
+    // assume that the the tx pointed to by the prevout (input) to an output to me
+    // is not necessarily the same object as the object as the output in my wallet
+    //    me [outputA]--> other [outputB]--> me
+    //           | outputA in my wallet as input to outputB
+    //    me [outputA']--> other
+    //           | outputA' in my wallet as output
+    // so even though outputA = outputA', they are represented as
+    // two different objects in wallet(?)
+    std::map<uint256, CWalletTx>::const_iterator it = this->wallet->mapWallet.find(tx.GetHash());
+    if (it == this->wallet->mapWallet.end())
+    {
+         printf("WalletModel::findStealthTransactions(): tx %s not in wallet\n",
+                                                          tx.GetHash().ToString().c_str());
+         return false;
+    }
+    return this->wallet->FindStealthTransactions(it->second, mapNarr);
 }
 
 // returns false if vin is empty, prevout tx isn't in wallet or is not trusted
