@@ -249,6 +249,7 @@ static const CRPCCommand vRPCCommands[] =
     { "getmininginfo",             &getmininginfo,             true,   false },
     { "getstakinginfo",            &getstakinginfo,            true,   false },
     { "getnewaddress",             &getnewaddress,             true,   false },
+    { "makeburnaddress",           &makeburnaddress,           true,   false },
     { "getnewpubkey",              &getnewpubkey,              true,   false },
     { "getaccountaddress",         &getaccountaddress,         true,   false },
     { "setaccount",                &setaccount,                true,   false },
@@ -299,6 +300,7 @@ static const CRPCCommand vRPCCommands[] =
     { "dumpwallet",                &dumpwallet,                true,   false },
     { "importwallet",              &importwallet,              false,  false },
     { "importprivkey",             &importprivkey,             false,  false },
+    { "encodebase58",              &encodebase58,              false,  false },
     { "listunspent",               &listunspent,               false,  false },
     { "getrawtransaction",         &getrawtransaction,         false,  false },
     { "createrawtransaction",      &createrawtransaction,      false,  false },
@@ -1201,6 +1203,7 @@ Array RPCConvertValues(const std::string &strMethod, const std::vector<std::stri
     // Special case non-string parameter types
     //
     if (strMethod == "stop"                         && n > 0) ConvertTo<bool>(params[0]);
+    if (strMethod == "makeburnaddress"              && n > 0) ConvertTo<boost::int64_t>(params[0]);
     if (strMethod == "sendtoaddress"                && n > 1) ConvertTo<double>(params[1]);
     if (strMethod == "settxfee"                     && n > 0) ConvertTo<double>(params[0]);
     if (strMethod == "getreceivedbyaddress"         && n > 1) ConvertTo<boost::int64_t>(params[1]);

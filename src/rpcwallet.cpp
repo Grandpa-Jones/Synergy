@@ -177,6 +177,36 @@ Value getnewaddress(const Array& params, bool fHelp)
     return CBitcoinAddress(keyID).ToString();
 }
 
+// gives 9223372036854775808 (2**64) burn addresses, starting with 0
+Value makeburnaddress(const Array& params, bool fHelp)
+{
+   if (fHelp || params.size() != 1)
+   {
+        throw runtime_error(
+            "makeburnaddress <id>\n"
+            "Returns a serialed mainnet burn address numbered <id> with o replacing 0.");
+   }
+   
+   string strData = strprintf("S%023"PRId64"XXXXXXXX", params[0].get_int64());
+
+   std::replace(strData.begin(), strData.end(), '0', 'o');
+
+   std::vector<unsigned char> vch;
+   if (!DecodeBase58(strData, vch))
+   {
+       // should never happen but might as well check return
+       throw runtime_error("Invalid base58 input.");
+   }
+
+   if (vch.size() != 20)
+   {
+       // throw runtime_error(strprintf("Invalid address input: %d.", vch.size()));
+       vch.resize(20);
+   }
+
+   return EncodeBase58Check(vch);
+}
+    
 
 CBitcoinAddress GetAccountAddress(string strAccount, bool bForceNew=false)
 {
@@ -2211,7 +2241,7 @@ Value validateaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "validateaddress <synergyaddress>\n"
+            "validateaddress <synergyaddress> [showpubkey]\n"
             "Return information about <synergyaddress>.");
 
     CBitcoinAddress address(params[0].get_str());
@@ -2224,6 +2254,7 @@ Value validateaddress(const Array& params, bool fHelp)
         CTxDestination dest = address.Get();
         string currentAddress = address.ToString();
         ret.push_back(Pair("address", currentAddress));
+        CKeyID keyID;
         bool fMine = IsMine(*pwalletMain, dest);
         ret.push_back(Pair("ismine", fMine));
         if (fMine) {
@@ -2231,7 +2262,15 @@ Value validateaddress(const Array& params, bool fHelp)
             ret.insert(ret.end(), detail.begin(), detail.end());
         }
         if (pwalletMain->mapAddressBook.count(dest))
+        {
             ret.push_back(Pair("account", pwalletMain->mapAddressBook[dest]));
+        }
+        if (address.GetKeyID(keyID))
+        {
+            CPubKey vchPubKey;
+            pwalletMain->GetPubKey(keyID, vchPubKey);
+            ret.push_back(Pair("pubkey", HexStr(vchPubKey.Raw())));
+        }
     }
     return ret;
 }

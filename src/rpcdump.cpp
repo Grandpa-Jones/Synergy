@@ -10,6 +10,8 @@
 #include "ui_interface.h"
 #include "base58.h"
 
+#include "json_spirit.h"
+
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/variant/get.hpp>
 #include <boost/algorithm/string.hpp>
@@ -317,4 +319,42 @@ Value dumpwallet(const Array& params, bool fHelp)
     file << "# End of dump\n";
     file.close();
     return Value::null;
+}
+
+Value encodebase58(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1)
+        throw runtime_error(
+            "encodebase58 <jsonbytearray>\n"
+            "The <jsonbytearray> should be base 10 bytes, e.g.: '[1, 0, 110, 255]'\n"
+            "Encodes the byte array as base58.");
+
+    Value value;
+
+    json_spirit::read(params[0].get_str(), value);
+    if (value.type() != json_spirit::array_type)
+    {
+        throw runtime_error("Not a json array.\n");
+    }
+    Array ary = value.get_array();
+    int count = ary.size();
+    if (count < 1)
+    {
+        throw runtime_error("Array is empty.\n");
+    }
+    std::vector<unsigned char> decoded;
+    for (int i = 0; i < count; ++i)
+    {
+        if (ary[i].type() != json_spirit::int_type)
+        {
+             throw runtime_error(strprintf("Value at %d is wrong type.\n", i));
+        }
+        int v = ary[i].get_int();
+        if (v < 0 || v > 255)
+        {
+             throw runtime_error(strprintf("Value at %d is not byte data.\n", i));
+        }
+        decoded.push_back(v);
+    }
+    return EncodeBase58(decoded);
 }

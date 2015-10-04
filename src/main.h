@@ -64,9 +64,9 @@ static const std::string sMAX_TX_COMMENT_LEN = "512";
 static const unsigned int MAX_TX_COMMENT_LEN = std::atoi(sMAX_TX_COMMENT_LEN.c_str());
 
 // Comments are used for block chain services -- they cost money
-static const int64_t COMMENT_FEE_PER_CHAR = 10000;
+static const int64_t COMMENT_FEE_PER_CHAR = 10000;    // 0.0001
 // OP_RETURN is useful, but encourage swift services
-static const int64_t OP_RET_FEE_PER_CHAR = 15000;
+static const int64_t OP_RET_FEE_PER_CHAR = 15000;    // 0.00015
 
 
 static const int64_t MIN_TXOUT_AMOUNT = MIN_TX_FEE;
