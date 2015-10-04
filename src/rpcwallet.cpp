@@ -177,7 +177,7 @@ Value getnewaddress(const Array& params, bool fHelp)
     return CBitcoinAddress(keyID).ToString();
 }
 
-// gives 9223372036854775808 (2**64) burn addresses, starting with 0
+// gives 9223372036854775807 (2**64 - 1) burn addresses, starting with 1
 Value makeburnaddress(const Array& params, bool fHelp)
 {
    if (fHelp || params.size() != 1)
@@ -187,7 +187,7 @@ Value makeburnaddress(const Array& params, bool fHelp)
             "Returns a serialed mainnet burn address numbered <id> with o replacing 0.");
    }
    
-   string strData = strprintf("S%023"PRId64"XXXXXXXX", params[0].get_int64());
+   string strData = strprintf("SYNERGY%019"PRId64"XXXXXXXX", params[0].get_int64());
 
    std::replace(strData.begin(), strData.end(), '0', 'o');
 
@@ -198,10 +198,10 @@ Value makeburnaddress(const Array& params, bool fHelp)
        throw runtime_error("Invalid base58 input.");
    }
 
-   if (vch.size() != 20)
+   if (vch.size() != 21)
    {
        // throw runtime_error(strprintf("Invalid address input: %d.", vch.size()));
-       vch.resize(20);
+       vch.resize(21);
    }
 
    return EncodeBase58Check(vch);
@@ -2241,7 +2241,7 @@ Value validateaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "validateaddress <synergyaddress> [showpubkey]\n"
+            "validateaddress <synergyaddress>\n"
             "Return information about <synergyaddress>.");
 
     CBitcoinAddress address(params[0].get_str());
@@ -2264,12 +2264,6 @@ Value validateaddress(const Array& params, bool fHelp)
         if (pwalletMain->mapAddressBook.count(dest))
         {
             ret.push_back(Pair("account", pwalletMain->mapAddressBook[dest]));
-        }
-        if (address.GetKeyID(keyID))
-        {
-            CPubKey vchPubKey;
-            pwalletMain->GetPubKey(keyID, vchPubKey);
-            ret.push_back(Pair("pubkey", HexStr(vchPubKey.Raw())));
         }
     }
     return ret;
