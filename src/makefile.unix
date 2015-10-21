@@ -15,6 +15,7 @@ INCLUDEPATHS= \
  -I"$(CURDIR)/tor/or" \
  -I"/usr/include" \
  -I"$(INC_LINUX)" \
+ -I"$(CURDIR)/leveldb" \
  -I"$(CURDIR)/leveldb/include" \
  -I"$(CURDIR)/leveldb/helpers" \
  -I"$(CURDIR)/json"
@@ -263,6 +264,7 @@ leveldb/libleveldb.a:
 	@echo "Building LevelDB ..."; cd leveldb; make libleveldb.a libmemenv.a; cd ..;
 obj/txdb-leveldb.o: leveldb/libleveldb.a
 
+LIBS += -Wl,-Bdynamic,-rpath,.
 
 # auto-generated dependencies:
 -include obj/*.P

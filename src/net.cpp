@@ -1729,18 +1729,20 @@ static void run_tor() {
     printf("TOR thread started.\n");
 
     std::string logDecl = "notice file " + GetDataDir().string() + "/tor/tor.log";
-    char *argvLogDecl = (char*) logDecl.c_str();
 
-    char* argv[] = {
-        "tor",
-        "--hush",
-        "--Log",
-        argvLogDecl
-    };
+    char* argv[4];
+
+    argv[0] = (char *) malloc(strlen("tor") + 1);
+    strcpy(argv[0], "tor");
+    argv[1] = (char *) malloc(strlen("--hush") + 1);
+    strcpy(argv[1], "--hush");
+    argv[2] = (char *) malloc(strlen("--Log") + 1);
+    strcpy(argv[2], "--Log");
+    argv[3] = (char *) malloc(strlen(logDecl.c_str()));
+    strcpy(argv[3], logDecl.c_str());
 
     tor_main(4, argv);
 }
-
 
 void StartTor(void* parg)
 {

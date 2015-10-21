@@ -177,7 +177,7 @@ Value getnewaddress(const Array& params, bool fHelp)
     return CBitcoinAddress(keyID).ToString();
 }
 
-// gives 9223372036854775807 (2**64 - 1) burn addresses, starting with 1
+// gives 9223372036854775807 (2**63 - 1) burn addresses, starting with 1
 Value makeburnaddress(const Array& params, bool fHelp)
 {
    if (fHelp || params.size() != 1)
