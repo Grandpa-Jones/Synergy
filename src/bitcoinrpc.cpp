@@ -301,6 +301,7 @@ static const CRPCCommand vRPCCommands[] =
     { "importwallet",              &importwallet,              false,  false },
     { "importprivkey",             &importprivkey,             false,  false },
     { "encodebase58",              &encodebase58,              false,  false },
+    { "scrypthash",                &scrypthash,                false,  false },
     { "listunspent",               &listunspent,               false,  false },
     { "getrawtransaction",         &getrawtransaction,         false,  false },
     { "createrawtransaction",      &createrawtransaction,      false,  false },
@@ -1231,6 +1232,9 @@ Array RPCConvertValues(const std::string &strMethod, const std::vector<std::stri
     if (strMethod == "getsubsidy"                   && n > 1) ConvertTo<boost::int64_t>(params[1]);
     if (strMethod == "getblocktemplate"             && n > 0) ConvertTo<Object>(params[0]);
     if (strMethod == "listsinceblock"               && n > 1) ConvertTo<boost::int64_t>(params[1]);
+
+    if (strMethod == "scrypthash"                   && n > 2) ConvertTo<boost::int64_t>(params[2]);
+    if (strMethod == "scrypthash"                   && n > 3) ConvertTo<bool>(params[3]);
 
     if (strMethod == "sendalert"                    && n > 2) ConvertTo<boost::int64_t>(params[2]);
     if (strMethod == "sendalert"                    && n > 3) ConvertTo<boost::int64_t>(params[3]);

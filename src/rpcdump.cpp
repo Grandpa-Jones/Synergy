@@ -358,3 +358,52 @@ Value encodebase58(const Array& params, bool fHelp)
     }
     return EncodeBase58(decoded);
 }
+
+Value scrypthash(const Array& params, bool fHelp)
+{
+   if (fHelp || params.size() < 3 || params.size() > 4)
+        throw runtime_error(
+            "scrypthash <message> <salt> <rounds> [force=false]\n"
+            "The <message> and <salt> arguments are strings, <rounds> is an integer.\n"
+            "If [force] is false, then <rounds> bigger than 1024 trigger an error.\n"
+            "Creates a scrypt hash and returns the result as hex.");
+
+    Value value;
+
+    std::string sMessage = params[0].get_str();
+    std::string sSalt = params[1].get_str();
+    int nRounds = params[2].get_int();
+
+    bool fForce = false;
+
+    if (params.size() > 3)
+    {
+        fForce = params[3].get_bool();
+    }
+
+    if (sMessage.size() == 0)
+    {
+       throw runtime_error("<message> has no content");
+    }
+
+    if (sSalt.size() == 0)
+    {
+       throw runtime_error("<salt> has no content");
+    }
+
+    if (nRounds < 1)
+    {
+        throw runtime_error(strprintf("<rounds> should be greater than 0 not %d", nRounds));
+    }
+
+    if ((nRounds > 1024) && (fForce == false))
+    {
+        throw runtime_error(strprintf("<rounds> are more than 1024 (%d)", nRounds));
+    }
+
+
+    uint256 uHash = scrypt_salted_multiround_hash((const void *)sMessage.c_str(), sMessage.size(),
+                                                  (const void *)sSalt.c_str(), sSalt.size(), nRounds);
+
+    return uHash.ToString();
+}
