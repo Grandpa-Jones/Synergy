@@ -366,7 +366,7 @@ Value scrypthash(const Array& params, bool fHelp)
             "scrypthash <message> <salt> <rounds> [force=false]\n"
             "The <message> and <salt> arguments are strings, <rounds> is an integer.\n"
             "If [force] is false, then <rounds> bigger than 1024 trigger an error.\n"
-            "Creates a scrypt hash and returns the result as hex.");
+            "Returns hex of the hash sha256(scrypt(sha256(message, salt))).");
 
     Value value;
 
