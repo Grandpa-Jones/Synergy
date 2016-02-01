@@ -296,7 +296,12 @@ HEADERS += src/qt/bitcoingui.h \
     src/sph_simd.h \
     src/sph_skein.h \
     src/sph_types.h \
-    src/threadsafety.h
+    src/threadsafety.h \
+    src/qt/turbopage.h \
+    src/qt/pumppage.h \
+    src/qt/qcustomplot/qcustomplot.h \
+    src/qt/qcgaugewidget/qcgaugewidget.h \
+    src/qt/turboaddresstablemodel.h
 
 SOURCES += \
     src/qt/bitcoin.cpp \
@@ -449,7 +454,12 @@ SOURCES += \
     src/scrypt-x86_64.S \
     src/scrypt.cpp \
     src/pbkdf2.cpp \
-    src/stealth.cpp
+    src/stealth.cpp \
+    src/qt/turbopage.cpp \
+    src/qt/pumppage.cpp \
+    src/qt/qcustomplot/qcustomplot.cpp \
+    src/qt/qcgaugewidget/qcgaugewidget.cpp \
+    src/qt/turboaddresstablemodel.cpp
 
 RESOURCES += \
     src/qt/bitcoin.qrc
@@ -466,7 +476,9 @@ FORMS += \
     src/qt/forms/sendcoinsentry.ui \
     src/qt/forms/askpassphrasedialog.ui \
     src/qt/forms/rpcconsole.ui \
-    src/qt/forms/optionsdialog.ui
+    src/qt/forms/optionsdialog.ui \
+    src/qt/forms/tubopage.ui \
+    src/qt/forms/pumppage.ui
 
 win32 {
   HEADERS += src/tor/or/ntmain.h
