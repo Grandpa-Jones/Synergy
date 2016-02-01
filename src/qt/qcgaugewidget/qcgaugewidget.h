@@ -33,9 +33,11 @@
 #include <QPainter>
 #include <QObject>
 #include <QRectF>
+#if QT_VERSION >= 0x050000
 #include <QtMath>
-
-
+#else
+#include <QtCore/qmath.h>
+#endif
 
 #if defined(QCGAUGE_COMPILE_LIBRARY)
 #  define QCGAUGE_DECL  Q_DECL_EXPORT
