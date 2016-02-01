@@ -477,7 +477,7 @@ FORMS += \
     src/qt/forms/askpassphrasedialog.ui \
     src/qt/forms/rpcconsole.ui \
     src/qt/forms/optionsdialog.ui \
-    src/qt/forms/tubopage.ui \
+    src/qt/forms/turbopage.ui \
     src/qt/forms/pumppage.ui
 
 win32 {
