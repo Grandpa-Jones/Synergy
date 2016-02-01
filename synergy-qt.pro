@@ -22,11 +22,11 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
 }
 
-///////////////////////////////////////////////////////////////
-//
-// Change these variables in Qt environment preferrably
-//
-///////////////////////////////////////////////////////////////
+###############################################################
+##
+## Change these variables in Qt environment preferrably
+##
+###############################################################
 BOOST_LIB_SUFFIX=-mgw48-mt-s-1_55
 BOOST_INCLUDE_PATH=C:/deps/boost_1_55_0
 BOOST_LIB_PATH=C:/deps/boost_1_55_0/stage/lib
@@ -88,7 +88,7 @@ contains(USE_QRCODE, 1) {
     LIBS += -lqrencode
 }
 
-// do not use upnp with tor, make sure USE_UPNP=-
+## do not use upnp with tor, make sure USE_UPNP=-
 USE_UPNP=-
 # use: qmake "USE_UPNP=1" ( enabled by default; default)
 #  or: qmake "USE_UPNP=0" (disabled by default)
@@ -587,6 +587,8 @@ LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX
 windows:LIBS += -lws2_32 -lshlwapi -lmswsock -lole32 -loleaut32 -luuid -lgdi32
 LIBS += -lboost_system$$BOOST_LIB_SUFFIX -lboost_filesystem$$BOOST_LIB_SUFFIX -lboost_program_options$$BOOST_LIB_SUFFIX -lboost_thread$$BOOST_THREAD_LIB_SUFFIX
 windows:LIBS += -lboost_chrono$$BOOST_LIB_SUFFIX
+
+LIBS +=  -lssl -levent -lz -lcrypto
 
 contains(RELEASE, 1) {
     !windows:!macx {
