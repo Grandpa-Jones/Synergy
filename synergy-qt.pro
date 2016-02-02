@@ -5,21 +5,19 @@ INCLUDEPATH += src src/json src/qt src/tor
 INCLUDEPATH += src/tor/adapter src/tor/common src/tor/ext
 INCLUDEPATH += src/tor/ext/curve25519_donna src/tor/or
 INCLUDEPATH += src/qt/plugins/mrichtexteditor
-QT += core gui network
+INCLUDEPATH += src/qt/qcgaugewidget src/qt/qcustomplot
+QT += core gui network webkitwidgets webkit
 CONFIG += no_include_pwd
 CONFIG += thread
-CONFIG += static
+QMAKE_CXXFLAGS = -fpermissive -Wunused-variable   
 
 win32 {
     QMAKE_LFLAGS *= -Wl,--large-address-aware -static
     CONFIG += openssl-linked
 }
 
-QMAKE_CXXFLAGS = -fpermissive
-
 greaterThan(QT_MAJOR_VERSION, 4) {
-    QT += widgets
-    DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
+    QT += widgets printsupport
 }
 
 ###############################################################
@@ -27,20 +25,20 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 ## Change these variables in Qt environment preferrably
 ##
 ###############################################################
-BOOST_LIB_SUFFIX=-mgw48-mt-s-1_55
-BOOST_INCLUDE_PATH=C:/deps/boost_1_55_0
-BOOST_LIB_PATH=C:/deps/boost_1_55_0/stage/lib
-BDB_INCLUDE_PATH=C:/deps/db-4.8.30.NC/build_unix
-BDB_LIB_PATH=C:/deps/db-4.8.30.NC/build_unix
-OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.1g/include
-OPENSSL_LIB_PATH=C:/deps/openssl-1.0.1g
-MINIUPNPC_INCLUDE_PATH=C:/deps/
-MINIUPNPC_LIB_PATH=C:/deps/miniupnpc
-QRENCODE_INCLUDE_PATH=C:/deps/qrencode-3.4.3
-QRENCODE_LIB_PATH=C:/deps/qrencode-3.4.3/.libs
+# BOOST_LIB_SUFFIX=-mgw48-mt-s-1_55
+# BOOST_INCLUDE_PATH=C:/deps/boost_1_55_0
+# BOOST_LIB_PATH=C:/deps/boost_1_55_0/stage/lib
+# BDB_INCLUDE_PATH=C:/deps/db-4.8.30.NC/build_unix
+# BDB_LIB_PATH=C:/deps/db-4.8.30.NC/build_unix
+# OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.1g/include
+# OPENSSL_LIB_PATH=C:/deps/openssl-1.0.1g
+# MINIUPNPC_INCLUDE_PATH=C:/deps/
+# MINIUPNPC_LIB_PATH=C:/deps/miniupnpc
+# QRENCODE_INCLUDE_PATH=C:/deps/qrencode-3.4.3
+# QRENCODE_LIB_PATH=C:/deps/qrencode-3.4.3/.libs
 
 DEFINES += QT_GUI BOOST_THREAD_USE_LIB BOOST_SPIRIT_THREADSAFE \
-           BOOST_THREAD_PROVIDES_GENERIC_SHARED_MUTEX_ON_WIN \
+#           BOOST_THREAD_PROVIDES_GENERIC_SHARED_MUTEX_ON_WIN \
            __NO_SYSTEM_INCLUDES
 
 # for boost 1.37, add -mt to the boost libraries
@@ -64,7 +62,7 @@ contains(RELEASE, 1) {
 
     !windows:!macx {
         # Linux: static link
-        LIBS += -Wl,-Bstatic
+        LIBS += -Wl,-Bstatic  -Wl,-z,relro -Wl,-z,now 
     }
 }
 
@@ -209,7 +207,8 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/aboutdialog.h \
     src/qt/editaddressdialog.h \
     src/qt/bitcoinaddressvalidator.h \
-    src/alert.h \
+    src/qt/findaddressdialog.h \
+    rc/alert.h \
     src/addrman.h \
     src/base58.h \
     src/bignum.h \
@@ -315,6 +314,7 @@ SOURCES += \
     src/qt/addressbookpage.cpp \
     src/qt/signverifymessagedialog.cpp \
     src/qt/aboutdialog.cpp \
+    src/qt/findaddressdialog.cpp \
     src/qt/editaddressdialog.cpp \
     src/qt/bitcoinaddressvalidator.cpp \
     src/tor/common/address.c \
@@ -455,6 +455,9 @@ SOURCES += \
     src/scrypt.cpp \
     src/pbkdf2.cpp \
     src/stealth.cpp \
+    src/json/json_spirit_reader.cpp \
+    src/json/json_spirit_value.cpp \
+    src/json/json_spirit_writer.cpp \
     src/qt/turbopage.cpp \
     src/qt/pumppage.cpp \
     src/qt/qcustomplot/qcustomplot.cpp \
@@ -466,6 +469,7 @@ RESOURCES += \
 
 FORMS += \
     src/qt/forms/coincontroldialog.ui \
+    src/qt/forms/findaddressdialog.ui \
     src/qt/forms/sendcoinsdialog.ui \
     src/qt/forms/addressbookpage.ui \
     src/qt/forms/signverifymessagedialog.ui \
@@ -582,13 +586,11 @@ macx:QMAKE_CXXFLAGS_THREAD += -pthread
 # Set libraries and includes at end, to use platform-defined defaults if not overridden
 INCLUDEPATH += $$BOOST_INCLUDE_PATH $$BDB_INCLUDE_PATH $$OPENSSL_INCLUDE_PATH $$QRENCODE_INCLUDE_PATH
 LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,)
-LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX
+LIBS += -lz -levent -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX
 # -lgdi32 has to happen after -lcrypto (see  #681)
 windows:LIBS += -lws2_32 -lshlwapi -lmswsock -lole32 -loleaut32 -luuid -lgdi32
 LIBS += -lboost_system$$BOOST_LIB_SUFFIX -lboost_filesystem$$BOOST_LIB_SUFFIX -lboost_program_options$$BOOST_LIB_SUFFIX -lboost_thread$$BOOST_THREAD_LIB_SUFFIX
 windows:LIBS += -lboost_chrono$$BOOST_LIB_SUFFIX
-
-LIBS +=  -lssl -levent -lz -lcrypto
 
 contains(RELEASE, 1) {
     !windows:!macx {
@@ -597,4 +599,5 @@ contains(RELEASE, 1) {
     }
 }
 
+#system($$QMAKE_LRELEASE -silent $$TRANSLATIONS)
 system($$QMAKE_LRELEASE -silent $$_PRO_FILE_)
